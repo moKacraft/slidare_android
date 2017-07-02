@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="project.eip.epitech.slidare.ContactActivity">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:orientation="vertical"
+        android:background="@drawable/top_bar"
+        android:layout_marginTop="0dp"
+        android:id="@+id/top_bar">
+
+        <ImageView
+            android:id="@+id/ico_search"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/ico_search"
+            android:layout_marginLeft="55dp"
+            android:layout_marginTop="0dp"/>
+
+        <ImageView
+            android:id="@+id/ico_chat"
+            android:layout_height="25dp"
+            android:layout_width="25dp"
+            android:layout_below="@+id/ico_search"
+            android:src="@drawable/ico_chat"
+            android:layout_marginLeft="170dp"
+            android:layout_marginTop="-20dp"/>
+
+        <ImageView
+            android:id="@+id/ico_addContact"
+            android:layout_height="25dp"
+            android:layout_width="25dp"
+            android:layout_below="@+id/ico_chat"
+            android:src="@drawable/ico_addcontact"
+            android:layout_marginLeft="280dp"
+            android:layout_marginTop="-18dp"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:orientation="vertical"
+        android:background="@drawable/bottom_bar"
+        android:layout_marginTop="560dp"
+        android:id="@+id/bottom_bar">
+
+        <ImageView
+            android:id="@+id/ico_home"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/ico_home"
+            android:layout_marginLeft="55dp"
+            android:layout_marginTop="20dp"/>
+
+        <ImageView
+            android:id="@+id/ico_group"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_below="@+id/ico_home"
+            android:src="@drawable/ico_contact"
+            android:layout_marginLeft="170dp"
+            android:layout_marginTop="-30dp"/>
+
+        <ImageView
+            android:id="@+id/ico_profil"
+            android:layout_height="45dp"
+            android:layout_width="45dp"
+            android:layout_below="@+id/ico_group"
+            android:src="@drawable/new_user"
+            android:layout_marginLeft="280dp"
+            android:layout_marginTop="-40dp"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical"
+        android:id="@+id/main_background">
+
+        <ListView
+            android:id="@+id/listView"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="250dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>

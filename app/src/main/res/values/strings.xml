@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Slidare</string>
+    <string name="action_settings">Settings</string>
+    <string name="facebook_app_id">133866697101427</string>
+    <string name="prompt">Choose a color</string>
+
+    <string-array name="colors">
+        <item>Blue</item>
+        <item>Red</item>
+        <item>Orange</item>
+        <item>Green</item>
+        <item>White</item>
+        <item>Black</item>
+        <item>Grey</item>
+        <item>Yellow</item>
+    </string-array>
+
+    <string-array name="items">
+        <item>Item 1</item>
+        <item>Item 2</item>
+        <item>Item 3</item>
+        <item>Item 4</item>
+        <item>Item 5</item>
+        <item>Item 6</item>
+    </string-array>
+
+</resources>
