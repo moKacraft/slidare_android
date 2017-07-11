@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +19,28 @@ import com.github.kittinunf.fuel.core.Response;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
+import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
+
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URISyntaxException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
+
+import project.eip.epitech.slidare.util.encryptUtils;
 
 /**
  * Created by ferrei_e on 01/11/2016.
@@ -31,6 +54,8 @@ public class LoginActivity extends AppCompatActivity{
     private EditText mPasswordEditText = null;
     private Button mLoginButton = null;
     private String mBody;
+
+    String mailToShare = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,6 +75,7 @@ public class LoginActivity extends AppCompatActivity{
                 Log.d("Password : ", "value = " + mPasswordEditText.getText().toString());
 
                 String email = mEmailEditText.getText().toString();
+                mailToShare = email;
                 String password = mPasswordEditText.getText().toString();
 
                 mBody = "{ \"email\": \"" + email + "\",\"password\": \"" + password + "\" }";
@@ -68,7 +94,7 @@ public class LoginActivity extends AppCompatActivity{
     }
 
     public void loginUser(String body) throws Exception {
-        Fuel.post("http://54.152.163.253:50000/loginUser").body(body.getBytes()).responseString(new Handler<String>() {
+        Fuel.post("http://34.227.142.101:50000/loginUser").body(body.getBytes()).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
                 Log.d("SUCCESS login User : ",response.toString());

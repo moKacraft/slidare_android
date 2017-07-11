@@ -134,7 +134,7 @@ public class SessionActivity extends AppCompatActivity {
         Map<String, Object> header = new HashMap<>();
         header.put("Authorization", "Bearer "+token);
 
-        Fuel.get("http://54.224.110.79:50000/fetchUser").header(header).responseString(new Handler<String>() {
+        Fuel.get("http://34.227.142.101:50000/fetchUser").header(header).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
                 Log.d("SUCCESS fetch User : ",response.toString());

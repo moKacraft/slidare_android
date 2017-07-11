@@ -1,11 +1,18 @@
 package project.eip.epitech.slidare;
 
+import project.eip.epitech.slidare.SocketIO.SocketIOService;
 import project.eip.epitech.slidare.request.ApiRequest;
+import project.eip.epitech.slidare.util.encryptUtils;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -25,14 +32,32 @@ import com.github.kittinunf.fuel.core.FuelError;
 import com.github.kittinunf.fuel.core.Handler;
 import com.github.kittinunf.fuel.core.Request;
 import com.github.kittinunf.fuel.core.Response;
+import com.github.nkzawa.emitter.Emitter;
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URISyntaxException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 public class MainActivity extends AppCompatActivity {
     static final String TAG = "MainActivity";
@@ -134,10 +159,13 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "----------> LOGIN USER");
 
-        Fuel.post("http://54.224.110.79:50000/loginUser").body(body.getBytes()).responseString(new Handler<String>() {
+        Fuel.post("http://34.227.142.101:50000/loginUser").body(body.getBytes()).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
                 Log.d("SUCCESS login User : ",response.toString());
+
+                //setupConnections();
+                //startService(new Intent(this, SocketIOService.class));
 
                 try {
                     JSONObject data = new JSONObject(new String(response.getData()));
@@ -211,7 +239,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void createUser(String body) throws Exception {
 
-        Fuel.post("http://54.224.110.79:50000/createUser").body(body.getBytes()).responseString(new Handler<String>() {
+        Fuel.post("http://34.227.142.101:50000/createUser").body(body.getBytes()).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
                 Log.d("SUCCESS create User : ",response.toString());
@@ -241,7 +269,7 @@ public class MainActivity extends AppCompatActivity {
         Map<String, Object> header = new HashMap<>();
         header.put("Authorization", "Bearer "+token);
 
-        Fuel.post("http://54.224.110.79:50000/updateUserPicture").header(header).body(body.getBytes()).responseString(new Handler<String>() {
+        Fuel.post("http://34.227.142.101:50000/updateUserPicture").header(header).body(body.getBytes()).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
                 Log.d("SUCCESS PICTURE : ",response.toString());
@@ -256,5 +284,169 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Picture update failed.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private Socket mSocket;
+
+    public void setupConnections() {
+        try {
+            mSocket = IO.socket("http://34.227.142.101:8090");
+            System.out.println("socket init");
+            Log.d(TAG, "----------> SOCKET INIT");
+            mSocket.on("server ready", new Emitter.Listener() {
+                @Override
+                public void call(final Object... args) {
+
+                    //dialogSend.setVisible(true);
+                    System.out.println("Server ready");
+                    Log.d(TAG, "----------> Server ready");
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                Log.d(TAG, "----------> in server thread");
+                                java.net.Socket sock;
+                                sock = new java.net.Socket("34.227.142.101", (int)args[0]);
+                                OutputStream is = sock.getOutputStream();
+                                FileInputStream fis = new FileInputStream((String)args[1]);
+                                BufferedInputStream bis = new BufferedInputStream(fis);
+                                byte[] buffer = new byte[4096];
+                                int ret;
+                                while ((ret = fis.read(buffer)) > 0) {
+                                    is.write(buffer, 0, ret);
+                                }
+                                fis.close();
+                                bis.close();
+                                is.close();
+                                sock.close();
+                            } catch (IOException ex) {
+                                //Logger.getLogger(EventlogController.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                        }
+                    }).start();
+                }
+            }).on("soso@gmail.com", new Emitter.Listener() {
+                @Override
+                public void call(final Object... args)
+                {
+                    Log.d(TAG, "----------> in server username file receive");
+
+                    Looper.prepare();
+
+                    AlertDialog.Builder builder;
+                    //Context context = getApplicationContext();
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                        builder = new AlertDialog.Builder(MainActivity.this, android.R.style.Theme_Material_Dialog_Alert);
+//                    } else {
+                        builder = new AlertDialog.Builder(getApplicationContext());
+                    //}
+                    builder.setTitle("Delete entry")
+                            .setMessage("Are you sure you want to delete this entry?")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // continue with delete
+                                }
+                            })
+                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // do nothing
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                    //Platform.runLater(new Runnable() {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+
+//                            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+//                            alert.setTitle("Info");
+//                            alert.setHeaderText("File Received");
+//                            alert.setContentText("");
+//                            Optional<ButtonType> result = alert.showAndWait();
+//                            System.out.println(result);
+//
+//                            if (result.isPresent() && result.get() != ButtonType.OK) {
+//                                return;
+//                            }
+
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+//                                    JDialog dialog = new JDialog();
+//                                    JLabel label = new JLabel("Please wait...");
+//                                    dialog.setLocationRelativeTo(null);
+//                                    dialog.setTitle("Please Wait...");
+//                                    dialog.add(label);
+//                                    dialog.setPreferredSize(new Dimension(300, 100));
+//                                    dialog.setAlwaysOnTop(true);
+//                                    dialog.pack();
+
+                                    System.out.println("Receving File");
+                                    Log.d(TAG, "----------> receiving file");
+                                    String transferId = (String) args[2];
+                                    try {
+                                        FileOutputStream fos = new FileOutputStream((String) args[3]);
+                                        java.net.Socket sock = new java.net.Socket("34.227.142.101", (int)args[1]);
+                                        InputStream is = sock.getInputStream();
+                                        byte[] buffer = new byte[4096];
+                                        int ret;
+                                        double sumCount = 0.0;
+
+                                        //dialog.setVisible(true);
+
+                                        while ((ret = is.read(buffer)) > 0) {
+                                            fos.write(buffer, 0, ret);
+
+                                            sumCount += ret;
+                                            System.out.println("Percentace: " + (int)((sumCount / (int) args[9] * 100.0)) + "%");
+                                            Log.d(TAG, "----------> Percentace: " + (int)((sumCount / (int) args[9] * 100.0)) + "%");
+                                            //Thread.sleep(1000);
+                                            //label.setText("Percentace: " + (int)((sumCount / (int) args[9] * 100.0)) + "%");
+                                        }
+                                        //dialog.setVisible(false);
+                                        Log.d(TAG, "----------> Transfer Finished");
+                                        System.out.println("Transfer Finished");
+                                        fos.close();
+                                        is.close();
+                                        sock.close();
+                                        mSocket.emit("transfer finished", transferId);
+
+                                        encryptUtils _crypt = new  encryptUtils();
+                                        byte[] salt =  Base64.decode((String)args[6],Base64.DEFAULT);
+                                        byte[] iv = Base64.decode((String)args[7],Base64.DEFAULT);
+                                        System.out.println(salt);
+                                        System.out.println(iv);
+                                        System.out.println(salt.length);
+                                        System.out.println(iv.length);
+                                        _crypt.decryptFile((String) args[3], (String) args[4], (String) args[5], salt, iv, (String) args[8]);
+                                    } catch (IOException | NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeySpecException | InvalidAlgorithmParameterException | InvalidKeyException | BadPaddingException | IllegalBlockSizeException ex) {
+
+                                    }
+                                }
+                            }).start();
+                        }
+                    });
+                }
+            }).on("receiving data", new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    System.out.println("args[0] " + (String)args[0] + "args[1] " + args[1]);
+                    Log.d(TAG, "----------> args[0] " + (String)args[0] + "args[1] " + args[1]);
+                    //labelSend.setText((String) args[0]);
+//                    if ((boolean) args[1] == true) {
+//                        dialogSend.setVisible(false);
+//                    }
+                }
+            });
+            mSocket.connect();
+            //Looper.loop();
+
+        } catch (URISyntaxException ex) {
+            System.out.println(ex.getMessage());
+            System.out.println(ex.getReason());
+        }
+
     }
 }

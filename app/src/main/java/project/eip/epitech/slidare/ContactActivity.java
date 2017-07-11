@@ -129,7 +129,7 @@ public class ContactActivity extends AppCompatActivity {
         Map<String, Object> header = new HashMap<>();
         header.put("Authorization", "Bearer "+token);
 
-        Fuel.get("http://54.224.110.79:50000/userContacts").header(header).responseString(new Handler<String>() {
+        Fuel.get("http://34.227.142.101:50000/userContacts").header(header).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
                 Log.d("SUCCESS userContacts : ",response.toString());
@@ -186,7 +186,7 @@ public class ContactActivity extends AppCompatActivity {
         Map<String, Object> header = new HashMap<>();
         header.put("Authorization", "Bearer "+token);
 
-        Fuel.get("http://54.224.110.79:50000/userContact/{contact_identifier}").header(header).responseString(new Handler<String>() {
+        Fuel.get("http://34.227.142.101:50000/userContact/{contact_identifier}").header(header).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
                 Log.d("SUCCESS userContact : ",response.toString());
@@ -205,7 +205,7 @@ public class ContactActivity extends AppCompatActivity {
         Map<String, Object> header = new HashMap<>();
         header.put("Authorization", "Bearer "+token);
 
-        Fuel.get("http://54.224.110.79:50000/addContact").header(header).responseString(new Handler<String>() {
+        Fuel.get("http://34.227.142.101:50000/addContact").header(header).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
                 Log.d("SUCCESS addContact : ",response.toString());
@@ -224,7 +224,7 @@ public class ContactActivity extends AppCompatActivity {
         Map<String, Object> header = new HashMap<>();
         header.put("Authorization", "Bearer "+token);
 
-        Fuel.get("http://54.224.110.79:50000/removeContact/{contact_identifier}").header(header).responseString(new Handler<String>() {
+        Fuel.get("http://34.227.142.101:50000/removeContact/{contact_identifier}").header(header).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
                 Log.d("SUCCESS rmContact : ",response.toString());

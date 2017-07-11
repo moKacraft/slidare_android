@@ -96,7 +96,7 @@ public class SignupActivity extends AppCompatActivity {
 
     public void createUser(String body) throws Exception {
 
-        Fuel.post("http://54.224.110.79:50000/createUser").body(body.getBytes()).responseString(new Handler<String>() {
+        Fuel.post("http://34.227.142.101:50000/createUser").body(body.getBytes()).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
                 Log.d("SUCCESS create User : ",response.toString());
@@ -117,7 +117,7 @@ public class SignupActivity extends AppCompatActivity {
 
     public void loginUser(String body) throws Exception {
 
-        Fuel.post("http://54.224.110.79:50000/loginUser").body(body.getBytes()).responseString(new Handler<String>() {
+        Fuel.post("http://34.227.142.101:50000/loginUser").body(body.getBytes()).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
                 Log.d("SUCCESS login User : ",response.toString());
