@@ -27,43 +27,64 @@
             android:layout_centerHorizontal="true"
             android:gravity="center"
             android:text="Settings"
-            android:textSize="25dp"
+            android:textSize="23dp"
             android:fontFamily="Roboto"
-            android:layout_marginTop="30dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="5dp"
             android:textColor="@color/blue_back"/>
 
         <ImageView
             android:id="@+id/user"
-            android:layout_height="150dp"
-            android:layout_width="150dp"
+            android:layout_height="140dp"
+            android:layout_width="140dp"
             android:src="@drawable/user"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/title"
             android:padding="10dp" />
 
+        <ImageView
+            android:id="@+id/camera"
+            android:layout_height="15dp"
+            android:layout_width="15dp"
+            android:src="@drawable/camera"
+            android:layout_below="@+id/user"
+            android:layout_marginTop="3dp"
+            android:layout_marginLeft="130dp"/>
+
         <TextView
-            android:id="@+id/modify"
+            android:id="@+id/library"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_below="@+id/user"
-            android:text="modify"
+            android:text="Library"
             android:textSize="18dp"
             android:fontFamily="Roboto"
-            android:layout_centerHorizontal="true"
             android:clickable="true"
-            android:textColor="@color/blue_back"/>
+            android:textColor="@color/blue_back"
+            android:layout_marginLeft="170dp"/>
+
+        <TextView
+            android:id="@+id/profil_name"
+            android:layout_height="20dp"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/library"
+            android:gravity="center_horizontal"
+            android:text="Name"
+            android:textSize="20dp"
+            android:fontFamily="Roboto"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/black"/>
 
         <TextView
             android:id="@+id/username_label"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_below="@+id/modify"
+            android:layout_below="@+id/profil_name"
             android:text="Username"
             android:textSize="18dp"
             android:fontFamily="Roboto"
             android:clickable="true"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="10dp"
             android:layout_marginLeft="40dp"
             android:textColor="@color/grey_light"/>
 
@@ -165,22 +186,22 @@
             android:text="Save"
             android:textSize="20dp"
             android:layout_marginTop="20dp"
-            android:layout_marginBottom="10dp"
             android:background="@color/blue_back"
             android:textColor="@drawable/login_button_text_color"/>
 
         <TextView
-            android:id="@+id/cancel"
+            android:id="@+id/logout"
             android:layout_height="wrap_content"
             android:layout_width="300dp"
-            android:layout_below="@+id/submit"
+            android:layout_below="@+id/save"
             android:layout_centerHorizontal="true"
             android:gravity="center"
-            android:text="Cancel"
-            android:textSize="15dp"
+            android:text="Logout"
+            android:textSize="20dp"
             android:fontFamily="Roboto"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
-            android:textColor="@color/whiteColor"/>
+            android:textColor="@color/blue_back"/>
 
     </RelativeLayout>
 

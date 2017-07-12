@@ -44,11 +44,13 @@ public class SettingsActivity extends AppCompatActivity {
     private String mBodyUpdateEmail;
     private String mBodyUpdatePassword;
 
-    private TextView mModify;
+    private TextView mLibrary;
+    private TextView mName;
     private TextView mPseudo;
     private TextView mEmailAddress;
     private TextView mPasswordLabel;
     private TextView mPasswordNewLabel;
+    private TextView mLogout;
 
     private ImageView mHomeView;
     private ImageView mGroupView;
@@ -74,13 +76,15 @@ public class SettingsActivity extends AppCompatActivity {
         mToken = intent.getStringExtra("token");
         mUrlPicture = intent.getStringExtra("fbUrl");
 
+        mName = (TextView) findViewById(R.id.profil_name);
         mHomeView = (ImageView) findViewById(R.id.ico_home);
         mGroupView = (ImageView) findViewById(R.id.ico_group);
         mProfilView = (ImageView) findViewById(R.id.ico_profil);
-        mModify = (TextView) findViewById(R.id.modify);
+        mLibrary = (TextView) findViewById(R.id.library);
         mSave = (Button) findViewById(R.id.save);
+        mLogout = (TextView) findViewById(R.id.logout);
 
-        View.OnClickListener mModifyListener = new View.OnClickListener(){
+        /*View.OnClickListener mModifyListener = new View.OnClickListener(){
             @Override
             public void onClick(View v) {
 
@@ -98,7 +102,7 @@ public class SettingsActivity extends AppCompatActivity {
                     Log.d(TAG, "EXCEPTION ERROR = " + error);
                 }
             }
-        };
+        };*/
 
         View.OnClickListener mHomeViewListener = new View.OnClickListener() {
             @Override
@@ -203,11 +207,22 @@ public class SettingsActivity extends AppCompatActivity {
             }
         };
 
+        View.OnClickListener mLogoutListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        };
+
         mHomeView.setOnClickListener(mHomeViewListener);
         mGroupView.setOnClickListener(mGroupViewListener);
         mProfilView.setOnClickListener(mProfilViewListener);
-        mModify.setOnClickListener(mModifyListener);
+        //mModify.setOnClickListener(mModifyListener);
         mSave.setOnClickListener(mSaveListener);
+        mLogout.setOnClickListener(mLogoutListener);
 
         try {
             fetchUser(mToken);
@@ -231,6 +246,7 @@ public class SettingsActivity extends AppCompatActivity {
                     JSONObject data = new JSONObject(new String(response.getData()));
 
                     mUsername = data.getString("username");
+                    mName.setText(data.getString("username"));
                     mEmail = data.getString("email");
                     try {
                         mPassword = data.getString("password");
