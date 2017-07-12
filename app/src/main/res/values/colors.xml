@@ -3,10 +3,12 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
     <color name="whiteColor">#FFFFFF</color>
-    <color name="login_edittext">#333</color>
     <color name="blue_back">#00BFFF</color>
-    <color name="blue_light">#B0E0E6</color>
-    <color name="blue_dark">#2B3D53</color>
     <color name="grey_light">#C0C0C0</color>
+    <color name="blue_light">#B0E0E6</color>
+    <color name="black">#000000</color>
+    <color name="grey_snow">#EFEFEF</color>
+    <color name="red">#FF0000</color>
 </resources>

@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="epitech.eip.slidare.SettingsActivity">
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical"
+        android:id="@+id/main_background">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_height="wrap_content"
+            android:layout_width="300dp"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="Settings"
+            android:textSize="25dp"
+            android:fontFamily="Roboto"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="30dp"
+            android:textColor="@color/blue_back"/>
+
+        <ImageView
+            android:id="@+id/user"
+            android:layout_height="150dp"
+            android:layout_width="150dp"
+            android:src="@drawable/user"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/title"
+            android:padding="10dp" />
+
+        <TextView
+            android:id="@+id/modify"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_below="@+id/user"
+            android:text="modify"
+            android:textSize="18dp"
+            android:fontFamily="Roboto"
+            android:layout_centerHorizontal="true"
+            android:clickable="true"
+            android:textColor="@color/blue_back"/>
+
+        <TextView
+            android:id="@+id/username_label"
+            android:layout_height="wrap_content"
+            android:layout_width="300dp"
+            android:layout_below="@+id/modify"
+            android:layout_centerHorizontal="true"
+            android:text="Username"
+            android:textSize="20dp"
+            android:fontFamily="Roboto"
+            android:clickable="true"
+            android:layout_marginTop="50dp"
+            android:textColor="@color/grey_light"/>
+
+        <EditText
+            android:id="@+id/username_setting"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/username_label"
+            android:layout_centerHorizontal="true"
+            android:hint="Username"
+            android:textColorHint="@color/blue_light"
+            android:textColor="@color/blue_back"
+            android:background="@drawable/settings_border"
+            android:padding="10dp"
+            android:layout_marginTop="5dp"
+            android:inputType="text"
+            android:textSize="20dp"/>
+
+        <TextView
+            android:id="@+id/email_label"
+            android:layout_height="wrap_content"
+            android:layout_width="300dp"
+            android:layout_below="@+id/username_setting"
+            android:layout_centerHorizontal="true"
+            android:text="Email"
+            android:textSize="20dp"
+            android:fontFamily="Roboto"
+            android:clickable="true"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="40dp"
+            android:textColor="@color/grey_light"/>
+
+        <EditText
+            android:id="@+id/email_setting"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/email_label"
+            android:layout_centerHorizontal="true"
+            android:hint="Email"
+            android:textColorHint="@color/blue_light"
+            android:textColor="@color/blue_back"
+            android:background="@drawable/settings_border"
+            android:padding="10dp"
+            android:layout_marginTop="5dp"
+            android:inputType="textEmailAddress"
+            android:textSize="20dp"/>
+
+        <TextView
+            android:id="@+id/password"
+            android:layout_height="wrap_content"
+            android:layout_width="300dp"
+            android:layout_below="@+id/email_setting"
+            android:layout_centerHorizontal="true"
+            android:text="Password"
+            android:textSize="20dp"
+            android:fontFamily="Roboto"
+            android:clickable="true"
+            android:layout_marginTop="30dp"
+            android:layout_marginLeft="40dp"
+            android:textColor="@color/grey_light"/>
+
+        <EditText
+            android:id="@+id/password_current"
+            android:layout_width="135dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/password"
+            android:hint="Current"
+            android:textColorHint="@color/blue_light"
+            android:textColor="@color/blue_back"
+            android:background="@drawable/settings_border"
+            android:padding="10dp"
+            android:inputType="textPassword"
+            android:fontFamily="sans-serif-condensed"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="105dp"
+            android:textSize="20dp"/>
+
+        <EditText
+            android:id="@+id/password_new"
+            android:layout_width="135dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/password"
+            android:hint="New"
+            android:textColorHint="@color/blue_light"
+            android:textColor="@color/blue_back"
+            android:background="@drawable/settings_border"
+            android:padding="10dp"
+            android:inputType="textPassword"
+            android:fontFamily="sans-serif-condensed"
+            android:layout_marginTop="5dp"
+            android:layout_marginLeft="270dp"
+            android:textSize="20dp"/>
+
+        <Button
+            android:id="@+id/save"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/password_current"
+            android:layout_centerHorizontal="true"
+            android:textAllCaps="false"
+            android:text="Save"
+            android:textSize="20dp"
+            android:layout_marginTop="50dp"
+            android:background="@color/blue_back"
+            android:textColor="@drawable/login_button_text_color"/>
+
+        <TextView
+            android:id="@+id/cancel"
+            android:layout_height="wrap_content"
+            android:layout_width="300dp"
+            android:layout_below="@+id/submit"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="Cancel"
+            android:textSize="15dp"
+            android:fontFamily="Roboto"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/blue_back"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin"
+        android:layout_gravity="bottom"
+        android:background="@drawable/bottom_bar"
+        android:id="@+id/bottom_bar">
+
+        <ImageView
+            android:id="@+id/ico_home"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:src="@drawable/ico_home"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="20dp"/>
+
+        <ImageView
+            android:id="@+id/ico_group"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_below="@+id/ico_home"
+            android:src="@drawable/ico_contact"
+            android:layout_marginLeft="235dp"
+            android:layout_marginTop="-30dp"/>
+
+        <ImageView
+            android:id="@+id/ico_profil"
+            android:layout_height="45dp"
+            android:layout_width="45dp"
+            android:layout_below="@+id/ico_group"
+            android:src="@drawable/new_user"
+            android:layout_marginLeft="415dp"
+            android:layout_marginTop="-40dp"/>
+
+    </RelativeLayout>
+
+</android.support.design.widget.CoordinatorLayout>

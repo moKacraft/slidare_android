@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_gravity="center_vertical"
+    android:background="@color/whiteColor"
+    android:id="@+id/main_background">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="vertical"
+        android:background="@color/grey_snow"
+        android:layout_marginTop="0dp"
+        android:id="@+id/top_bar">
+
+        <TextView
+            android:id="@+id/add_title"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:text="Add a new contact"
+            android:textSize="20dp"
+            android:fontFamily="Roboto"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/cancel_add"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:gravity="center|left"
+            android:text="Cancel"
+            android:textSize="20dp"
+            android:fontFamily="Roboto"
+            android:layout_marginLeft="20dp"
+            android:textColor="@color/blue_back"/>
+
+        <TextView
+            android:id="@+id/done_add"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:gravity="center|right"
+            android:text="Done"
+            android:textSize="20dp"
+            android:fontFamily="Roboto"
+            android:layout_marginRight="20dp"
+            android:textColor="@color/blue_back"/>
+
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/enteremail"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_below="@+id/top_bar"
+        android:gravity="center"
+        android:text="Enter the email address"
+        android:textSize="20dp"
+        android:fontFamily="Roboto"
+        android:layout_marginTop="80dp"
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/black"/>
+
+    <EditText
+        android:id="@+id/new_email"
+        android:layout_width="300dp"
+        android:layout_height="40dp"
+        android:layout_below="@+id/enteremail"
+        android:layout_centerHorizontal="true"
+        android:gravity="center_horizontal"
+        android:background="@drawable/border"
+        android:padding="5dp"
+        android:inputType="textEmailAddress"
+        android:layout_marginBottom="80dp"
+        android:textSize="18dp"/>
+
+    <TextView
+        android:id="@+id/save"
+        android:layout_width="80dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/new_email"
+        android:gravity="center"
+        android:text="Add"
+        android:textSize="20dp"
+        android:textColor="@color/whiteColor"
+        android:background="@color/blue_back"
+        android:layout_centerHorizontal="true"/>
+
+</RelativeLayout>
