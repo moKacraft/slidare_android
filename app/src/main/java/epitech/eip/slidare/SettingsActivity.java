@@ -248,7 +248,11 @@ public class SettingsActivity extends AppCompatActivity {
                     mPictureUrlImage = (ImageView) findViewById(R.id.user);
                     mPseudo.setText(mUsername);
                     mEmailAddress.setText(mEmail);
-                    mPasswordLabel.setText(mPassword);
+                    if (mPassword == null) {
+                        mPasswordLabel.setVisibility(View.INVISIBLE);
+                        mPasswordNewLabel.setVisibility(View.INVISIBLE);
+                    } else
+                        mPasswordLabel.setText(mPassword);
                     mPasswordNewLabel.setText("");
                     /*if (mUrlPicture.compareTo("") != 0) {
                         new DownloadImageTask((ImageView) findViewById(R.id.user)).execute(mUrlPicture);

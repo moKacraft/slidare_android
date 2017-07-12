@@ -16,6 +16,8 @@ import android.widget.Toast;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.github.kittinunf.fuel.Fuel;
@@ -25,6 +27,7 @@ import com.github.kittinunf.fuel.core.Request;
 import com.github.kittinunf.fuel.core.Response;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
@@ -77,9 +80,9 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Log.d(TAG, "----------> onSuccess");
+                Log.d(TAG, "----------> FACEBOOK onSuccess");
                 mLoginResult = loginResult;
-                //getUserDetailsFromFB(mLoginResult);
+                getUserDetailsFromFB(mLoginResult);
             }
 
             @Override
@@ -129,6 +132,15 @@ public class MainActivity extends AppCompatActivity {
         mSignupText.setOnClickListener(mSignupTextListener);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        callbackManager.onActivityResult(requestCode,
+                resultCode, data);
+
+        Log.d(TAG, "----------> ON ACTIVITY RESULT");
+    }
+
     public void loginUser(String body) throws Exception {
 
         Log.d(TAG, "----------> loginUser");
@@ -158,6 +170,71 @@ public class MainActivity extends AppCompatActivity {
             public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
                 Log.d("loginUser FAILURE : ",response.toString());
                 Toast.makeText(MainActivity.this, "Login or password incorrect.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void getUserDetailsFromFB(LoginResult loginResult) {
+
+        GraphRequest req = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
+            @Override
+            public void onCompleted(JSONObject object, GraphResponse response) {
+
+                try{
+                    String[] strings = object.getString("name").split(" ");
+                    //Log.d(TAG, "----------> FIRSTNAME " + strings[0]);
+                    //Log.d(TAG, "----------> LASTNAME " + strings[1]);
+                    mBody = "{ \"first_name\": \"" + strings[0] + "\",\"last_name\": \"" + strings[1] + "\",\"email\": \"" + object.getString("email") + "\",\"fb_token\": \"" + mLoginResult.getAccessToken().getToken() + "\",\"fb_user_id\": \"" + mLoginResult.getAccessToken().getUserId() + "\" }";
+                    //Log.d(TAG, "----------> BODY " + mBody);
+                    mUrlPicture = "https://graph.facebook.com/" + mLoginResult.getAccessToken().getUserId() + "/picture?type=large";
+                    /*String email =  object.getString("email");
+                    String birthday = object.getString("birthday");
+                    String gender = object.getString("gender");
+                    String name = object.getString("name");
+                    String id = object.getString("id");
+                    String photourl =object.getJSONObject("picture").getJSONObject("data").getString("url");*/
+                    try {
+                        //Log.d(TAG, "----------> BODY BIS :" + mBody);
+                        createUser(mBody);
+                    }
+                    catch (Exception e){
+                        Log.d(TAG, "EXCEPTION ERROR : " + e);
+                    }
+                }
+                catch (JSONException e) {
+                    Log.d(TAG, "EXCEPTION ERROR : " + e);
+                }
+            }
+        });
+        Bundle parameters = new Bundle();
+        parameters.putString("fields", "id,name,email,gender,birthday,picture.type(large)");
+        req.setParameters(parameters);
+        req.executeAsync();
+    }
+
+    public void createUser(String body) throws Exception {
+
+        Fuel.post("http://34.227.142.101:50000/createUser").body(body.getBytes()).responseString(new Handler<String>() {
+            @Override
+            public void success(@NotNull Request request, @NotNull Response response, String s) {
+                Log.d("createUser SUCCESS : ",response.toString());
+                try {
+                    loginUser(mBody);
+                }
+                catch (Exception error) {
+                    Log.d(TAG, "EXCEPTION ERROR : " + error);
+                }
+            }
+
+            @Override
+            public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
+                Log.d("createUser FAILURE: ",response.toString());
+                try {
+                    loginUser(mBody);
+                }
+                catch (Exception error) {
+                    Log.d(TAG, "EXCEPTION ERROR : " + error);
+                }
             }
         });
     }
