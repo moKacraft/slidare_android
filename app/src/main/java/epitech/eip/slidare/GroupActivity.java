@@ -185,7 +185,7 @@ public class GroupActivity extends AppCompatActivity {
             public void success(@NotNull Request request, @NotNull Response response, String s) {
                 Log.d("fetchGroups SUCCESS : ",response.toString());
                 mFirst = false;
-                
+
                 try {
                     JSONObject data = new JSONObject(new String(response.getData()));
                     //Log.d(TAG, "----------> result : "+data.getString("groups"));

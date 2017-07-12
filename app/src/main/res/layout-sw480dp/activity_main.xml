@@ -75,28 +75,15 @@
             android:background="@drawable/edittext_border"
             android:padding="10dp"
             android:inputType="textPassword"
+            android:layout_marginBottom="80dp"
             android:textSize="20dp"
             android:fontFamily="Roboto"/>
-
-        <TextView
-            android:id="@+id/password_forgot"
-            android:layout_height="wrap_content"
-            android:layout_width="400dp"
-            android:layout_below="@+id/password_field"
-            android:layout_centerHorizontal="true"
-            android:text="Forgot password ?"
-            android:textSize="20dp"
-            android:fontFamily="Roboto"
-            android:clickable="true"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="80dp"
-            android:textColor="@color/whiteColor"/>
 
         <Button
             android:id="@+id/btnsignin"
             android:layout_height ="wrap_content"
             android:layout_width ="250dp"
-            android:layout_below="@+id/password_forgot"
+            android:layout_below="@+id/password_field"
             android:background="@color/blue_back"
             android:textAllCaps="false"
             android:text ="Sign in"
