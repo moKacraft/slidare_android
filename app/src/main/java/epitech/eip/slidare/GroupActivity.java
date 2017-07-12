@@ -184,7 +184,8 @@ public class GroupActivity extends AppCompatActivity {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
                 Log.d("fetchGroups SUCCESS : ",response.toString());
-
+                mFirst = false;
+                
                 try {
                     JSONObject data = new JSONObject(new String(response.getData()));
                     //Log.d(TAG, "----------> result : "+data.getString("groups"));
@@ -216,6 +217,16 @@ public class GroupActivity extends AppCompatActivity {
                             } else {
                                 //Log.d(TAG, "----------> NONE");
                                 mCounts.add("0");
+                                if (i == 0 && !group.isNull("name")){
+                                    mGroups.add(mGroupnames.get(i));
+                                    List<String> listTmp = new ArrayList<String>();
+                                    listTmp.add("No contacts");
+                                    mContacts.put(mGroups.get(i), listTmp);
+                                    mGroupListAdapter = new ExpandableListAdapter(mContext, mGroups, mContacts);
+                                    mGroupList.setAdapter(mGroupListAdapter);
+                                    for ( int l = 0; l < mGroupListAdapter.getGroupCount(); l++)
+                                        mGroupList.expandGroup(l);
+                                }
                             }
                         }
                     }
