@@ -45,6 +45,7 @@ public class SettingsActivity extends AppCompatActivity {
     private String mBodyUpdatePassword;
 
     private TextView mLibrary;
+    private TextView mUserEmail;
     private TextView mName;
     private TextView mPseudo;
     private TextView mEmailAddress;
@@ -77,6 +78,7 @@ public class SettingsActivity extends AppCompatActivity {
         mUrlPicture = intent.getStringExtra("fbUrl");
 
         mName = (TextView) findViewById(R.id.profil_name);
+        mUserEmail = (TextView) findViewById(R.id.profil_email);
         mHomeView = (ImageView) findViewById(R.id.ico_home);
         mGroupView = (ImageView) findViewById(R.id.ico_group);
         mProfilView = (ImageView) findViewById(R.id.ico_profil);
@@ -248,6 +250,7 @@ public class SettingsActivity extends AppCompatActivity {
                     mUsername = data.getString("username");
                     mName.setText(data.getString("username"));
                     mEmail = data.getString("email");
+                    mUserEmail.setText(data.getString("email"));
                     try {
                         mPassword = data.getString("password");
                         mUrlPicture = data.getString("profile_picture_url");

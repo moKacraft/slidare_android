@@ -27,7 +27,7 @@
             android:layout_centerHorizontal="true"
             android:gravity="center"
             android:text="Settings"
-            android:textSize="23dp"
+            android:textSize="21dp"
             android:fontFamily="Roboto"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="5dp"
@@ -35,8 +35,8 @@
 
         <ImageView
             android:id="@+id/user"
-            android:layout_height="140dp"
-            android:layout_width="140dp"
+            android:layout_height="130dp"
+            android:layout_width="130dp"
             android:src="@drawable/user"
             android:layout_centerHorizontal="true"
             android:layout_below="@+id/title"
@@ -65,12 +65,24 @@
 
         <TextView
             android:id="@+id/profil_name"
-            android:layout_height="20dp"
+            android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:layout_below="@+id/library"
             android:gravity="center_horizontal"
             android:text="Name"
             android:textSize="20dp"
+            android:fontFamily="Roboto"
+            android:layout_marginTop="5dp"
+            android:textColor="@color/black"/>
+
+        <TextView
+            android:id="@+id/profil_email"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/profil_name"
+            android:gravity="center_horizontal"
+            android:text="Email"
+            android:textSize="16dp"
             android:fontFamily="Roboto"
             android:layout_marginTop="5dp"
             android:textColor="@color/black"/>
@@ -84,7 +96,7 @@
             android:textSize="18dp"
             android:fontFamily="Roboto"
             android:clickable="true"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:layout_marginLeft="40dp"
             android:textColor="@color/grey_light"/>
 
