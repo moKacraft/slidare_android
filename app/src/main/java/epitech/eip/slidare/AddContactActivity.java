@@ -100,7 +100,7 @@ public class AddContactActivity extends AppCompatActivity {
         Map<String, Object> header = new HashMap<>();
         header.put("Authorization", "Bearer "+token);
 
-        Fuel.post("http://54.224.110.79:50000/addContact").header(header).body(body.getBytes()).responseString(new Handler<String>() {
+        Fuel.post("http://34.227.142.101:50000/addContact").header(header).body(body.getBytes()).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
 

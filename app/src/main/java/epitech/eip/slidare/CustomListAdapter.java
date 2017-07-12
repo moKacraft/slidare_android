@@ -55,7 +55,10 @@ public class CustomListAdapter extends BaseAdapter implements ListAdapter, Filte
 
     @Override
     public int getCount() {
-        return mList.size();
+        if (mList != null)
+            return mList.size();
+        else
+            return 0;
     }
 
     @Override

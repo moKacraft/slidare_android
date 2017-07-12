@@ -36,14 +36,13 @@ public class ContactActivity extends AppCompatActivity {
 
     private Context mContext;
 
-    private String mToken;
+    private boolean mFirst = true;
 
-    private String[] userListContacts;
+    private String mToken;
 
     private TextView mGroupSwitch;
 
     private ImageView mHomeView;
-    private ImageView mGroupView;
     private ImageView mProfilView;
     private ImageView mAddContact;
 
@@ -72,7 +71,6 @@ public class ContactActivity extends AppCompatActivity {
 
         mListView = (ListView) findViewById(R.id.listView);
         mHomeView = (ImageView) findViewById(R.id.ico_home);
-        //mGroupView = (ImageView) findViewById(R.id.ico_group);
         mProfilView = (ImageView) findViewById(R.id.ico_profil);
         mAddContact = (ImageView) findViewById(R.id.ico_addContact);
         mGroupSwitch = (TextView) findViewById(R.id.group_off);
@@ -88,14 +86,6 @@ public class ContactActivity extends AppCompatActivity {
                 finish();
             }
         };
-
-        /*View.OnClickListener mGroupViewListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Log.d(TAG, "----------> Contact");
-            }
-        };*/
 
         View.OnClickListener mProfilViewListener = new View.OnClickListener() {
             @Override
@@ -133,7 +123,6 @@ public class ContactActivity extends AppCompatActivity {
         };
 
         mHomeView.setOnClickListener(mHomeViewListener);
-        //mGroupView.setOnClickListener(mGroupViewListener);
         mProfilView.setOnClickListener(mProfilViewListener);
         mAddContact.setOnClickListener(mAddContactListener);
         mGroupSwitch.setOnClickListener(mGroupSwitchListener);
@@ -157,6 +146,21 @@ public class ContactActivity extends AppCompatActivity {
                 return false;
             }
         });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (mFirst == false) {
+            mList = new ArrayList<String>();
+            mAdapter = new CustomListAdapter(mList, mContext, mToken);
+            try {
+                userContacts(mToken);
+            } catch (Exception error) {
+                Log.d(TAG, "EXCEPTION ERROR : " + error);
+            }
+        }
     }
 
     public void userContacts(String token) throws Exception {
@@ -193,12 +197,11 @@ public class ContactActivity extends AppCompatActivity {
                         mList = list;
                     }
                     else {
-                        userListContacts = new String[1];
-                        userListContacts[0] = "0 contacts";
                         Toast.makeText(ContactActivity.this, "You have no contact yet.", Toast.LENGTH_SHORT).show();
                     }
                     mAdapter = new CustomListAdapter(mList, mContext, mToken);
                     mListView.setAdapter(mAdapter);
+                    mFirst = false;
                 } catch (Throwable tx) {
                     tx.printStackTrace();
                 }
