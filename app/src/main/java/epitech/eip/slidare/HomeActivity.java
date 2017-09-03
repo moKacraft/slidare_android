@@ -153,7 +153,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-        mSocket.on("juju@gmail.com", new Emitter.Listener() {
+        mSocket.on("soso@gmail.com", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
                 System.out.println(args[0]);
