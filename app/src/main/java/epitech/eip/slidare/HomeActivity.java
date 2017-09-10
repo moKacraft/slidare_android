@@ -13,6 +13,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.webkit.DownloadListener;
@@ -36,13 +37,28 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
 import epitech.eip.slidare.util.MyWebViewClient;
 import epitech.eip.slidare.util.TcpClient;
+import epitech.eip.slidare.util.encryptUtils;
 import kotlin.text.Charsets;
 
 /**
@@ -56,12 +72,19 @@ public class HomeActivity extends AppCompatActivity {
     private String mToken;
     private String mUrlPicture;
     private ByteArrayOutputStream fileData = new ByteArrayOutputStream();
+    private FileOutputStream fos;
 
     private ImageView mHomeView;
     private ImageView mGroupView;
     private ImageView mProfilView;
     private WebView mMyWebview;
     private String mFileName;
+    private String encFilePath;
+    private String filePath;
+    private String sha1;
+    private String key;
+    private byte[] salt;
+    private byte[] iv;
 
     private Socket mSocket;
     {
@@ -83,27 +106,58 @@ public class HomeActivity extends AppCompatActivity {
                 //here the messageReceived method is implemented
                 public void messageReceived(byte[] message, int messageSize) {
                     if (messageSize <= 0) {
-                        UploadTask uploadTask = mStorage.putBytes(fileData.toByteArray());
-                        uploadTask.addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception exception) {
-                                System.out.println(exception);
-                            }
-                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
-                                System.out.println("SUCCESS");
+                        encryptUtils _crypt = null;
+                        try {
+                            _crypt = new encryptUtils();
+                            _crypt.decryptFile(encFilePath, filePath, sha1, salt, iv, key);
 
-                                mMyWebview.loadUrl(taskSnapshot.getDownloadUrl().toString());
-                                DownloadManager.Request request = new DownloadManager.Request(taskSnapshot.getDownloadUrl());
-                                request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, mFileName);
-                                request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED); // to notify when download is complete
-                                request.allowScanningByMediaScanner();// if you want to be available from media players
-                                DownloadManager manager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-                                manager.enqueue(request);
-                            }
-                        });
+                            InputStream stream = new FileInputStream(new File(filePath));
+                            UploadTask uploadTask = mStorage.putStream(stream);
+//                            UploadTask uploadTask = mStorage.putBytes(fileData.toByteArray());
+                            uploadTask.addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                    System.out.println(exception);
+                                }
+                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                                @Override
+                                public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
+                                    System.out.println("SUCCESS");
+
+                                    mMyWebview.loadUrl(taskSnapshot.getDownloadUrl().toString());
+                                    DownloadManager.Request request = new DownloadManager.Request(taskSnapshot.getDownloadUrl());
+                                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, mFileName);
+                                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED); // to notify when download is complete
+                                    request.allowScanningByMediaScanner();// if you want to be available from media players
+                                    DownloadManager manager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                                    manager.enqueue(request);
+                                }
+                            });
+                        } catch (NoSuchAlgorithmException e) {
+                            e.printStackTrace();
+                        } catch (NoSuchPaddingException e) {
+                            e.printStackTrace();
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        } catch (InvalidKeyException e) {
+                            e.printStackTrace();
+                        } catch (InvalidAlgorithmParameterException e) {
+                            e.printStackTrace();
+                        } catch (IllegalBlockSizeException e) {
+                            e.printStackTrace();
+                        } catch (BadPaddingException e) {
+                            e.printStackTrace();
+                        } catch (InvalidKeySpecException e) {
+                            e.printStackTrace();
+                        }
                     } else {
+                        try {
+                            fos.write(message, 0, messageSize);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                         fileData.write(message, 0, messageSize);
                         toto += messageSize;
                     }
@@ -117,35 +171,6 @@ public class HomeActivity extends AppCompatActivity {
         @Override
         protected void onProgressUpdate(String... values) {
             super.onProgressUpdate(values);
-            //response received from server
-//            if (values[0].equals("FINISHED")) {
-//                UploadTask uploadTask = mStorage.putBytes(fileData.toByteArray());
-//                uploadTask.addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception exception) {
-//                        System.out.println(exception);
-//                    }
-//                }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//                    @Override
-//                    public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
-//                        System.out.println("SUCCESS");
-//
-//                        DownloadManager.Request request = new DownloadManager.Request(taskSnapshot.getDownloadUrl());
-//                        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, mFileName);
-//                        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED); // to notify when download is complete
-//                        request.allowScanningByMediaScanner();// if you want to be available from media players
-//                        DownloadManager manager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-//                        manager.enqueue(request);
-//                    }
-//                });
-//            } else {
-//                fileData.write(values[0].getBytes(), 0, values[0].length());
-//                toto += values[0].length();
-//            }
-//            System.out.println(toto);
-//            Log.d("test", "response " + values[0]);
-            //process server response here....
-
         }
     }
 
@@ -156,12 +181,24 @@ public class HomeActivity extends AppCompatActivity {
         mSocket.on("soso@gmail.com", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
-                System.out.println(args[0]);
-                System.out.println(args[1]);
-                System.out.println(args[2]);
-                System.out.println(args[3]);
-                System.out.println(args[4]);
+                sha1 = (String) args[5];
+                key = (String) args[8];
+                salt = Base64.decode((String) args[6], Base64.DEFAULT);
+                iv = Base64.decode((String) args[7], Base64.DEFAULT);
                 fileData = new ByteArrayOutputStream();
+                try {
+                    File yourEncFile = new File(getApplicationContext().getFilesDir(), (String)args[3]);
+                    File yourFile = new File(getApplicationContext().getFilesDir(), (String)args[4]);
+                    encFilePath = yourEncFile.getPath();
+                    filePath = yourFile.getPath();
+                    yourFile.createNewFile();
+                    yourEncFile.createNewFile();
+                    fos = new FileOutputStream(encFilePath);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 TcpClient.SERVER_IP = "34.227.142.101";
                 TcpClient.SERVER_PORT = Integer.parseInt(args[1].toString());
                 mFileName = args[4].toString();
