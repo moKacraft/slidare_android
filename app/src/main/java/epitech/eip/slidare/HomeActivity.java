@@ -2,6 +2,10 @@ package epitech.eip.slidare;
 
 import android.app.Activity;
 import android.app.DownloadManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -11,6 +15,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
@@ -26,6 +31,11 @@ import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.github.kittinunf.fuel.Fuel;
+import com.github.kittinunf.fuel.core.FuelError;
+import com.github.kittinunf.fuel.core.Handler;
+import com.github.kittinunf.fuel.core.Request;
+import com.github.kittinunf.fuel.core.Response;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
@@ -35,6 +45,11 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -123,6 +138,12 @@ public class HomeActivity extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
                                     System.out.println("SUCCESS");
+                                    sendNotification(getApplicationContext(), "File transfer finished");
+                                    try {
+                                        addFile(taskSnapshot.getDownloadUrl().toString());
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
 
                                     mMyWebview.loadUrl(taskSnapshot.getDownloadUrl().toString());
                                     DownloadManager.Request request = new DownloadManager.Request(taskSnapshot.getDownloadUrl());
@@ -181,6 +202,7 @@ public class HomeActivity extends AppCompatActivity {
         mSocket.on("soso@gmail.com", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
+                sendNotification(getApplicationContext(), "xxx Wants to send you a file");
                 sha1 = (String) args[5];
                 key = (String) args[8];
                 salt = Base64.decode((String) args[6], Base64.DEFAULT);
@@ -314,5 +336,75 @@ public class HomeActivity extends AppCompatActivity {
         mHomeView.setOnClickListener(mHomeViewListener);
         mGroupView.setOnClickListener(mGroupViewListener);
         mProfilView.setOnClickListener(mProfilViewListener);
+        try {
+            getFiles();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    public static void sendNotification(Context ctx, String content) {
+        Intent intent = new Intent(ctx, HomeActivity.class);
+        PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        NotificationCompat.Builder b = new NotificationCompat.Builder(ctx);
+
+        b.setAutoCancel(true)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setWhen(System.currentTimeMillis())
+                .setSmallIcon(R.drawable.slidarelogo)
+                .setContentTitle("File Transfer")
+                .setContentText(content)
+                .setDefaults(Notification.DEFAULT_LIGHTS| Notification.DEFAULT_SOUND)
+                .setContentIntent(contentIntent)
+                .setContentInfo(content);
+
+
+        NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(1, b.build());
+    }
+
+    public void addFile(String file_url) throws Exception {
+
+        Map<String, Object> header = new HashMap<>();
+        header.put("Authorization", "Bearer "+ mToken);
+
+        String body = "{ \"file_url\": \"" + file_url + "\" }";
+
+
+        Fuel.post("http://34.227.142.101:50000/addFileToList").header(header).body(body.getBytes()).responseString(new Handler<String>() {
+            @Override
+            public void success(@NotNull Request request, @NotNull Response response, String s) {
+                Log.d("addContact SUCCESS : ",response.toString());
+            }
+
+            @Override
+            public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
+                Log.d("addContact FAILURE : ",response.toString());
+            }
+        });
+    }
+
+    public void getFiles() throws Exception {
+
+        Map<String, Object> header = new HashMap<>();
+        header.put("Authorization", "Bearer "+ mToken);
+
+        Fuel.get("http://34.227.142.101:50000/getUserFiles").header(header).responseString(new Handler<String>() {
+            @Override
+            public void success(@NotNull Request request, @NotNull Response response, String s) {
+                Log.d("getFiles SUCCESS : ",response.toString());
+                try {
+                    JSONObject data = new JSONObject(new String(response.getData()));
+                    JSONArray fileUrls = data.getJSONArray("file_urls");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
+                Log.d("getFiles FAILURE : ",response.toString());
+            }
+        });
     }
 }
