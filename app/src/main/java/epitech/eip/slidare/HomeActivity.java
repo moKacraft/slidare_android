@@ -28,6 +28,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -45,12 +46,14 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.mvc.imagepicker.ImagePicker;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -58,12 +61,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
+import java.security.spec.InvalidParameterSpecException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -196,9 +201,93 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        try {
+            InputStream is = ImagePicker.getInputStreamFromResult(this, requestCode, resultCode, data);
+            if (is != null) {
+                File file = new File(getCacheDir(), "toEncryt.png");
+                OutputStream out = new FileOutputStream(file);
+                byte[] buf = new byte[1024];
+                int len;
+                while((len=is.read(buf))>0){
+                    out.write(buf,0,len);
+                }
+
+                File encrypted = new File(getCacheDir(), "encrypted");
+                FileOutputStream outFile = new FileOutputStream(encrypted);
+
+                encryptUtils _crypt = new  encryptUtils();
+                String key =  encryptUtils.SHA256("my secret key", 32);
+
+                _crypt.encryptFile(file.toString(), "encrypted", outFile, key);
+
+//                String users[] = new String[1];
+//                users[0] = "soso@gmail.com";
+
+//                String[] users = {"soso@gmail.com"};
+
+                JSONArray users = new JSONArray();
+                users.put("soso@gmail.com");
+
+                mSocket.emit("request file transfer", file.getName(),
+                        encrypted, users, _crypt.get_fileEncryptedName(), file.getName(),
+                        _crypt.get_fileSHA1(), Base64.encode(_crypt.get_fileSalt(), Base64.DEFAULT),
+                        Base64.encode(_crypt.get_fileIV(), Base64.DEFAULT), _crypt.get_fileKey(), file.length());
+
+                System.out.println(_crypt.get_fileSalt());
+                System.out.println( Base64.encode(_crypt.get_fileSalt(), Base64.DEFAULT));
+
+                out.flush();
+                out.close();
+                outFile.flush();
+                outFile.close();
+                is.close();
+            }
+            else {
+                //failed to load file
+            }
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidParameterSpecException e) {
+            e.printStackTrace();
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void onPickImage(View view) {
+        // Click on image button
+        ImagePicker.pickImage(this, "Select your image:");
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
+        final Button button = (Button) findViewById(R.id.button_id);
+        ImagePicker.setMinQuality(600, 600);
+
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                onPickImage(v);
+            }
+        });
+
+
         mSocket.on("soso@gmail.com", new Emitter.Listener() {
             @Override
             public void call(Object... args) {
@@ -230,6 +319,40 @@ public class HomeActivity extends AppCompatActivity {
                 new ConnectTask().execute("".getBytes());
             }
         });
+
+        mSocket.on("server ready", new Emitter.Listener() {
+            @Override
+            public void call(final Object... args) {
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            java.net.Socket sock;
+                            sock = new java.net.Socket("34.227.142.101", (int)args[0]);
+                            OutputStream is = sock.getOutputStream();
+
+                            File arg = new File(getCacheDir(), (String)args[1]);
+
+                            FileInputStream fis = new FileInputStream(arg);
+                            BufferedInputStream bis = new BufferedInputStream(fis);
+                            byte[] buffer = new byte[4096];
+                            int ret;
+                            while ((ret = fis.read(buffer)) > 0) {
+                                is.write(buffer, 0, ret);
+                            }
+                            fis.close();
+                            bis.close();
+                            is.close();
+                            sock.close();
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                    }
+                }).start();
+            }
+        });
+
         mSocket.connect();
         Log.d(TAG, "----------> onCreate");
 

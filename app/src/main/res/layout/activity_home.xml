@@ -9,13 +9,14 @@
     <WebView
         android:id="@+id/my_webview"
         android:layout_width="match_parent"
-        android:layout_height="513dp">
+        android:layout_height="516dp">
     </WebView>
-    <ImageView
-        android:layout_width="50dp"
-        android:background="@color/black"
-        android:layout_height="50dp">
-    </ImageView>
+    <Button
+        android:id="@+id/button_id"
+        android:layout_height="58dp"
+        android:layout_width="wrap_content"
+        android:layout_gravity="bottom|center"
+        android:text="Send" />
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
