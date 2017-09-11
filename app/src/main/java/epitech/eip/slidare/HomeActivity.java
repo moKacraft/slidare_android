@@ -241,6 +241,14 @@ public class HomeActivity extends AppCompatActivity {
         mGroupView = (ImageView) findViewById(R.id.ico_group);
         mProfilView = (ImageView) findViewById(R.id.ico_profil);
         mMyWebview = (WebView) findViewById(R.id.my_webview);
+        ImageView btn = (ImageView) findViewById(R.id.myBtn);
+
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
 
         mMyWebview.setWebViewClient(new MyWebViewClient());
         mMyWebview.getSettings().setJavaScriptEnabled(true);
@@ -250,6 +258,7 @@ public class HomeActivity extends AppCompatActivity {
         mMyWebview.getSettings().setAllowFileAccess(true);
         mMyWebview.getSettings().setLoadWithOverviewMode(true);
         mMyWebview.getSettings().setUseWideViewPort(true);
+
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {

@@ -12,6 +12,7 @@
         android:layout_height="513dp">
     </WebView>
     <ImageView
+        android:id="@+id/myBtn"
         android:layout_width="50dp"
         android:background="@color/black"
         android:layout_height="50dp">
