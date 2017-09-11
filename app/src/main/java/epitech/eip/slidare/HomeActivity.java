@@ -105,6 +105,7 @@ public class HomeActivity extends AppCompatActivity {
     private String key;
     private byte[] salt;
     private byte[] iv;
+    private String transferId;
 
     private Socket mSocket;
     {
@@ -144,6 +145,7 @@ public class HomeActivity extends AppCompatActivity {
                                 public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
                                     System.out.println("SUCCESS");
                                     sendNotification(getApplicationContext(), "File transfer finished");
+                                    mSocket.emit("transfer finished", transferId);
                                     try {
                                         addFile(taskSnapshot.getDownloadUrl().toString());
                                     } catch (Exception e) {
@@ -292,6 +294,7 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void call(Object... args) {
                 sendNotification(getApplicationContext(), "xxx Wants to send you a file");
+                transferId = (String) args[2];
                 sha1 = (String) args[5];
                 key = (String) args[8];
                 salt = Base64.decode((String) args[6], Base64.DEFAULT);
