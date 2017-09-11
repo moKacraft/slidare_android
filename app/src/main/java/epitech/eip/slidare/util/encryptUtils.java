@@ -96,6 +96,7 @@ public class encryptUtils {
     public void encryptFile(
             String toEncryptFileName,
             String encryptedFileName,
+            FileOutputStream encrypted,
             String _encryptionKey)
             throws IOException,
             NoSuchAlgorithmException,
@@ -116,7 +117,8 @@ public class encryptUtils {
         // File to be encrypted SHA1
         _fileSHA1 = SHA1(toEncryptFileName);
         // Encrypted file
-        FileOutputStream outFile = new FileOutputStream(encryptedFileName);
+        //FileOutputStream outFile = new FileOutputStream(encryptedFileName);
+        FileOutputStream outFile = encrypted;
         // Encrypted file filename
         _fileEncryptedName = encryptedFileName;
 
