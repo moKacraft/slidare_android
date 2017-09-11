@@ -1,6 +1,7 @@
 package epitech.eip.slidare;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,8 +21,22 @@ public class SplashActivity extends AppCompatActivity {
 
         Log.d(TAG,"----------> onCreate");
 
-        Intent intent = new Intent(SplashActivity.this,MainActivity.class);
-        startActivity(intent);
-        finish();
+        SharedPreferences settings = getSharedPreferences("USERDATA", 0);
+        String userToken = settings.getString("userToken", null);
+        String urlPicture = settings.getString("fbUrlImage", null);
+
+
+        if (userToken != null) {
+            Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
+            intent.putExtra("token", userToken);
+            intent.putExtra("fbUrlImage", urlPicture);
+            startActivity(intent);
+            finish();
+        } else {
+            Intent intent = new Intent(SplashActivity.this,MainActivity.class);
+            startActivity(intent);
+            finish();
+        }
+
     }
 }

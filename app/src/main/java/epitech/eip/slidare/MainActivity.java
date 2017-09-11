@@ -2,6 +2,7 @@ package epitech.eip.slidare;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     private String mBody;
     private String mToken;
     private String mUrlPicture;
+    private String mId;
 
     private TextView mSignupText;
 
@@ -154,6 +156,15 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject data = new JSONObject(new String(response.getData()));
 
                     mToken = data.getString("token");
+                    mId = data.getString("id");
+
+                    SharedPreferences settings = getSharedPreferences("USERDATA", 0);
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putString("userToken", mToken);
+                    editor.putString("userId", mId);
+                    editor.putString("fbUrlImage", mUrlPicture);
+
+                    editor.apply();
 
                     Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                     intent.putExtra("token", mToken);

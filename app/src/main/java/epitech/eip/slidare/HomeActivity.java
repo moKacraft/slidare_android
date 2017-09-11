@@ -367,14 +367,6 @@ public class HomeActivity extends AppCompatActivity {
         mGroupView = (ImageView) findViewById(R.id.ico_group);
         mProfilView = (ImageView) findViewById(R.id.ico_profil);
         mMyWebview = (WebView) findViewById(R.id.my_webview);
-        ImageView btn = (ImageView) findViewById(R.id.myBtn);
-
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
 
         mMyWebview.setWebViewClient(new MyWebViewClient());
         mMyWebview.getSettings().setJavaScriptEnabled(true);
