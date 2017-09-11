@@ -1,6 +1,7 @@
 package epitech.eip.slidare;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -126,8 +127,18 @@ public class SignupActivity extends AppCompatActivity {
                 try {
                     JSONObject data = new JSONObject(new String(response.getData()));
 
+                    String token = data.getString("token");
+                    String id = data.getString("id");
+
+                    SharedPreferences settings = getSharedPreferences("USERDATA", 0);
+                    SharedPreferences.Editor editor = settings.edit();
+                    editor.putString("userToken", token);
+                    editor.putString("userId", id);
+
+                    editor.apply();
+
                     Intent intent = new Intent(SignupActivity.this, HomeActivity.class);
-                    intent.putExtra("token", data.getString("token"));
+                    intent.putExtra("token", token);
                     startActivity(intent);
                     finish();
                 }

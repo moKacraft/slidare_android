@@ -31,7 +31,6 @@ public class SplashActivity extends AppCompatActivity {
             intent.putExtra("token", userToken);
             intent.putExtra("fbUrlImage", urlPicture);
             startActivity(intent);
-            finish();
         } else {
             Intent intent = new Intent(SplashActivity.this,MainActivity.class);
             startActivity(intent);

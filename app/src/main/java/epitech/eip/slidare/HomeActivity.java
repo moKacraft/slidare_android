@@ -229,7 +229,7 @@ public class HomeActivity extends AppCompatActivity {
 //                String[] users = {"soso@gmail.com"};
 
                 JSONArray users = new JSONArray();
-                users.put("soso@gmail.com");
+                users.put("juju@gmail.com");
 
                 mSocket.emit("request file transfer", file.getName(),
                         encrypted, users, _crypt.get_fileEncryptedName(), file.getName(),
@@ -289,74 +289,75 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-
-        mSocket.on("soso@gmail.com", new Emitter.Listener() {
-            @Override
-            public void call(Object... args) {
-                sendNotification(getApplicationContext(), "xxx Wants to send you a file");
-                transferId = (String) args[2];
-                sha1 = (String) args[5];
-                key = (String) args[8];
-                salt = Base64.decode((String) args[6], Base64.DEFAULT);
-                iv = Base64.decode((String) args[7], Base64.DEFAULT);
-                fileData = new ByteArrayOutputStream();
-                try {
-                    File yourEncFile = new File(getApplicationContext().getFilesDir(), (String)args[3]);
-                    File yourFile = new File(getApplicationContext().getFilesDir(), (String)args[4]);
-                    encFilePath = yourEncFile.getPath();
-                    filePath = yourFile.getPath();
-                    yourFile.createNewFile();
-                    yourEncFile.createNewFile();
-                    fos = new FileOutputStream(encFilePath);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                TcpClient.SERVER_IP = "34.227.142.101";
-                TcpClient.SERVER_PORT = Integer.parseInt(args[1].toString());
-                mFileName = args[4].toString();
-//                FirebaseStorage.getInstance();
-                mStorage = FirebaseStorage.getInstance().getReferenceFromUrl("gs://slidare-c93d1.appspot.com/" + args[4].toString());
-
-                new ConnectTask().execute("".getBytes());
-            }
-        });
-
-        mSocket.on("server ready", new Emitter.Listener() {
-            @Override
-            public void call(final Object... args) {
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        try {
-                            java.net.Socket sock;
-                            sock = new java.net.Socket("34.227.142.101", (int)args[0]);
-                            OutputStream is = sock.getOutputStream();
-
-                            File arg = new File(getCacheDir(), (String)args[1]);
-
-                            FileInputStream fis = new FileInputStream(arg);
-                            BufferedInputStream bis = new BufferedInputStream(fis);
-                            byte[] buffer = new byte[4096];
-                            int ret;
-                            while ((ret = fis.read(buffer)) > 0) {
-                                is.write(buffer, 0, ret);
-                            }
-                            fis.close();
-                            bis.close();
-                            is.close();
-                            sock.close();
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        }
+        if (mSocket.connected() == false) {
+            mSocket.on("tim@gmail.com", new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    sendNotification(getApplicationContext(), "xxx Wants to send you a file");
+                    transferId = (String) args[2];
+                    sha1 = (String) args[5];
+                    key = (String) args[8];
+                    salt = Base64.decode((String) args[6], Base64.DEFAULT);
+                    iv = Base64.decode((String) args[7], Base64.DEFAULT);
+                    fileData = new ByteArrayOutputStream();
+                    try {
+                        File yourEncFile = new File(getApplicationContext().getFilesDir(), (String)args[3]);
+                        File yourFile = new File(getApplicationContext().getFilesDir(), (String)args[4]);
+                        encFilePath = yourEncFile.getPath();
+                        filePath = yourFile.getPath();
+                        yourFile.createNewFile();
+                        yourEncFile.createNewFile();
+                        fos = new FileOutputStream(encFilePath);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                }).start();
-            }
-        });
+                    TcpClient.SERVER_IP = "34.227.142.101";
+                    TcpClient.SERVER_PORT = Integer.parseInt(args[1].toString());
+                    mFileName = args[4].toString();
+//                FirebaseStorage.getInstance();
+                    mStorage = FirebaseStorage.getInstance().getReferenceFromUrl("gs://slidare-c93d1.appspot.com/" + args[4].toString());
 
-        mSocket.connect();
+                    new ConnectTask().execute("".getBytes());
+                }
+            });
+
+            mSocket.on("server ready", new Emitter.Listener() {
+                @Override
+                public void call(final Object... args) {
+
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                java.net.Socket sock;
+                                sock = new java.net.Socket("34.227.142.101", (int)args[0]);
+                                OutputStream is = sock.getOutputStream();
+
+                                File arg = new File(getCacheDir(), (String)args[1]);
+
+                                FileInputStream fis = new FileInputStream(arg);
+                                BufferedInputStream bis = new BufferedInputStream(fis);
+                                byte[] buffer = new byte[4096];
+                                int ret;
+                                while ((ret = fis.read(buffer)) > 0) {
+                                    is.write(buffer, 0, ret);
+                                }
+                                fis.close();
+                                bis.close();
+                                is.close();
+                                sock.close();
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+                    }).start();
+                }
+            });
+
+            mSocket.connect();
+        }
         Log.d(TAG, "----------> onCreate");
 
         Intent intent = getIntent();
@@ -533,5 +534,11 @@ public class HomeActivity extends AppCompatActivity {
                 Log.d("getFiles FAILURE : ",response.toString());
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(TAG, "----------> onDestroy");
     }
 }
