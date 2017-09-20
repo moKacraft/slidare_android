@@ -113,6 +113,7 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
                 Log.d("createUser FAILURE : ",response.toString());
+                Toast.makeText(SignupActivity.this, new String(response.getData()), Toast.LENGTH_SHORT).show();
             }
         });
     }
