@@ -2,6 +2,7 @@ package epitech.eip.slidare;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -212,6 +213,13 @@ public class SettingsActivity extends AppCompatActivity {
         View.OnClickListener mLogoutListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                SharedPreferences settings = getSharedPreferences("USERDATA", 0);
+                SharedPreferences.Editor editor = settings.edit();
+                editor.remove("userToken");
+                editor.remove("userId");
+                editor.remove("fbUrlImage");
+                editor.commit();
 
                 Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
                 startActivity(intent);
