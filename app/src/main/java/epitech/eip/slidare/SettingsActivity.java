@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ import com.github.kittinunf.fuel.core.FuelError;
 import com.github.kittinunf.fuel.core.Handler;
 import com.github.kittinunf.fuel.core.Request;
 import com.github.kittinunf.fuel.core.Response;
+import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
@@ -58,6 +60,7 @@ public class SettingsActivity extends AppCompatActivity {
     private ImageView mGroupView;
     private ImageView mProfilView;
     private ImageView mPictureUrlImage;
+    private ImageButton mPhotoButton;
 
     private EditText mNewUsername;
     private EditText mNewEmail;
@@ -84,8 +87,18 @@ public class SettingsActivity extends AppCompatActivity {
         mGroupView = (ImageView) findViewById(R.id.ico_group);
         mProfilView = (ImageView) findViewById(R.id.ico_profil);
         mLibrary = (TextView) findViewById(R.id.library);
+        mPhotoButton = (ImageButton) findViewById(R.id.camera);
+        Picasso.with(getApplicationContext()).load(R.drawable.camera).fit().into(mPhotoButton);
         mSave = (Button) findViewById(R.id.save);
         mLogout = (TextView) findViewById(R.id.logout);
+
+        View.OnClickListener mPhotoButtonListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "----------> PHOTO BUTTON");
+
+            }
+        };
 
         /*View.OnClickListener mModifyListener = new View.OnClickListener(){
             @Override
@@ -230,6 +243,7 @@ public class SettingsActivity extends AppCompatActivity {
         mHomeView.setOnClickListener(mHomeViewListener);
         mGroupView.setOnClickListener(mGroupViewListener);
         mProfilView.setOnClickListener(mProfilViewListener);
+        mPhotoButton.setOnClickListener(mPhotoButtonListener);
         //mModify.setOnClickListener(mModifyListener);
         mSave.setOnClickListener(mSaveListener);
         mLogout.setOnClickListener(mLogoutListener);
