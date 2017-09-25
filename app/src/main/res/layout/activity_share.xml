@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="epitech.eip.slidare.HomeActivity">
+
+    <LinearLayout
+        android:id="@+id/switch_agenda"
+        android:layout_width="200dp"
+        android:layout_height="30dp"
+        android:background="@drawable/switch_border"
+        android:layout_gravity="top | center"
+        android:layout_marginTop="10dp">
+
+        <TextView
+            android:id="@+id/contact_on"
+            android:layout_height="30dp"
+            android:layout_width="120dp"
+            android:gravity="center"
+            android:text="To a contact"
+            android:textSize="18dp"
+            android:fontFamily="Roboto"
+            android:background="@drawable/contact_left"
+            android:textColor="@color/blue_back"/>
+
+        <TextView
+            android:id="@+id/group_off"
+            android:layout_height="30dp"
+            android:layout_width="120dp"
+            android:gravity="center"
+            android:text="To a group"
+            android:textSize="18dp"
+            android:fontFamily="Roboto"
+            android:background="@drawable/contact_right"
+            android:textColor="@color/whiteColor"/>
+
+    </LinearLayout>
+
+    <WebView
+        android:id="@+id/my_webview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="100dp">
+    </WebView>
+
+</android.support.design.widget.CoordinatorLayout>

@@ -50,7 +50,6 @@
 
     </RelativeLayout>
 
-
     <TextView
         android:id="@+id/entergroup"
         android:layout_height="wrap_content"
