@@ -262,10 +262,10 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    public void onPickImage(View view) {
+    /*public void onPickImage(View view) {
         // Click on image button
         ImagePicker.pickImage(this, "Select your image:");
-    }
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -277,7 +277,10 @@ public class HomeActivity extends AppCompatActivity {
 
         buttonSend.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                onPickImage(v);
+                //onPickImage(v);
+                Intent intent = new Intent(HomeActivity.this, ShareActivity.class);
+                intent.putExtra("token", mToken);
+                startActivity(intent);
             }
         });
 

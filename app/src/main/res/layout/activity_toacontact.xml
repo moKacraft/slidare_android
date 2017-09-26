@@ -8,4 +8,60 @@
     android:background="@color/whiteColor"
     android:id="@+id/toacontact_background">
 
+    <TextView
+        android:id="@+id/tocontact_title"
+        android:layout_height="80dp"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:text="Choose a contact"
+        android:textSize="20dp"
+        android:fontFamily="Roboto"
+        android:textColor="@color/black"/>
+
+    <ScrollView
+        android:id="@+id/scroll_contact"
+        android:layout_width="match_parent"
+        android:layout_height="130dp"
+        android:layout_below="@+id/tocontact_title"
+        android:layout_marginBottom="50dp">
+
+        <ListView
+            android:id="@+id/list_contact"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:choiceMode="singleChoice"
+            android:focusable="true"
+            android:listSelector="@color/grey_snow" />
+
+    </ScrollView>
+
+    <ImageView
+        android:id="@+id/ico_attachment"
+        android:layout_height="35dp"
+        android:layout_width="35dp"
+        android:src="@drawable/attachment"
+        android:layout_below="@+id/scroll_contact"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp"/>
+
+    <ImageView
+        android:id="@+id/attachment"
+        android:layout_height="35dp"
+        android:layout_width="35dp"
+        android:layout_below="@+id/ico_attachment"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp"/>
+
+    <TextView
+        android:id="@+id/send"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:layout_below="@+id/attachment"
+        android:gravity="center"
+        android:text="Send"
+        android:textSize="20dp"
+        android:textColor="@color/whiteColor"
+        android:background="@color/blue_back"
+        android:layout_centerHorizontal="true"/>
+
 </RelativeLayout>

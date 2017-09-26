@@ -39,7 +39,7 @@
     </RelativeLayout>
 
     <LinearLayout
-        android:id="@+id/switch_agenda"
+        android:id="@+id/switch_target"
         android:layout_width="240dp"
         android:layout_height="30dp"
         android:background="@drawable/switch_border"
@@ -47,7 +47,7 @@
         android:layout_marginTop="50dp">
 
         <TextView
-            android:id="@+id/contact_on"
+            android:id="@+id/tocontact"
             android:layout_height="30dp"
             android:layout_width="120dp"
             android:gravity="center"
@@ -58,7 +58,7 @@
             android:textColor="@color/blue_back"/>
 
         <TextView
-            android:id="@+id/group_off"
+            android:id="@+id/togroup"
             android:layout_height="30dp"
             android:layout_width="120dp"
             android:gravity="center"
