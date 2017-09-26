@@ -35,7 +35,7 @@
             android:layout_marginLeft="30dp"/>
 
         <ImageView
-            android:id="@+id/ico_share"
+            android:id="@+id/ico_send"
             android:layout_height="25dp"
             android:layout_width="25dp"
             android:src="@drawable/share"
@@ -51,13 +51,6 @@
         android:layout_height="match_parent"
         android:layout_marginTop="50dp">
     </WebView>
-
-    <Button
-        android:id="@+id/button_id"
-        android:layout_height="58dp"
-        android:layout_width="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:text="Send" />
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"

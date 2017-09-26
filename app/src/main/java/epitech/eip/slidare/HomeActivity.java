@@ -272,10 +272,10 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        final Button button = (Button) findViewById(R.id.button_id);
-        ImagePicker.setMinQuality(600, 600);
+        final ImageView buttonSend = (ImageView) findViewById(R.id.ico_send);
+        //ImagePicker.setMinQuality(600, 600);
 
-        button.setOnClickListener(new View.OnClickListener() {
+        buttonSend.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 onPickImage(v);
             }

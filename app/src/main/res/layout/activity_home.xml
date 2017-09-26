@@ -1,49 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     tools:context="epitech.eip.slidare.HomeActivity">
-
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="vertical"
-        android:background="@color/grey_snow"
-        android:layout_marginTop="0dp"
-        android:id="@+id/top_bar">
-
-        <TextView
-            android:id="@+id/home_title"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:gravity="center"
-            android:text="History"
-            android:textSize="20dp"
-            android:fontFamily="Roboto"
-            android:textColor="@color/black"/>
-
-        <ImageView
-            android:id="@+id/ico_slidare"
-            android:layout_height="35dp"
-            android:layout_width="35dp"
-            android:src="@drawable/slidarelogo"
-            android:gravity="center|left"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="30dp"/>
-
-        <ImageView
-            android:id="@+id/ico_share"
-            android:layout_height="25dp"
-            android:layout_width="25dp"
-            android:src="@drawable/share"
-            android:gravity="center"
-            android:layout_marginTop="12dp"
-            android:layout_marginLeft="330dp"/>
-
-    </RelativeLayout>
 
     <WebView
         android:id="@+id/my_webview"
@@ -51,13 +14,6 @@
         android:layout_height="match_parent"
         android:layout_marginTop="50dp">
     </WebView>
-
-    <Button
-        android:id="@+id/button_id"
-        android:layout_height="58dp"
-        android:layout_width="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:text="Send" />
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
@@ -97,6 +53,44 @@
             android:src="@drawable/new_user"
             android:layout_marginLeft="280dp"
             android:layout_marginTop="-40dp"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="0dp"
+        android:background="@color/grey_snow"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/home_title"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fontFamily="Roboto"
+            android:gravity="center"
+            android:text="History"
+            android:textColor="@color/black"
+            android:textSize="20dp" />
+
+        <ImageView
+            android:id="@+id/ico_slidare"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="30dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center|left"
+            android:src="@drawable/slidarelogo" />
+
+        <ImageView
+            android:id="@+id/ico_send"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginLeft="330dp"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:src="@drawable/share" />
 
     </RelativeLayout>
 
