@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="vertical"
+        android:layout_marginTop="50dp"
         android:id="@+id/top_bar">
 
         <TextView
@@ -21,7 +22,7 @@
             android:layout_width="match_parent"
             android:gravity="center"
             android:text="Share something"
-            android:textSize="20dp"
+            android:textSize="30dp"
             android:fontFamily="Roboto"
             android:textColor="@color/black"/>
 
@@ -31,7 +32,7 @@
             android:layout_width="match_parent"
             android:gravity="center|right"
             android:text="Done"
-            android:textSize="20dp"
+            android:textSize="30dp"
             android:fontFamily="Roboto"
             android:textColor="@color/blue_back"
             android:layout_marginRight="15dp"/>
@@ -44,7 +45,7 @@
         android:layout_height="30dp"
         android:background="@drawable/switch_border"
         android:layout_gravity="top|center"
-        android:layout_marginTop="50dp">
+        android:layout_marginTop="130dp">
 
         <TextView
             android:id="@+id/tocontact"
@@ -74,7 +75,7 @@
         android:id="@+id/my_webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="100dp">
+        android:layout_marginTop="200dp">
     </WebView>
 
 </android.support.design.widget.CoordinatorLayout>
