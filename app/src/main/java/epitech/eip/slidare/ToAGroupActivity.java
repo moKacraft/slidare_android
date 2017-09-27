@@ -41,7 +41,7 @@ public class ToAGroupActivity extends AppCompatActivity {
     private List<String> mEmails;
     private List<String> mIds;
 
-    private CustomListAdapter mGroupListAdapter;
+    private SharingListAdapter mGroupListAdapter;
     private ListView mGroupList;
     private List<String> mList;
 
@@ -65,8 +65,7 @@ public class ToAGroupActivity extends AppCompatActivity {
             Log.d(TAG, "EXCEPTION ERROR : " + error);
         }
 
-        mGroupListAdapter = new CustomListAdapter(mList, mContext, mToken);
-
+        mGroupListAdapter = new SharingListAdapter(mList, mContext, mToken);
         mGroupList = (ListView) findViewById(R.id.list_group);
 
     }
@@ -92,11 +91,12 @@ public class ToAGroupActivity extends AppCompatActivity {
                     mCounts = new ArrayList<String>();
                     if (data.getString("groups").compareTo("null") != 0) {
                         JSONArray groups = data.getJSONArray("groups");
+                        ArrayList<String> list = new ArrayList<String>();
                         for (int i = 0; i < groups.length(); ++i) {
 
                             JSONObject group = groups.getJSONObject(i);
-                            mGroupnames.add(group.getString("name"));
-                            if (!group.isNull("users")) {
+                            list.add(group.getString("name"));
+                            /*if (!group.isNull("users")) {
                                 String ids = group.getString("users").replace("[","").replace("]","").replace("{","").replace("}","");
                                 if (ids.contains(",")){
                                     //Log.d(TAG, "----------> MANY");
@@ -106,12 +106,12 @@ public class ToAGroupActivity extends AppCompatActivity {
                                         mIds.add(tab[j].replace("\"", ""));
                                     }
                                 } else {
-                                    /*//Log.d(TAG, "----------> ONE");
+                                    //Log.d(TAG, "----------> ONE");
                                     mCounts.add("1");
-                                    mIds.add(ids.replace("\"", ""));*/
+                                    mIds.add(ids.replace("\"", ""));
                                 }
                             } else {
-                                /*//Log.d(TAG, "----------> NONE");
+                                //Log.d(TAG, "----------> NONE");
                                 mCounts.add("0");
                                 if (i == 0 && !group.isNull("name")){
                                     mGroups.add(mGroupnames.get(i));
@@ -122,9 +122,10 @@ public class ToAGroupActivity extends AppCompatActivity {
                                     mGroupList.setAdapter(mGroupListAdapter);
                                     for ( int l = 0; l < mGroupListAdapter.getGroupCount(); l++)
                                         mGroupList.expandGroup(l);
-                                }*/
-                            }
+                                }
+                            }*/
                         }
+                        mList = list;
                     }
                     else {
                         Toast.makeText(ToAGroupActivity.this, "You have no group yet.", Toast.LENGTH_SHORT).show();

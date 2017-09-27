@@ -71,11 +71,13 @@
 
     </LinearLayout>
 
-    <WebView
-        android:id="@+id/my_webview"
+    <fragment
+        android:name="epitech.eip.slidare.ToContactFragment"
+        android:id="@+id/tocontact_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="horizontal"
         android:layout_marginTop="200dp">
-    </WebView>
+    </fragment>
 
 </android.support.design.widget.CoordinatorLayout>

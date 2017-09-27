@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="epitech.eip.slidare.HomeActivity">
+    tools:context="epitech.eip.slidare.ShareActivity"
+    android:id="@+id/share_activity">
 
     <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
@@ -70,11 +71,13 @@
 
     </LinearLayout>
 
-    <WebView
-        android:id="@+id/my_webview"
+    <fragment
+        android:name="epitech.eip.slidare.ToContactFragment"
+        android:id="@+id/tocontact_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="horizontal"
         android:layout_marginTop="100dp">
-    </WebView>
+    </fragment>
 
 </android.support.design.widget.CoordinatorLayout>
