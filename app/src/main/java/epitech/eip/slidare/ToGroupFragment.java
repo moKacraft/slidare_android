@@ -19,9 +19,11 @@ import com.github.kittinunf.fuel.core.FuelError;
 import com.github.kittinunf.fuel.core.Handler;
 import com.github.kittinunf.fuel.core.Request;
 import com.github.kittinunf.fuel.core.Response;
+import com.google.android.gms.tasks.Tasks;
 import com.mvc.imagepicker.ImagePicker;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -33,7 +35,7 @@ import java.util.Map;
  * Created by 42350 on 27/09/2017.
  */
 
-public class ToContactFragment extends Fragment {
+public class ToGroupFragment extends Fragment {
 
     static final String TAG = "ToContactFragment";
 
@@ -43,14 +45,14 @@ public class ToContactFragment extends Fragment {
 
     private ImageView mAttachment;
 
-    private SharingListAdapter mAdapter;
-    private ListView mListView;
+    private SharingListAdapter mGroupListAdapter;
+    private ListView mGroupList;
     private List<String> mList;
 
     private String mToken;
 
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_tocontact, container, false);
+        View view = inflater.inflate(R.layout.fragment_togroup, container, false);
 
         Log.d(TAG, "----------> onCreateView");
 
@@ -59,12 +61,12 @@ public class ToContactFragment extends Fragment {
         mToken = intent.getStringExtra("token");
 
         try {
-            userContacts(mToken);
+            fetchGroups(mToken);
         } catch (Exception error) {
-            Log.d(TAG, "EXCEPTION ERROR = " + error);
+            Log.d(TAG, "EXCEPTION ERROR : " + error);
         }
 
-        mListView = (ListView) view.findViewById(R.id.list_contact);
+        mGroupList = (ListView) view.findViewById(R.id.list_group);
 
         mAttachment = (ImageView) view.findViewById(R.id.ico_attachment);
         mAttachment.setOnClickListener(new View.OnClickListener() {
@@ -80,7 +82,7 @@ public class ToContactFragment extends Fragment {
     }
 
     public interface OnItemSelectedListener {
-        public void onContactItemSelected(String link);
+        public void onGroupItemSelected(String link);
     }
 
     @Override
@@ -93,7 +95,7 @@ public class ToContactFragment extends Fragment {
             listener = (OnItemSelectedListener) activity;
         } else {
             throw new ClassCastException(activity.toString()
-                    + " must implement ToContactFragment.OnItemSelectedListener");
+                    + " must implement ToGroupFragment.OnItemSelectedListener");
         }
     }
 
@@ -106,47 +108,38 @@ public class ToContactFragment extends Fragment {
     public void updateDetail() {
 
         String newTime = String.valueOf(System.currentTimeMillis());
-        listener.onContactItemSelected(newTime);
+        listener.onGroupItemSelected(newTime);
     }
 
-    public void userContacts(String token) throws Exception {
-
-        Log.d(TAG, "----------> userContacts");
+    public void fetchGroups(String token) throws Exception {
 
         Map<String, Object> header = new HashMap<>();
         header.put("Authorization", "Bearer "+token);
 
-        Fuel.get("http://34.227.142.101:50000/userContacts").header(header).responseString(new Handler<String>() {
+        Fuel.get("http://34.227.142.101:50000/fetchGroups").header(header).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
-                Log.d("userContacts SUCCESS : ",response.toString());
+                Log.d("fetchGroups SUCCESS : ",response.toString());
 
                 try {
                     JSONObject data = new JSONObject(new String(response.getData()));
-                    //Log.d(TAG, "----------> result : "+data.getString("contacts"));
+                    //Log.d(TAG, "----------> result : "+data.getString("groups"));
 
-                    if (data.getString("contacts").compareTo("null") != 0) {
-                        String result = data.getString("contacts");
-                        String[] tab = result.split(",");
+                    if (data.getString("groups").compareTo("null") != 0) {
+                        JSONArray groups = data.getJSONArray("groups");
                         ArrayList<String> list = new ArrayList<String>();
-                        for (String elem : tab) {
-                            String[] str = elem.split(":");
-                            for (int i = 0; i < (str.length - 1) ; i++) {
-                                if (str[i].toString().equals("\"email\"")) {
-                                    i++;
-                                    str[i]= str[i].replace("\"", "");
-                                    list.add(str[i]);
-                                    //Log.d(TAG, "ELEM = " + str[i]);
-                                }
-                            }
+                        for (int i = 0; i < groups.length(); ++i) {
+
+                            JSONObject group = groups.getJSONObject(i);
+                            list.add(group.getString("name"));
                         }
                         mList = list;
                     }
                     else {
-                        Toast.makeText(mContext, "You have no contact yet.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "You have no group yet.", Toast.LENGTH_SHORT).show();
                     }
-                    mAdapter = new SharingListAdapter(mList, mContext, mToken);
-                    mListView.setAdapter(mAdapter);
+                    mGroupListAdapter = new SharingListAdapter(mList, mContext, mToken);
+                    mGroupList.setAdapter(mGroupListAdapter);
                 } catch (Throwable tx) {
                     tx.printStackTrace();
                 }
@@ -154,7 +147,7 @@ public class ToContactFragment extends Fragment {
 
             @Override
             public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
-                Log.d("userContacts FAILURE : ",response.toString());
+                Log.d("fetchGroups FAILURE : ",response.toString());
             }
         });
     }

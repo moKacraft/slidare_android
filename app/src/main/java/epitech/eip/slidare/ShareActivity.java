@@ -1,8 +1,11 @@
 package epitech.eip.slidare;
 
+import android.app.Fragment;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -12,9 +15,11 @@ import android.widget.TextView;
  * Created by 42350 on 25/09/2017.
  */
 
-public class ShareActivity extends AppCompatActivity implements ToContactFragment.OnItemSelectedListener {
+public class ShareActivity extends AppCompatActivity implements ToContactFragment.OnItemSelectedListener, ToGroupFragment.OnItemSelectedListener {
 
     static final String TAG = "ShareActivity";
+
+    private Context mContext;
 
     private String mToken;
 
@@ -29,10 +34,10 @@ public class ShareActivity extends AppCompatActivity implements ToContactFragmen
 
         Log.d(TAG, "----------> onCreate");
 
+        mContext = getApplicationContext();
+
         Intent intent = getIntent();
         mToken = intent.getStringExtra("token");
-
-        Log.d(TAG, "TOKEN initial = " + mToken);
 
         mToContact = (TextView) findViewById(R.id.tocontact);
         mToGroup = (TextView) findViewById(R.id.togroup);
@@ -41,18 +46,33 @@ public class ShareActivity extends AppCompatActivity implements ToContactFragmen
         View.OnClickListener mToContactListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            Intent intent = new Intent(ShareActivity.this, ToAContactActivity.class);
-            intent.putExtra("token", mToken);
-            startActivity(intent);
+
+                getFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.tocontact_fragment, new ToContactFragment())
+                        .addToBackStack(null)
+                        .commit();
+
+                mToContact.setBackgroundResource(R.drawable.contact_left);
+                mToContact.setTextColor(ContextCompat.getColor(mContext, R.color.blue_back));
+                mToGroup.setBackgroundResource(R.drawable.contact_right);
+                mToGroup.setTextColor(ContextCompat.getColor(mContext, R.color.whiteColor));
             }
         };
 
         View.OnClickListener mToGroupListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            Intent intent = new Intent(ShareActivity.this, ToAGroupActivity.class);
-            intent.putExtra("token", mToken);
-            startActivity(intent);
+
+                getFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.tocontact_fragment, new ToGroupFragment())
+                        .addToBackStack(null)
+                        .commit();
+                mToContact.setBackgroundResource(R.drawable.group_left);
+                mToContact.setTextColor(ContextCompat.getColor(mContext, R.color.whiteColor));
+                mToGroup.setBackgroundResource(R.drawable.group_right);
+                mToGroup.setTextColor(ContextCompat.getColor(mContext, R.color.blue_back));
             }
         };
 
@@ -71,10 +91,24 @@ public class ShareActivity extends AppCompatActivity implements ToContactFragmen
     @Override
     public void onContactItemSelected(String link) {
 
-        ToContactFragment fragment = (ToContactFragment) getFragmentManager().findFragmentById(R.id.tocontact_fragment);
+        Log.d(TAG, "--------> onContactItemSelected");
+
+        /*ToContactFragment fragment = (ToContactFragment) getFragmentManager().findFragmentById(R.id.tocontact_fragment);
 
         if (fragment != null && fragment.isInLayout()) {
             //fragment.setText(link);
-        }
+        }*/
+    }
+
+    @Override
+    public void onGroupItemSelected(String link) {
+
+        Log.d(TAG, "--------> onGroupItemSelected");
+
+        /*ToGroupFragment fragment = (ToGroupFragment) getFragmentManager().findFragmentById(R.id.tocontact_fragment);
+
+        if (fragment != null && fragment.isInLayout()) {
+            //fragment.setText(link);
+        }*/
     }
 }

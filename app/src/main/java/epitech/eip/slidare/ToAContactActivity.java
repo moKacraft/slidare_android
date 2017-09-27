@@ -52,8 +52,6 @@ public class ToAContactActivity extends AppCompatActivity {
         Intent intent = getIntent();
         mToken = intent.getStringExtra("token");
 
-        //mAdapter = new SharingListAdapter(mList, mContext, mToken);
-
         try {
             userContacts(mToken);
         } catch (Exception error) {

@@ -65,7 +65,6 @@ public class ToAGroupActivity extends AppCompatActivity {
             Log.d(TAG, "EXCEPTION ERROR : " + error);
         }
 
-        mGroupListAdapter = new SharingListAdapter(mList, mContext, mToken);
         mGroupList = (ListView) findViewById(R.id.list_group);
 
     }
@@ -130,6 +129,8 @@ public class ToAGroupActivity extends AppCompatActivity {
                     else {
                         Toast.makeText(ToAGroupActivity.this, "You have no group yet.", Toast.LENGTH_SHORT).show();
                     }
+                    mGroupListAdapter = new SharingListAdapter(mList, mContext, mToken);
+                    mGroupList.setAdapter(mGroupListAdapter);
                     /*for (int k = 0; k < mIds.size(); k++) {
                         try {
                             userContact(mIds.get(k), mIds.size(), mToken);
