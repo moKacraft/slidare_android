@@ -22,7 +22,7 @@
             android:layout_width="match_parent"
             android:gravity="center"
             android:text="Share something"
-            android:textSize="30dp"
+            android:textSize="25dp"
             android:fontFamily="Roboto"
             android:textColor="@color/black"/>
 
@@ -32,7 +32,7 @@
             android:layout_width="match_parent"
             android:gravity="center|right"
             android:text="Done"
-            android:textSize="30dp"
+            android:textSize="25dp"
             android:fontFamily="Roboto"
             android:textColor="@color/blue_back"
             android:layout_marginRight="15dp"/>
@@ -45,7 +45,8 @@
         android:layout_height="30dp"
         android:background="@drawable/switch_border"
         android:layout_gravity="top|center"
-        android:layout_marginTop="130dp">
+        android:layout_marginTop="130dp"
+        android:layout_marginBottom="20dp">
 
         <TextView
             android:id="@+id/tocontact"

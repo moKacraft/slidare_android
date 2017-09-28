@@ -16,17 +16,18 @@
         android:text="Choose a group"
         android:textSize="20dp"
         android:fontFamily="Roboto"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black"
+        android:layout_marginTop="20dp"/>
 
     <ListView
         android:id="@+id/list_group"
         android:layout_width="match_parent"
-        android:layout_height="130dp"
+        android:layout_height="200dp"
         android:choiceMode="singleChoice"
         android:layout_below="@+id/togroup_title"
         android:focusable="true"
         android:listSelector="@color/grey_snow"
-        android:layout_marginBottom="50dp"/>
+        android:layout_marginBottom="100dp"/>
 
     <ImageView
         android:id="@+id/ico_attachment"
@@ -36,25 +37,5 @@
         android:layout_below="@+id/list_group"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="50dp"/>
-
-    <ImageView
-        android:id="@+id/attachment"
-        android:layout_height="35dp"
-        android:layout_width="35dp"
-        android:layout_below="@+id/ico_attachment"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="50dp"/>
-
-    <TextView
-        android:id="@+id/send"
-        android:layout_width="100dp"
-        android:layout_height="50dp"
-        android:layout_below="@+id/attachment"
-        android:gravity="center"
-        android:text="Send"
-        android:textSize="20dp"
-        android:textColor="@color/whiteColor"
-        android:background="@color/blue_back"
-        android:layout_centerHorizontal="true"/>
 
 </RelativeLayout>

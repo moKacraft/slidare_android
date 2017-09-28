@@ -49,7 +49,7 @@
             android:src="@drawable/camera"
             android:layout_below="@+id/user"
             android:layout_marginTop="3dp"
-            android:layout_marginLeft="200dp" />
+            android:layout_marginLeft="230dp" />
 
         <TextView
             android:id="@+id/library"
@@ -61,7 +61,7 @@
             android:fontFamily="Roboto"
             android:clickable="true"
             android:textColor="@color/blue_back"
-            android:layout_marginLeft="240dp"/>
+            android:layout_marginLeft="270dp"/>
 
         <TextView
             android:id="@+id/profil_name"
@@ -171,7 +171,7 @@
             android:inputType="textPassword"
             android:fontFamily="sans-serif-condensed"
             android:layout_marginTop="5dp"
-            android:layout_marginLeft="105dp"
+            android:layout_marginLeft="135dp"
             android:textSize="20dp"/>
 
         <EditText
@@ -187,7 +187,7 @@
             android:inputType="textPassword"
             android:fontFamily="sans-serif-condensed"
             android:layout_marginTop="5dp"
-            android:layout_marginLeft="270dp"
+            android:layout_marginLeft="300dp"
             android:textSize="20dp"/>
 
         <Button

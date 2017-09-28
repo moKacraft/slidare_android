@@ -4,10 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,12 +19,9 @@ import com.github.kittinunf.fuel.core.FuelError;
 import com.github.kittinunf.fuel.core.Handler;
 import com.github.kittinunf.fuel.core.Request;
 import com.github.kittinunf.fuel.core.Response;
-import com.github.nkzawa.socketio.client.IO;
-import com.github.nkzawa.socketio.client.Socket;
 import com.mvc.imagepicker.ImagePicker;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -48,7 +42,6 @@ public class ToContactFragment extends Fragment {
     private Context mContext;
 
     private ImageView mAttachment;
-    private TextView mSend;
 
     private SharingListAdapter mAdapter;
     private ListView mListView;
@@ -79,24 +72,15 @@ public class ToContactFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                if (mListView.getCheckedItemPosition() >= -1){
-                    ShareActivity.mEmail = mListView.getItemAtPosition(mListView.getCheckedItemPosition()).toString();
+                if (mListView.getCheckedItemPosition() > -1){
+                    ShareActivity.mEmails.put(mListView.getItemAtPosition(mListView.getCheckedItemPosition()).toString());
+                    ImagePicker.setMinQuality(600, 600);
+                    ImagePicker.pickImage(getActivity(), "Select your image:");
+                } else {
+                    Toast.makeText(mContext, "You must choose a contact first.", Toast.LENGTH_SHORT).show();
                 }
-
-                ImagePicker.setMinQuality(600, 600);
-                ImagePicker.pickImage(getActivity(), "Select your image:");
             }
         });
-
-        /*mSend = (TextView) view.findViewById(R.id.send);
-        mSend.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mListView.getCheckedItemPosition() >= -1){
-                    ShareActivity.mEmail = mListView.getItemAtPosition(mListView.getCheckedItemPosition()).toString();
-                }
-            }
-        });*/
 
         return view;
     }

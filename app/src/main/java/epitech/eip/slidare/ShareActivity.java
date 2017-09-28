@@ -1,10 +1,8 @@
 package epitech.eip.slidare;
 
-import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
@@ -36,8 +34,6 @@ import javax.crypto.NoSuchPaddingException;
 
 import epitech.eip.slidare.util.encryptUtils;
 
-import static com.facebook.FacebookSdk.getCacheDir;
-
 /**
  * Created by 42350 on 25/09/2017.
  */
@@ -48,9 +44,9 @@ public class ShareActivity extends AppCompatActivity implements ToContactFragmen
 
     private Context mContext;
 
-    private String mToken;
+    //private String mToken;
 
-    public static String mEmail;
+    public static JSONArray mEmails = new JSONArray();
 
     private TextView mToContact;
     private TextView mToGroup;
@@ -74,8 +70,8 @@ public class ShareActivity extends AppCompatActivity implements ToContactFragmen
 
         mContext = getApplicationContext();
 
-        Intent intent = getIntent();
-        mToken = intent.getStringExtra("token");
+        //Intent intent = getIntent();
+        //mToken = intent.getStringExtra("token");
 
         mToContact = (TextView) findViewById(R.id.tocontact);
         mToGroup = (TextView) findViewById(R.id.togroup);
@@ -127,9 +123,16 @@ public class ShareActivity extends AppCompatActivity implements ToContactFragmen
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        mEmails = new JSONArray();
+    }
+
+    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        Log.d(TAG, "EMAIL !!!!!!!! = " + mEmail);
+        //Log.d(TAG, "EMAIL !!!!!!!! = " + mEmails);
 
         try {
             InputStream is = ImagePicker.getInputStreamFromResult(mContext, requestCode, resultCode, data);
@@ -150,16 +153,11 @@ public class ShareActivity extends AppCompatActivity implements ToContactFragmen
 
                 _crypt.encryptFile(file.toString(), "encrypted", outFile, key);
 
-                //String users[] = new String[1];
-                //users[0] = mEmail;
-
-                //String[] users = {mEmail};
-
-                JSONArray users = new JSONArray();
-                users.put(mEmail);
+                //JSONArray users = new JSONArray();
+                //users.put(mEmail);
 
                 mSocket.emit("request file transfer", file.getName(),
-                        encrypted, users, _crypt.get_fileEncryptedName(), file.getName(),
+                        encrypted, mEmails, _crypt.get_fileEncryptedName(), file.getName(),
                         _crypt.get_fileSHA1(), Base64.encode(_crypt.get_fileSalt(), Base64.DEFAULT),
                         Base64.encode(_crypt.get_fileIV(), Base64.DEFAULT), _crypt.get_fileKey(), file.length());
 
@@ -202,11 +200,7 @@ public class ShareActivity extends AppCompatActivity implements ToContactFragmen
 
         Log.d(TAG, "--------> onContactItemSelected");
 
-        /*ToContactFragment fragment = (ToContactFragment) getFragmentManager().findFragmentById(R.id.tocontact_fragment);
-
-        if (fragment != null && fragment.isInLayout()) {
-            //fragment.setText(link);
-        }*/
+        /*ToContactFragment fragment = (ToContactFragment) getFragmentManager().findFragmentById(R.id.tocontact_fragment);*/
     }
 
     @Override
@@ -214,10 +208,6 @@ public class ShareActivity extends AppCompatActivity implements ToContactFragmen
 
         Log.d(TAG, "--------> onGroupItemSelected");
 
-        /*ToGroupFragment fragment = (ToGroupFragment) getFragmentManager().findFragmentById(R.id.tocontact_fragment);
-
-        if (fragment != null && fragment.isInLayout()) {
-            //fragment.setText(link);
-        }*/
+        /*ToGroupFragment fragment = (ToGroupFragment) getFragmentManager().findFragmentById(R.id.tocontact_fragment);*/
     }
 }

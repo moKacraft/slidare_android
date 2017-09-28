@@ -87,14 +87,6 @@
             android:name=".ShareActivity"
             android:theme="@style/AppTheme.PopupEdit">
         </activity>
-        <activity
-            android:name=".ToAContactActivity"
-            android:theme="@style/AppTheme.PopupEdit">
-        </activity>
-        <activity
-            android:name=".ToAGroupActivity"
-            android:theme="@style/AppTheme.PopupEdit">
-        </activity>
     </application>
 
 </manifest>
