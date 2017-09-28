@@ -162,7 +162,7 @@ public class SettingsActivity extends AppCompatActivity {
             Log.d(TAG, "----------> SAVE");
 
             mNewUsername = (EditText) findViewById(R.id.username_setting);
-            mNewEmail = (EditText) findViewById(R.id.email_setting);
+            //mNewEmail = (EditText) findViewById(R.id.email_setting);
             mNewPassword = (EditText) findViewById(R.id.password_new);
             mCurrentPassword = (EditText) findViewById(R.id.password_current);
 
@@ -175,7 +175,7 @@ public class SettingsActivity extends AppCompatActivity {
             //Log.d("Real Password :", "value = " + mPassword);
 
             String username = mNewUsername.getText().toString();
-            String email = mNewEmail.getText().toString();
+            //String email = mNewEmail.getText().toString();
             String currentPassword = mCurrentPassword.getText().toString();
             String newPassword = mNewPassword.getText().toString();
 
@@ -190,7 +190,7 @@ public class SettingsActivity extends AppCompatActivity {
                 }
             }
 
-            if (mEmail.compareTo(email) != 0) {
+            /*if (mEmail.compareTo(email) != 0) {
 
                 mBodyUpdateEmail = "{ \"email\": \"" + email + "\" }";
                 //Log.d("TEST = ", mBodyUpdateEmail);
@@ -199,7 +199,7 @@ public class SettingsActivity extends AppCompatActivity {
                 } catch (Exception error) {
                     Log.d(TAG, "EXCEPTION ERROR : " + error);
                 }
-            }
+            }*/
 
             if (mPassword.compareTo(currentPassword) == 0) {
 
@@ -271,7 +271,7 @@ public class SettingsActivity extends AppCompatActivity {
 
                     mUsername = data.getString("username");
                     mName.setText(data.getString("username"));
-                    mEmail = data.getString("email");
+                    //mEmail = data.getString("email");
                     mUserEmail.setText(data.getString("email"));
                     try {
                         mPassword = data.getString("password");
@@ -283,12 +283,12 @@ public class SettingsActivity extends AppCompatActivity {
                     mToken = data.getString("token");
 
                     mPseudo = (TextView) findViewById(R.id.username_setting);
-                    mEmailAddress = (TextView) findViewById(R.id.email_setting);
+                    //mEmailAddress = (TextView) findViewById(R.id.email_setting);
                     mPasswordLabel = (TextView) findViewById(R.id.password_current);
                     mPasswordNewLabel = (TextView) findViewById(R.id.password_new);
                     mPictureUrlImage = (ImageView) findViewById(R.id.user);
                     mPseudo.setText(mUsername);
-                    mEmailAddress.setText(mEmail);
+                    //mEmailAddress.setText(mEmail);
                     if (mPassword == null) {
                         mPasswordLabel.setVisibility(View.INVISIBLE);
                         mPasswordNewLabel.setVisibility(View.INVISIBLE);
