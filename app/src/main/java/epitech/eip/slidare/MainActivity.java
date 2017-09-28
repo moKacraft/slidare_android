@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
     private String mId;
 
     private TextView mSignupText;
+    private TextView mForget;
 
     private EditText mEmailEditText;
     private EditText mPasswordEditText;
@@ -70,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         mEmailEditText = (EditText) findViewById(R.id.email_field);
         mPasswordEditText = (EditText) findViewById(R.id.password_field);
         mBtnSignin = (Button) findViewById(R.id.btnsignin);
+        mForget = (TextView) findViewById(R.id.forget);
         mSignupText = (TextView) findViewById(R.id.signup_text);
         SpannableString content = new SpannableString("No account ? Sign up");
         content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
@@ -130,6 +132,15 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
+        View.OnClickListener mForgetListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MainActivity.this, ForgetActivity.class);
+                startActivity(intent);
+            }
+        };
+
+        mForget.setOnClickListener(mForgetListener);
         mBtnSignin.setOnClickListener(mSigninListener);
         mSignupText.setOnClickListener(mSignupTextListener);
     }

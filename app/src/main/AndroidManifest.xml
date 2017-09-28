@@ -87,6 +87,10 @@
             android:name=".ShareActivity"
             android:theme="@style/AppTheme.PopupEdit">
         </activity>
+        <activity
+            android:name=".ForgetActivity"
+            android:theme="@style/AppTheme.PopupEdit">
+        </activity>
     </application>
 
 </manifest>

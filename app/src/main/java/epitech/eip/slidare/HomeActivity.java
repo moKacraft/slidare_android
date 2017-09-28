@@ -89,6 +89,7 @@ public class HomeActivity extends AppCompatActivity {
     private ImageView mHomeView;
     private ImageView mGroupView;
     private ImageView mProfilView;
+    private ImageView mShare;
     private WebView mMyWebview;
     private String mFileName;
     private String encFilePath;
@@ -262,59 +263,42 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    /*public void onPickImage(View view) {
-        // Click on image button
-        ImagePicker.pickImage(this, "Select your image:");
-    }*/
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        final ImageView buttonSend = (ImageView) findViewById(R.id.ico_send);
-        //ImagePicker.setMinQuality(600, 600);
-
-        buttonSend.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                //onPickImage(v);
-                Intent intent = new Intent(HomeActivity.this, ShareActivity.class);
-                intent.putExtra("token", mToken);
-                startActivity(intent);
-            }
-        });
-
         if (mSocket.connected() == false) {
             mSocket.on("tim@gmail.com", new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                    sendNotification(getApplicationContext(), "xxx Wants to send you a file");
-                    transferId = (String) args[2];
-                    sha1 = (String) args[5];
-                    key = (String) args[8];
-                    salt = Base64.decode((String) args[6], Base64.DEFAULT);
-                    iv = Base64.decode((String) args[7], Base64.DEFAULT);
-                    fileData = new ByteArrayOutputStream();
-                    try {
-                        File yourEncFile = new File(getApplicationContext().getFilesDir(), (String)args[3]);
-                        File yourFile = new File(getApplicationContext().getFilesDir(), (String)args[4]);
-                        encFilePath = yourEncFile.getPath();
-                        filePath = yourFile.getPath();
-                        yourFile.createNewFile();
-                        yourEncFile.createNewFile();
-                        fos = new FileOutputStream(encFilePath);
-                    } catch (FileNotFoundException e) {
-                        e.printStackTrace();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    TcpClient.SERVER_IP = "34.227.142.101";
-                    TcpClient.SERVER_PORT = Integer.parseInt(args[1].toString());
-                    mFileName = args[4].toString();
+                sendNotification(getApplicationContext(), "xxx Wants to send you a file");
+                transferId = (String) args[2];
+                sha1 = (String) args[5];
+                key = (String) args[8];
+                salt = Base64.decode((String) args[6], Base64.DEFAULT);
+                iv = Base64.decode((String) args[7], Base64.DEFAULT);
+                fileData = new ByteArrayOutputStream();
+                try {
+                    File yourEncFile = new File(getApplicationContext().getFilesDir(), (String)args[3]);
+                    File yourFile = new File(getApplicationContext().getFilesDir(), (String)args[4]);
+                    encFilePath = yourEncFile.getPath();
+                    filePath = yourFile.getPath();
+                    yourFile.createNewFile();
+                    yourEncFile.createNewFile();
+                    fos = new FileOutputStream(encFilePath);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                TcpClient.SERVER_IP = "34.227.142.101";
+                TcpClient.SERVER_PORT = Integer.parseInt(args[1].toString());
+                mFileName = args[4].toString();
 //                FirebaseStorage.getInstance();
-                    mStorage = FirebaseStorage.getInstance().getReferenceFromUrl("gs://slidare-c93d1.appspot.com/" + args[4].toString());
+                mStorage = FirebaseStorage.getInstance().getReferenceFromUrl("gs://slidare-c93d1.appspot.com/" + args[4].toString());
 
-                    new ConnectTask().execute("".getBytes());
+                new ConnectTask().execute("".getBytes());
                 }
             });
 
@@ -362,6 +346,7 @@ public class HomeActivity extends AppCompatActivity {
         mHomeView = (ImageView) findViewById(R.id.ico_home);
         mGroupView = (ImageView) findViewById(R.id.ico_group);
         mProfilView = (ImageView) findViewById(R.id.ico_profil);
+        mShare = (ImageView) findViewById(R.id.ico_send);
         mMyWebview = (WebView) findViewById(R.id.my_webview);
 
         mMyWebview.setWebViewClient(new MyWebViewClient());
@@ -456,9 +441,19 @@ public class HomeActivity extends AppCompatActivity {
             }
         };
 
+        View.OnClickListener mSendListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, ShareActivity.class);
+                intent.putExtra("token", mToken);
+                startActivity(intent);
+            }
+        };
+
         mHomeView.setOnClickListener(mHomeViewListener);
         mGroupView.setOnClickListener(mGroupViewListener);
         mProfilView.setOnClickListener(mProfilViewListener);
+        mShare.setOnClickListener(mSendListener);
         try {
             getFiles();
         } catch (Exception e) {
