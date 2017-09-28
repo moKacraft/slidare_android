@@ -44,6 +44,7 @@ public class ToGroupFragment extends Fragment {
     private Context mContext;
 
     private ImageView mAttachment;
+    private TextView mSend;
 
     private SharingListAdapter mGroupListAdapter;
     private ListView mGroupList;
@@ -75,6 +76,16 @@ public class ToGroupFragment extends Fragment {
             public void onClick(View v) {
 
                 ImagePicker.pickImage(getActivity(), "Select your image:");
+            }
+        });
+
+        mSend = (TextView) view.findViewById(R.id.send);
+        mSend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mGroupList.getCheckedItemPosition() >= -1){
+                    mGroupList.getItemAtPosition(mGroupList.getCheckedItemPosition()).toString();
+                }
             }
         });
 

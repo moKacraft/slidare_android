@@ -7,9 +7,36 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import com.github.nkzawa.socketio.client.IO;
+import com.github.nkzawa.socketio.client.Socket;
+import com.mvc.imagepicker.ImagePicker;
+
+import org.json.JSONArray;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.InvalidParameterSpecException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+
+import epitech.eip.slidare.util.encryptUtils;
+
+import static com.facebook.FacebookSdk.getCacheDir;
 
 /**
  * Created by 42350 on 25/09/2017.
@@ -23,9 +50,20 @@ public class ShareActivity extends AppCompatActivity implements ToContactFragmen
 
     private String mToken;
 
+    public static String mEmail;
+
     private TextView mToContact;
     private TextView mToGroup;
     private TextView mDone;
+
+    private Socket mSocket;
+    {
+        try {
+            mSocket = IO.socket("http://34.227.142.101:8090");
+        } catch (URISyntaxException e) {
+            Log.d(TAG, "SYNTAX EXCEPTION = " + e);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +124,77 @@ public class ShareActivity extends AppCompatActivity implements ToContactFragmen
         mToContact.setOnClickListener(mToContactListener);
         mToGroup.setOnClickListener(mToGroupListener);
         mDone.setOnClickListener(mDoneListener);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        Log.d(TAG, "EMAIL !!!!!!!! = " + mEmail);
+
+        try {
+            InputStream is = ImagePicker.getInputStreamFromResult(mContext, requestCode, resultCode, data);
+            if (is != null) {
+                File file = new File(getCacheDir(), "toEncryt.png");
+                OutputStream out = new FileOutputStream(file);
+                byte[] buf = new byte[1024];
+                int len;
+                while((len=is.read(buf))>0){
+                    out.write(buf,0,len);
+                }
+
+                File encrypted = new File(getCacheDir(), "encrypted");
+                FileOutputStream outFile = new FileOutputStream(encrypted);
+
+                encryptUtils _crypt = new  encryptUtils();
+                String key =  encryptUtils.SHA256("my secret key", 32);
+
+                _crypt.encryptFile(file.toString(), "encrypted", outFile, key);
+
+                //String users[] = new String[1];
+                //users[0] = mEmail;
+
+                //String[] users = {mEmail};
+
+                JSONArray users = new JSONArray();
+                users.put(mEmail);
+
+                mSocket.emit("request file transfer", file.getName(),
+                        encrypted, users, _crypt.get_fileEncryptedName(), file.getName(),
+                        _crypt.get_fileSHA1(), Base64.encode(_crypt.get_fileSalt(), Base64.DEFAULT),
+                        Base64.encode(_crypt.get_fileIV(), Base64.DEFAULT), _crypt.get_fileKey(), file.length());
+
+                System.out.println(_crypt.get_fileSalt());
+                System.out.println( Base64.encode(_crypt.get_fileSalt(), Base64.DEFAULT));
+
+                out.flush();
+                out.close();
+                outFile.flush();
+                outFile.close();
+                is.close();
+            }
+            else {
+                //failed to load file
+            }
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidParameterSpecException e) {
+            e.printStackTrace();
+        } catch (InvalidKeySpecException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

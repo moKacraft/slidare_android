@@ -2,10 +2,12 @@ package epitech.eip.slidare;
 
 import android.content.Context;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
@@ -61,6 +63,19 @@ public class SharingListAdapter extends BaseAdapter implements ListAdapter {
 
         final TextView listItemText = (TextView)view.findViewById(R.id.list_item_text);
         listItemText.setText(mList.get(position));
+
+        /*TextView sendButton = (TextView) parent.findViewById(R.id.send);
+        sendButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+
+                String body = mList.get(position);
+
+                Log.d(TAG, "SEND = " + body);
+
+                notifyDataSetChanged();
+            }
+        });*/
 
         return view;
     }
