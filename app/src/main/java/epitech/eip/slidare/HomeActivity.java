@@ -56,7 +56,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
@@ -514,6 +516,9 @@ public class HomeActivity extends AppCompatActivity {
                 try {
                     JSONObject data = new JSONObject(new String(response.getData()));
                     JSONArray fileUrls = data.getJSONArray("file_urls");
+
+                    String urlStr = fileUrls.toString().replace("[\"", "").replace("\"]", "").replaceAll("\\\\", "");
+                    mMyWebview.loadDataWithBaseURL(null, "<html><head></head><body><table style=\"width:100%; height:100%;\"><tr><td style=\"vertical-align:middle;\"><img src=\"" + urlStr + "\"></td></tr></table></body></html>", "html/css", "utf-8", null);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
