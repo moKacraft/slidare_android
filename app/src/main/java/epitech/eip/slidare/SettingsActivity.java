@@ -19,13 +19,25 @@ import com.github.kittinunf.fuel.core.FuelError;
 import com.github.kittinunf.fuel.core.Handler;
 import com.github.kittinunf.fuel.core.Request;
 import com.github.kittinunf.fuel.core.Response;
+import com.mvc.imagepicker.ImagePicker;
 import com.squareup.picasso.Picasso;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
+import java.io.File;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+import java.security.spec.InvalidParameterSpecException;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 /**
  * Created by ferrei_e on 13/02/2017.
@@ -59,7 +71,7 @@ public class SettingsActivity extends AppCompatActivity {
     private ImageView mHomeView;
     private ImageView mGroupView;
     private ImageView mProfilView;
-    private ImageView mPictureUrlImage;
+    private ImageView mUserImage;
     private ImageButton mPhotoButton;
 
     private EditText mNewUsername;
@@ -89,6 +101,8 @@ public class SettingsActivity extends AppCompatActivity {
         mLibrary = (TextView) findViewById(R.id.library);
         mPhotoButton = (ImageButton) findViewById(R.id.camera);
         Picasso.with(getApplicationContext()).load(R.drawable.camera).fit().into(mPhotoButton);
+        mUserImage = (ImageView) findViewById(R.id.user_image);
+        //Picasso.with(getApplicationContext()).load("https://pbs.twimg.com/profile_images/2234415184/Fane_Din_Babane.jpg").fit().into(mUserImage);
         mSave = (Button) findViewById(R.id.save);
         mLogout = (TextView) findViewById(R.id.logout);
 
@@ -240,10 +254,18 @@ public class SettingsActivity extends AppCompatActivity {
             }
         };
 
+        View.OnClickListener mSearchLibraryListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ImagePicker.pickImage(SettingsActivity.this, "Select your image:");
+            }
+        };
+
         mHomeView.setOnClickListener(mHomeViewListener);
         mGroupView.setOnClickListener(mGroupViewListener);
         mProfilView.setOnClickListener(mProfilViewListener);
         mPhotoButton.setOnClickListener(mPhotoButtonListener);
+        mLibrary.setOnClickListener(mSearchLibraryListener);
         //mModify.setOnClickListener(mModifyListener);
         mSave.setOnClickListener(mSaveListener);
         mLogout.setOnClickListener(mLogoutListener);
@@ -276,6 +298,7 @@ public class SettingsActivity extends AppCompatActivity {
                     try {
                         mPassword = data.getString("password");
                         mUrlPicture = data.getString("profile_picture_url");
+                        Picasso.with(getApplicationContext()).load(mUrlPicture).fit().into(mUserImage);
                     }
                     catch (Exception error){
                         Log.d("NO PICTURE OR PWD : ", error.toString());
@@ -286,7 +309,6 @@ public class SettingsActivity extends AppCompatActivity {
                     //mEmailAddress = (TextView) findViewById(R.id.email_setting);
                     mPasswordLabel = (TextView) findViewById(R.id.password_current);
                     mPasswordNewLabel = (TextView) findViewById(R.id.password_new);
-                    mPictureUrlImage = (ImageView) findViewById(R.id.user);
                     mPseudo.setText(mUsername);
                     //mEmailAddress.setText(mEmail);
                     if (mPassword == null) {
@@ -295,9 +317,6 @@ public class SettingsActivity extends AppCompatActivity {
                     } else
                         mPasswordLabel.setText(mPassword);
                     mPasswordNewLabel.setText("");
-                    /*if (mUrlPicture.compareTo("") != 0) {
-                        new DownloadImageTask((ImageView) findViewById(R.id.user)).execute(mUrlPicture);
-                    }*/
                 } catch (Throwable tx) {
                     tx.printStackTrace();
                 }
@@ -422,5 +441,19 @@ public class SettingsActivity extends AppCompatActivity {
                 Toast.makeText(SettingsActivity.this, "Wrong password provided.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        try {
+            String url = ImagePicker.getImagePathFromResult(this, requestCode, resultCode, data);
+
+            Log.d(TAG, "TEST = " +  url);
+
+            Picasso.with(getApplicationContext()).load(new File(url)).fit().into(mUserImage);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

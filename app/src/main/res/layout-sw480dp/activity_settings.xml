@@ -34,7 +34,7 @@
             android:textColor="@color/blue_back"/>
 
         <ImageView
-            android:id="@+id/user"
+            android:id="@+id/user_image"
             android:layout_height="150dp"
             android:layout_width="150dp"
             android:src="@drawable/user"
@@ -47,7 +47,7 @@
             android:layout_height="20dp"
             android:layout_width="20dp"
             android:src="@drawable/camera"
-            android:layout_below="@+id/user"
+            android:layout_below="@+id/user_image"
             android:layout_marginTop="3dp"
             android:layout_marginLeft="230dp" />
 
@@ -55,7 +55,7 @@
             android:id="@+id/library"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_below="@+id/user"
+            android:layout_below="@+id/user_image"
             android:text="Library"
             android:textSize="22dp"
             android:fontFamily="Roboto"
