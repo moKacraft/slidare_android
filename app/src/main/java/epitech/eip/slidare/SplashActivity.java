@@ -25,17 +25,15 @@ public class SplashActivity extends AppCompatActivity {
         String userToken = settings.getString("userToken", null);
         String urlPicture = settings.getString("fbUrlImage", null);
 
-
         if (userToken != null) {
             Intent intent = new Intent(SplashActivity.this, HomeActivity.class);
             intent.putExtra("token", userToken);
             intent.putExtra("fbUrlImage", urlPicture);
             startActivity(intent);
         } else {
-            Intent intent = new Intent(SplashActivity.this,MainActivity.class);
+            Intent intent = new Intent(SplashActivity.this, MainActivity.class);
             startActivity(intent);
             finish();
         }
-
     }
 }
