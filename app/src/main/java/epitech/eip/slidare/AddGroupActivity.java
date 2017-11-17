@@ -100,7 +100,7 @@ public class AddGroupActivity extends AppCompatActivity {
         Map<String, Object> header = new HashMap<>();
         header.put("Authorization", "Bearer "+token);
 
-        Fuel.post("http://34.227.142.101:50000/createGroup").header(header).body(body.getBytes()).responseString(new Handler<String>() {
+        Fuel.post("http://34.238.153.180:50000/createGroup").header(header).body(body.getBytes()).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
 

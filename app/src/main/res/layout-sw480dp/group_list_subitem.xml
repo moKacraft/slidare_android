@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
@@ -15,4 +15,14 @@
         android:paddingBottom="5dp"
         android:textColor="@color/black"/>
 
-</LinearLayout>
+    <ImageView
+        android:id="@+id/delete_btn"
+        android:layout_width="15dp"
+        android:layout_height="15dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="20dp"
+        android:src="@drawable/cross"
+        android:focusable="false"/>
+
+</RelativeLayout>

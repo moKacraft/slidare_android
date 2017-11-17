@@ -98,7 +98,7 @@ public class HomeActivity extends AppCompatActivity {
     private Socket mSocket;
     {
         try {
-            mSocket = IO.socket("http://34.227.142.101:8090");
+            mSocket = IO.socket("http://34.238.153.180:8090");
         } catch (URISyntaxException e) {}
     }
     TcpClient mTcpClient;
@@ -287,7 +287,7 @@ public class HomeActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                TcpClient.SERVER_IP = "34.227.142.101";
+                TcpClient.SERVER_IP = "34.238.153.180";
                 TcpClient.SERVER_PORT = Integer.parseInt(args[1].toString());
                 mFileName = args[4].toString();
 //                FirebaseStorage.getInstance();
@@ -306,7 +306,7 @@ public class HomeActivity extends AppCompatActivity {
                         public void run() {
                             try {
                                 java.net.Socket sock;
-                                sock = new java.net.Socket("34.227.142.101", (int)args[0]);
+                                sock = new java.net.Socket("34.238.153.180", (int)args[0]);
                                 OutputStream is = sock.getOutputStream();
 
                                 File arg = new File(getCacheDir(), (String)args[1]);
@@ -486,7 +486,7 @@ public class HomeActivity extends AppCompatActivity {
         String body = "{ \"file_url\": \"" + file_url + "\" }";
 
 
-        Fuel.post("http://34.227.142.101:50000/addFileToList").header(header).body(body.getBytes()).responseString(new Handler<String>() {
+        Fuel.post("http://34.238.153.180:50000/addFileToList").header(header).body(body.getBytes()).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
                 Log.d("addContact SUCCESS : ",response.toString());
@@ -504,7 +504,7 @@ public class HomeActivity extends AppCompatActivity {
         Map<String, Object> header = new HashMap<>();
         header.put("Authorization", "Bearer "+ mToken);
 
-        Fuel.get("http://34.227.142.101:50000/getUserFiles").header(header).responseString(new Handler<String>() {
+        Fuel.get("http://34.238.153.180:50000/getUserFiles").header(header).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
                 Log.d("getFiles SUCCESS : ",response.toString());

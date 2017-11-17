@@ -132,7 +132,7 @@ public class AddContactToGroupActivity extends AppCompatActivity {
         Map<String, Object> header = new HashMap<>();
         header.put("Authorization", "Bearer "+token);
 
-        Fuel.get("http://34.227.142.101:50000/fetchGroups").header(header).responseString(new Handler<String>() {
+        Fuel.get("http://34.238.153.180:50000/fetchGroups").header(header).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
                 Log.d("fetchGroups SUCCESS : ",response.toString());
@@ -182,7 +182,7 @@ public class AddContactToGroupActivity extends AppCompatActivity {
         Map<String, Object> header = new HashMap<>();
         header.put("Authorization", "Bearer "+token);
 
-        Fuel.get("http://34.227.142.101:50000/userContacts").header(header).responseString(new Handler<String>() {
+        Fuel.get("http://34.238.153.180:50000/userContacts").header(header).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
                 Log.d("userContacts SUCCESS : ",response.toString());
@@ -247,7 +247,7 @@ public class AddContactToGroupActivity extends AppCompatActivity {
         Map<String, Object> header = new HashMap<>();
         header.put("Authorization", "Bearer "+token);
 
-        Fuel.put("http://34.227.142.101:50000/addToGroup/" + group).header(header).body(body.getBytes()).responseString(new Handler<String>() {
+        Fuel.put("http://34.238.153.180:50000/addToGroup/" + group).header(header).body(body.getBytes()).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
 
@@ -269,7 +269,7 @@ public class AddContactToGroupActivity extends AppCompatActivity {
         Map<String, Object> header = new HashMap<>();
         header.put("Authorization", "Bearer "+token);
 
-        Fuel.delete("http://34.227.142.101:50000/removeGroup/" + group).header(header).responseString(new Handler<String>() {
+        Fuel.delete("http://34.238.153.180:50000/removeGroup/" + group).header(header).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
 

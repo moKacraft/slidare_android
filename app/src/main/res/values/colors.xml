@@ -7,8 +7,10 @@
     <color name="whiteColor">#FFFFFF</color>
     <color name="blue_back">#00BFFF</color>
     <color name="grey_light">#C0C0C0</color>
-    <color name="blue_light">#B0E0E6</color>
+    <color name="blue_powder">#B0E0E6</color>
     <color name="black">#000000</color>
     <color name="grey_snow">#EFEFEF</color>
     <color name="red">#FF0000</color>
+    <color name="grey_dc">#dcdcdc</color>
+    <color name="blue_light">#ADD8E6</color>
 </resources>

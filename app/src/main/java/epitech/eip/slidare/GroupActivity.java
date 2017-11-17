@@ -166,7 +166,7 @@ public class GroupActivity extends AppCompatActivity {
         if (mFirst == false) {
             mGroups = new ArrayList<String>();
             mContacts = new HashMap<String, List<String>>();
-            mGroupListAdapter = new ExpandableListAdapter(mContext, mGroups, mContacts);
+            mGroupListAdapter = new ExpandableListAdapter(mContext, mGroups, mContacts, mToken);
             try {
                 fetchGroups(mToken);
             } catch (Exception error) {
@@ -180,7 +180,7 @@ public class GroupActivity extends AppCompatActivity {
         Map<String, Object> header = new HashMap<>();
         header.put("Authorization", "Bearer "+token);
 
-        Fuel.get("http://34.227.142.101:50000/fetchGroups").header(header).responseString(new Handler<String>() {
+        Fuel.get("http://34.238.153.180:50000/fetchGroups").header(header).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
                 Log.d("fetchGroups SUCCESS : ",response.toString());
@@ -222,7 +222,7 @@ public class GroupActivity extends AppCompatActivity {
                                     List<String> listTmp = new ArrayList<String>();
                                     listTmp.add("No contacts");
                                     mContacts.put(mGroups.get(i), listTmp);
-                                    mGroupListAdapter = new ExpandableListAdapter(mContext, mGroups, mContacts);
+                                    mGroupListAdapter = new ExpandableListAdapter(mContext, mGroups, mContacts, mToken);
                                     mGroupList.setAdapter(mGroupListAdapter);
                                     for ( int l = 0; l < mGroupListAdapter.getGroupCount(); l++)
                                         mGroupList.expandGroup(l);
@@ -257,7 +257,7 @@ public class GroupActivity extends AppCompatActivity {
         Map<String, Object> header = new HashMap<>();
         header.put("Authorization", "Bearer "+token);
 
-        Fuel.get("http://34.227.142.101:50000/userContact/" + id).header(header).responseString(new Handler<String>() {
+        Fuel.get("http://34.238.153.180:50000/userContact/" + id).header(header).responseString(new Handler<String>() {
 
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
@@ -292,7 +292,7 @@ public class GroupActivity extends AppCompatActivity {
                                     mContacts.put(mGroups.get(i), listTmp);
                                 }
                             }
-                            mGroupListAdapter = new ExpandableListAdapter(mContext, mGroups, mContacts);
+                            mGroupListAdapter = new ExpandableListAdapter(mContext, mGroups, mContacts, mToken);
                             mGroupList.setAdapter(mGroupListAdapter);
                             for ( int i = 0; i < mGroupListAdapter.getGroupCount(); i++)
                                 mGroupList.expandGroup(i);

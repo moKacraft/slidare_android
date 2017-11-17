@@ -26,58 +26,40 @@
             android:src="@drawable/slidarelogo"
             android:padding="5dp"
             android:layout_marginTop="30dp"
-            android:layout_marginBottom="40dp"
+            android:layout_marginBottom="80dp"
             />
-
-        <TextView
-            android:id="@+id/email_label"
-            android:layout_height="wrap_content"
-            android:layout_width="400dp"
-            android:layout_below="@+id/logo"
-            android:layout_centerHorizontal="true"
-            android:text="Email"
-            android:textSize="25dp"
-            android:fontFamily="Roboto"
-            android:textColor="@color/whiteColor"
-            android:layout_marginBottom="5dp"/>
 
         <EditText
             android:id="@+id/email_field"
             android:layout_height="wrap_content"
             android:layout_width="400dp"
-            android:layout_below="@+id/email_label"
+            android:layout_below="@+id/logo"
             android:layout_centerHorizontal="true"
             android:background="@drawable/edittext_border"
             android:padding="10dp"
             android:inputType="text"
+            android:hint="Email"
+            android:gravity="center_horizontal"
             android:textSize="22dp"
-            android:fontFamily="Roboto"/>
-
-        <TextView
-            android:id="@+id/password_label"
-            android:layout_height="wrap_content"
-            android:layout_width="400dp"
-            android:layout_below="@+id/email_field"
-            android:layout_centerHorizontal="true"
-            android:text="Password"
-            android:textSize="25dp"
+            android:drawableLeft="@drawable/mail"
             android:fontFamily="Roboto"
-            android:textColor="@color/whiteColor"
-            android:layout_marginTop="50dp"
-            android:layout_marginBottom="5dp"/>
+            android:layout_marginBottom="50dp"/>
 
         <EditText
             android:id="@+id/password_field"
             android:layout_height="wrap_content"
             android:layout_width="400dp"
-            android:layout_below="@+id/password_label"
+            android:layout_below="@+id/email_field"
             android:layout_centerHorizontal="true"
             android:background="@drawable/edittext_border"
             android:padding="10dp"
             android:inputType="textPassword"
-            android:layout_marginBottom="5dp"
+            android:hint="Password"
+            android:gravity="center_horizontal"
             android:textSize="20dp"
-            android:fontFamily="Roboto"/>
+            android:drawableLeft="@drawable/lock"
+            android:fontFamily="Roboto"
+            android:layout_marginBottom="20dp"/>
 
         <TextView
             android:id="@+id/forget"
@@ -86,15 +68,15 @@
             android:layout_below="@+id/password_field"
             android:layout_centerHorizontal="true"
             android:text="Forget password ?"
-            android:textSize="20dp"
+            android:textSize="18dp"
             android:fontFamily="Roboto"
             android:textColor="@color/whiteColor"
-            android:layout_marginBottom="80dp"/>
+            android:layout_marginBottom="60dp"/>
 
         <Button
             android:id="@+id/btnsignin"
             android:layout_height ="wrap_content"
-            android:layout_width ="250dp"
+            android:layout_width ="400dp"
             android:layout_below="@+id/forget"
             android:background="@color/blue_back"
             android:textAllCaps="false"
@@ -102,12 +84,13 @@
             android:textSize="22dp"
             android:textColor="@color/whiteColor"
             android:layout_centerHorizontal="true"
-            android:stateListAnimator="@null"/>
+            android:stateListAnimator="@null"
+            android:layout_marginBottom="30dp"/>
 
         <com.facebook.login.widget.LoginButton
             android:id="@+id/login_button"
             android:layout_height="60dp"
-            android:layout_width ="250dp"
+            android:layout_width ="400dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
             android:textSize="20dp"
@@ -120,10 +103,9 @@
             android:layout_width="wrap_content"
             android:layout_below="@+id/login_button"
             android:layout_centerHorizontal="true"
-            android:text="No account ? Sign up"
-            android:textSize="25dp"
+            android:text="No Account ? Sign up"
+            android:textSize="22dp"
             android:fontFamily="Roboto"
-            android:clickable="true"
             android:layout_marginTop="50dp"
             android:layout_marginBottom="30dp"
             android:textColor="@color/whiteColor"/>

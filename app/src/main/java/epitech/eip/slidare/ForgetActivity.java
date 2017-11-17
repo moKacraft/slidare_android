@@ -81,7 +81,7 @@ public class ForgetActivity extends AppCompatActivity {
 
     public void resetPassword(String body) throws Exception {
 
-        Fuel.post("http://34.227.142.101:50000/resetPassword").body(body.getBytes()).responseString(new Handler<String>() {
+        Fuel.post("http://34.238.153.180:50000/resetPassword").body(body.getBytes()).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
                 Log.d("createUser SUCCESS : ",response.toString());

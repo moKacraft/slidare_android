@@ -55,7 +55,7 @@ public class ShareActivity extends AppCompatActivity implements ToContactFragmen
     private Socket mSocket;
     {
         try {
-            mSocket = IO.socket("http://34.227.142.101:8090");
+            mSocket = IO.socket("http://34.238.153.180:8090");
         } catch (URISyntaxException e) {
             Log.d(TAG, "SYNTAX EXCEPTION = " + e);
         }

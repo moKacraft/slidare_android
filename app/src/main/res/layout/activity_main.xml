@@ -116,7 +116,7 @@
             android:layout_width="wrap_content"
             android:layout_below="@+id/login_button"
             android:layout_centerHorizontal="true"
-            android:text="No account ? Sign up"
+            android:text="No Account ? Sign up"
             android:textSize="18dp"
             android:fontFamily="Roboto"
             android:clickable="true"

@@ -73,8 +73,8 @@ public class MainActivity extends AppCompatActivity {
         mBtnSignin = (Button) findViewById(R.id.btnsignin);
         mForget = (TextView) findViewById(R.id.forget);
         mSignupText = (TextView) findViewById(R.id.signup_text);
-        SpannableString content = new SpannableString("No account ? Sign up");
-        content.setSpan(new UnderlineSpan(), 0, content.length(), 0);
+        SpannableString content = new SpannableString("No Account ? Sign up");
+        content.setSpan(0, 0, content.length(), 0);
         mSignupText.setText(content);
 
         callbackManager = CallbackManager.Factory.create();
@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity {
 
         Log.d(TAG, "----------> loginUser");
 
-        Fuel.post("http://34.227.142.101:50000/loginUser").body(body.getBytes()).responseString(new Handler<String>() {
+        Fuel.post("http://34.238.153.180:50000/loginUser").body(body.getBytes()).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
                 Log.d("loginUser SUCCESS : ",response.toString());
@@ -236,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void createUser(String body) throws Exception {
 
-        Fuel.post("http://34.227.142.101:50000/createUser").body(body.getBytes()).responseString(new Handler<String>() {
+        Fuel.post("http://34.238.153.180:50000/createUser").body(body.getBytes()).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
                 Log.d("createUser SUCCESS : ",response.toString());

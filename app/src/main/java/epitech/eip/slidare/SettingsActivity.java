@@ -273,7 +273,7 @@ public class SettingsActivity extends AppCompatActivity {
         Map<String, Object> header = new HashMap<>();
         header.put("Authorization", "Bearer "+token);
 
-        Fuel.get("http://34.227.142.101:50000/fetchUser").header(header).responseString(new Handler<String>() {
+        Fuel.get("http://34.238.153.180:50000/fetchUser").header(header).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
                 Log.d("fetchUser SUCCESS : ",response.toString());
@@ -324,7 +324,7 @@ public class SettingsActivity extends AppCompatActivity {
         Map<String, Object> header = new HashMap<>();
         header.put("Authorization", "Bearer "+token);
 
-        Fuel.post("http://34.227.142.101:50000/updateUserPicture").header(header).body(body.getBytes()).responseString(new Handler<String>() {
+        Fuel.post("http://34.238.153.180:50000/updateUserPicture").header(header).body(body.getBytes()).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
 
@@ -353,7 +353,7 @@ public class SettingsActivity extends AppCompatActivity {
         Map<String, Object> header = new HashMap<>();
         header.put("Authorization", "Bearer "+token);
 
-        Fuel.post("http://34.227.142.101:50000/updateUserName").header(header).body(body.getBytes()).responseString(new Handler<String>() {
+        Fuel.post("http://34.238.153.180:50000/updateUserName").header(header).body(body.getBytes()).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
 
@@ -382,7 +382,7 @@ public class SettingsActivity extends AppCompatActivity {
         Map<String, Object> header = new HashMap<>();
         header.put("Authorization", "Bearer "+token);
 
-        Fuel.post("http://34.227.142.101:50000/updateUserEmail").header(header).body(body.getBytes()).responseString(new Handler<String>() {
+        Fuel.post("http://34.238.153.180:50000/updateUserEmail").header(header).body(body.getBytes()).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
 
@@ -410,7 +410,7 @@ public class SettingsActivity extends AppCompatActivity {
         Map<String, Object> header = new HashMap<>();
         header.put("Authorization", "Bearer "+token);
 
-        Fuel.post("http://34.227.142.101:50000/updateUserPassword").header(header).body(body.getBytes()).responseString(new Handler<String>() {
+        Fuel.post("http://34.238.153.180:50000/updateUserPassword").header(header).body(body.getBytes()).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
 

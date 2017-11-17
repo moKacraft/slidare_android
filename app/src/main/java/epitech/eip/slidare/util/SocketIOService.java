@@ -68,7 +68,7 @@ public class SocketIOService extends Service{
 
     public void setupConnections() {
         try {
-            mSocket = IO.socket("http://34.227.142.101:8090");
+            mSocket = IO.socket("http://34.238.153.180:8090");
             System.out.println("socket init");
             Log.d(TAG, "----------> SOCKET INIT");
             mSocket.on("server ready", new Emitter.Listener() {
@@ -85,7 +85,7 @@ public class SocketIOService extends Service{
                             try {
                                 Log.d(TAG, "----------> in server thread");
                                 java.net.Socket sock;
-                                sock = new java.net.Socket("34.227.142.101", (int)args[0]);
+                                sock = new java.net.Socket("34.238.153.180", (int)args[0]);
                                 OutputStream is = sock.getOutputStream();
                                 FileInputStream fis = new FileInputStream((String)args[1]);
                                 BufferedInputStream bis = new BufferedInputStream(fis);
@@ -166,7 +166,7 @@ public class SocketIOService extends Service{
                                     String transferId = (String) args[2];
                                     try {
                                         FileOutputStream fos = new FileOutputStream((String) args[3]);
-                                        java.net.Socket sock = new java.net.Socket("34.227.142.101", (int)args[1]);
+                                        java.net.Socket sock = new java.net.Socket("34.238.153.180", (int)args[1]);
                                         InputStream is = sock.getInputStream();
                                         byte[] buffer = new byte[4096];
                                         int ret;
