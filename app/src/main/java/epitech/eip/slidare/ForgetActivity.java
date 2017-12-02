@@ -36,7 +36,7 @@ public class ForgetActivity extends AppCompatActivity {
     private TextView mCancel;
     private TextView mDone;
 
-@Override
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forget);
