@@ -37,7 +37,7 @@
             android:layout_centerHorizontal="true"
             android:background="@drawable/edittext_border"
             android:padding="10dp"
-            android:inputType="text"
+            android:inputType="textEmailAddress"
             android:hint="Email"
             android:gravity="center_horizontal"
             android:textSize="22dp"
@@ -67,7 +67,7 @@
             android:layout_width="400dp"
             android:layout_below="@+id/password_field"
             android:layout_centerHorizontal="true"
-            android:text="Forget password ?"
+            android:text="Forgot password ?"
             android:textSize="18dp"
             android:fontFamily="Roboto"
             android:textColor="@color/whiteColor"
@@ -78,7 +78,7 @@
             android:layout_height ="wrap_content"
             android:layout_width ="400dp"
             android:layout_below="@+id/forget"
-            android:background="@color/blue_back"
+            android:background="@drawable/submit_border"
             android:textAllCaps="false"
             android:text ="Sign in"
             android:textSize="22dp"
@@ -89,11 +89,13 @@
 
         <com.facebook.login.widget.LoginButton
             android:id="@+id/login_button"
-            android:layout_height="60dp"
+            android:layout_height="100dp"
             android:layout_width ="400dp"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="20dp"
             android:textSize="20dp"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
             android:layout_below="@+id/btnsignin"
             android:layout_centerHorizontal="true" />
 
