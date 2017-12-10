@@ -3,14 +3,23 @@ package epitech.eip.slidare;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.SpannableString;
 import android.text.style.UnderlineSpan;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,12 +61,15 @@ public class MainActivity extends AppCompatActivity {
     private TextView mForget;
 
     private EditText mEmailEditText;
+    private EditText mEmailField;
     private EditText mPasswordEditText;
 
     private Button mBtnSignin;
 
+    private RelativeLayout mRelativeLayout;
     private CallbackManager callbackManager;
     private LoginResult mLoginResult;
+    private PopupWindow mPopup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +79,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "----------> onCreate");
 
         mContext = getApplicationContext();
+        mRelativeLayout = (RelativeLayout) findViewById(R.id.main_background);
         mBody = new String();
         mEmailEditText = (EditText) findViewById(R.id.email_field);
         mPasswordEditText = (EditText) findViewById(R.id.password_field);
@@ -137,6 +150,56 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, ForgetActivity.class);
                 startActivity(intent);
+
+                /*LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(LAYOUT_INFLATER_SERVICE);
+                View customView = inflater.inflate(R.layout.activity_forget,null);
+
+                DisplayMetrics dm = new DisplayMetrics();
+                getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+                int width = dm.widthPixels;
+                int height = dm.heightPixels;
+
+                mPopup = new PopupWindow(
+                        customView,
+                        WindowManager.LayoutParams.WRAP_CONTENT,
+                        WindowManager.LayoutParams.WRAP_CONTENT
+                );
+
+                mPopup.setWidth((int) ((width)*(0.7)));
+                mPopup.setHeight((int) ((height)*(0.6)));
+
+                if(Build.VERSION.SDK_INT>=21){
+                    mPopup.setElevation(5.0f);
+                }
+
+                mEmailField = (EditText) customView.findViewById(R.id.email);
+                TextView closeBtn = (TextView) customView.findViewById(R.id.cancel_forget);
+                TextView sendBtn = (TextView) customView.findViewById(R.id.send_password);
+
+                mEmailField.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                        imm.showSoftInput(mEmailField, InputMethodManager.SHOW_IMPLICIT);
+                    }
+                });
+
+                closeBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        mPopup.dismiss();
+                    }
+                });
+
+                sendBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+
+                mPopup.showAtLocation(mRelativeLayout, Gravity.CENTER,0,100);*/
             }
         };
 

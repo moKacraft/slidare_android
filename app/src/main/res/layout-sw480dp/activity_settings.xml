@@ -20,54 +20,64 @@
         android:layout_gravity="center_vertical"
         android:id="@+id/main_background">
 
-        <TextView
-            android:id="@+id/title"
-            android:layout_height="wrap_content"
-            android:layout_width="300dp"
-            android:layout_centerHorizontal="true"
-            android:gravity="center"
-            android:text="Settings"
-            android:textSize="25dp"
-            android:fontFamily="Roboto"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:textColor="@color/blue_back"/>
-
-        <ImageView
-            android:id="@+id/user_image"
-            android:layout_height="150dp"
-            android:layout_width="150dp"
-            android:src="@drawable/user"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/title"
-            android:padding="10dp" />
-
-        <ImageButton
-            android:id="@+id/camera"
-            android:layout_height="20dp"
-            android:layout_width="20dp"
-            android:src="@drawable/camera"
-            android:layout_below="@+id/user_image"
-            android:layout_marginTop="3dp"
-            android:layout_marginLeft="230dp" />
-
-        <TextView
-            android:id="@+id/library"
-            android:layout_height="wrap_content"
+        <RelativeLayout
+            android:id="@+id/photo_setting"
             android:layout_width="wrap_content"
-            android:layout_below="@+id/user_image"
-            android:text="Library"
-            android:textSize="22dp"
-            android:fontFamily="Roboto"
-            android:clickable="true"
-            android:textColor="@color/blue_back"
-            android:layout_marginLeft="270dp"/>
+            android:layout_height="wrap_content"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:layout_centerHorizontal="true"
+            android:background="@color/dark">
+
+            <ImageView
+                android:id="@+id/user_image"
+                android:layout_height="180dp"
+                android:layout_width="200dp"
+                android:src="@drawable/user"
+                android:layout_centerHorizontal="true"
+                android:paddingTop="10dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"/>
+
+            <LinearLayout
+                android:layout_width="170dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/user_image"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="10dp"
+                android:background="@color/grey_dc"
+                android:padding="15dp">
+
+                <ImageButton
+                    android:id="@+id/camera"
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_below="@+id/user_image"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginLeft="20dp"
+                    android:src="@drawable/camera" />
+
+                <TextView
+                    android:id="@+id/library"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/user_image"
+                    android:layout_marginLeft="25dp"
+                    android:clickable="true"
+                    android:fontFamily="Roboto"
+                    android:text="Library"
+                    android:textColor="@color/blue_back"
+                    android:textSize="22dp" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/profil_name"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            android:layout_below="@+id/library"
+            android:layout_below="@+id/photo_setting"
             android:gravity="center_horizontal"
             android:text="Name"
             android:textSize="21dp"
@@ -85,93 +95,82 @@
             android:textSize="18dp"
             android:fontFamily="Roboto"
             android:layout_marginTop="5dp"
-            android:textColor="@color/black"/>
-
-        <TextView
-            android:id="@+id/username_label"
-            android:layout_height="wrap_content"
-            android:layout_width="300dp"
-            android:layout_below="@+id/profil_email"
-            android:layout_centerHorizontal="true"
-            android:text="Username"
-            android:textSize="20dp"
-            android:fontFamily="Roboto"
-            android:clickable="true"
-            android:layout_marginTop="10dp"
-            android:textColor="@color/grey_light"/>
+            android:textColor="@color/grey_dc"/>
 
         <EditText
             android:id="@+id/username_setting"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/username_label"
+            android:layout_below="@+id/profil_email"
             android:layout_centerHorizontal="true"
             android:hint="Username"
-            android:textColorHint="@color/blue_light"
-            android:textColor="@color/blue_back"
+            android:textColorHint="@color/grey_dc"
+            android:textColor="@color/black"
             android:background="@drawable/settings_border"
             android:padding="10dp"
-            android:layout_marginTop="5dp"
+            android:layout_marginTop="25dp"
             android:inputType="text"
             android:textSize="20dp"/>
 
-        <TextView
-            android:id="@+id/password"
-            android:layout_height="wrap_content"
-            android:layout_width="300dp"
-            android:layout_below="@+id/username_setting"
-            android:layout_centerHorizontal="true"
-            android:text="Password"
-            android:textSize="20dp"
-            android:fontFamily="Roboto"
-            android:clickable="true"
-            android:layout_marginTop="30dp"
-            android:layout_marginLeft="40dp"
-            android:textColor="@color/grey_light"/>
-
         <EditText
             android:id="@+id/password_current"
-            android:layout_width="135dp"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/password"
-            android:hint="Current"
-            android:textColorHint="@color/blue_light"
-            android:textColor="@color/blue_back"
-            android:background="@drawable/settings_border"
+            android:layout_below="@+id/username_setting"
             android:padding="10dp"
+            android:hint="Current password"
+            android:textSize="20dp"
+            android:textColorHint="@color/grey_dc"
+            android:textColor="@color/black"
             android:inputType="textPassword"
             android:fontFamily="sans-serif-condensed"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="135dp"
-            android:textSize="20dp"/>
+            android:background="@drawable/settings_border"
+            android:layout_marginTop="35dp"
+            android:layout_marginLeft="135dp"/>
 
         <EditText
             android:id="@+id/password_new"
-            android:layout_width="135dp"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/password"
-            android:hint="New"
-            android:textColorHint="@color/blue_light"
-            android:textColor="@color/blue_back"
-            android:background="@drawable/settings_border"
+            android:layout_below="@+id/password_current"
             android:padding="10dp"
+            android:hint="New password"
+            android:textSize="20dp"
+            android:textColorHint="@color/grey_dc"
+            android:textColor="@color/black"
+            android:background="@drawable/settings_border"
             android:inputType="textPassword"
             android:fontFamily="sans-serif-condensed"
-            android:layout_marginTop="5dp"
-            android:layout_marginLeft="300dp"
-            android:textSize="20dp"/>
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="135dp"/>
+
+        <EditText
+            android:id="@+id/password_confirm"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/password_new"
+            android:padding="10dp"
+            android:hint="Confirm password"
+            android:textSize="20dp"
+            android:textColorHint="@color/grey_dc"
+            android:textColor="@color/black"
+            android:background="@drawable/settings_border"
+            android:inputType="textPassword"
+            android:fontFamily="sans-serif-condensed"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="135dp"/>
 
         <Button
             android:id="@+id/save"
-            android:layout_width="200dp"
-            android:layout_height="40dp"
-            android:layout_below="@+id/password_current"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/password_confirm"
             android:layout_centerHorizontal="true"
             android:textAllCaps="false"
             android:text="Save"
             android:textSize="20dp"
-            android:layout_marginTop="50dp"
-            android:background="@color/blue_back"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/submit_border"
             android:textColor="@drawable/login_button_text_color"/>
 
         <TextView
@@ -181,12 +180,13 @@
             android:layout_below="@+id/save"
             android:layout_centerHorizontal="true"
             android:gravity="center"
+            android:padding="10dp"
             android:text="Logout"
             android:textSize="20dp"
             android:fontFamily="Roboto"
-            android:layout_marginTop="100dp"
-            android:layout_marginBottom="10dp"
-            android:textColor="@color/blue_back"/>
+            android:layout_marginTop="20dp"
+            android:background="@drawable/logout_border"
+            android:textColor="@color/whiteColor"/>
 
     </RelativeLayout>
 
@@ -207,18 +207,18 @@
             android:id="@+id/ico_home"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:src="@drawable/ico_home"
-            android:layout_marginLeft="60dp"
-            android:layout_marginTop="20dp"/>
+            android:src="@drawable/messagewhite"
+            android:layout_marginLeft="70dp"
+            android:layout_marginTop="15dp"/>
 
         <ImageView
             android:id="@+id/ico_group"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_below="@+id/ico_home"
-            android:src="@drawable/ico_contact"
-            android:layout_marginLeft="235dp"
-            android:layout_marginTop="-30dp"/>
+            android:src="@drawable/contactwhite"
+            android:layout_marginLeft="260dp"
+            android:layout_marginTop="-42dp"/>
 
         <ImageView
             android:id="@+id/ico_profil"
@@ -226,8 +226,8 @@
             android:layout_width="45dp"
             android:layout_below="@+id/ico_group"
             android:src="@drawable/new_user"
-            android:layout_marginLeft="415dp"
-            android:layout_marginTop="-40dp"/>
+            android:layout_marginLeft="450dp"
+            android:layout_marginTop="-48dp"/>
 
     </RelativeLayout>
 

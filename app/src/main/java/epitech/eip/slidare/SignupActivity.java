@@ -35,6 +35,7 @@ public class SignupActivity extends AppCompatActivity {
     private EditText mFirstNameEditText;
     private EditText mLastNameEditText;
     private EditText mEmailEditText;
+    private EditText mEmailConfirmEditText;
     private EditText mPasswordEditText;
     private EditText mPasswordConfirmEditText;
 
@@ -50,6 +51,7 @@ public class SignupActivity extends AppCompatActivity {
         mFirstNameEditText = (EditText) findViewById(R.id.firstname);
         mLastNameEditText = (EditText) findViewById(R.id.lastname);
         mEmailEditText = (EditText) findViewById(R.id.email);
+        mEmailConfirmEditText = (EditText) findViewById(R.id.email_confirm);
         mPasswordEditText = (EditText) findViewById(R.id.password);
         mPasswordConfirmEditText = (EditText) findViewById(R.id.password_confirm);
         mSubmitButton = (Button) findViewById(R.id.submit);
@@ -71,6 +73,8 @@ public class SignupActivity extends AppCompatActivity {
 
                 if (password.compareTo(mPasswordConfirmEditText.getText().toString()) != 0)
                     Toast.makeText(SignupActivity.this, "Passwords must be identical.", Toast.LENGTH_SHORT).show();
+                else if (email.compareTo(mEmailConfirmEditText.getText().toString()) != 0)
+                    Toast.makeText(SignupActivity.this, "Addresses must be identical.", Toast.LENGTH_SHORT).show();
                 else {
                     mBody = "{ \"first_name\": \"" + firstname + "\",\"last_name\": \"" + lastname + "\",\"email\": \"" + email + "\",\"password\": \"" + password + "\" }";
 

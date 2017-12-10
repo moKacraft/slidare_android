@@ -4,8 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,19 +36,25 @@ public class ForgetActivity extends AppCompatActivity {
 
     private TextView mSendPassword;
     private TextView mCancel;
-    private TextView mDone;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_forget);
 
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+
+        int width = dm.widthPixels;
+        int height = dm.heightPixels;
+
+        getWindow().setLayout(((int) (width)),((int) (height)));
+
         mContext = getApplication();
 
         mEmail = (EditText) findViewById(R.id.email);
         mSendPassword = (TextView) findViewById(R.id.send_password);
         mCancel = (TextView) findViewById(R.id.cancel_forget);
-        mDone = (TextView) findViewById(R.id.done_forget);
 
         View.OnClickListener mSendPasswordListener = new View.OnClickListener() {
             @Override
@@ -76,7 +84,6 @@ public class ForgetActivity extends AppCompatActivity {
 
         mSendPassword.setOnClickListener(mSendPasswordListener);
         mCancel.setOnClickListener(mCancelListener);
-        mDone.setOnClickListener(mCancelListener);
     }
 
     public void resetPassword(String body) throws Exception {

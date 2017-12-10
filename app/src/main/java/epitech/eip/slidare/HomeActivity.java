@@ -512,8 +512,10 @@ public class HomeActivity extends AppCompatActivity {
                     JSONObject data = new JSONObject(new String(response.getData()));
                     JSONArray fileUrls = data.getJSONArray("file_urls");
 
+                    Log.d(TAG, "Urls = " + fileUrls);
+
                     String urlStr = fileUrls.toString().replace("[\"", "").replace("\"]", "").replaceAll("\\\\", "");
-                    mMyWebview.loadDataWithBaseURL(null, "<html><head></head><body><table style=\"width:100%; height:100%;\"><tr><td style=\"vertical-align:middle;\"><img src=\"" + urlStr + "\"></td></tr></table></body></html>", "html/css", "utf-8", null);
+                    mMyWebview.loadDataWithBaseURL(null, "<html><head></head><body><table style=\"width:20%; height:200%;\"><tr><td style=\"vertical-align:middle;\"><img src=\"" + urlStr + "\"></td></tr></table></body></html>", "html/css", "utf-8", null);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

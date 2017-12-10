@@ -127,18 +127,18 @@
             android:id="@+id/ico_home"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:src="@drawable/ico_home"
-            android:layout_marginLeft="60dp"
-            android:layout_marginTop="20dp"/>
+            android:src="@drawable/messagewhite"
+            android:layout_marginLeft="70dp"
+            android:layout_marginTop="15dp"/>
 
         <ImageView
             android:id="@+id/ico_group"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_below="@+id/ico_home"
-            android:src="@drawable/ico_contact"
-            android:layout_marginLeft="235dp"
-            android:layout_marginTop="-30dp"/>
+            android:src="@drawable/contactwhite"
+            android:layout_marginLeft="260dp"
+            android:layout_marginTop="-42dp"/>
 
         <ImageView
             android:id="@+id/ico_profil"
@@ -146,8 +146,8 @@
             android:layout_width="45dp"
             android:layout_below="@+id/ico_group"
             android:src="@drawable/new_user"
-            android:layout_marginLeft="415dp"
-            android:layout_marginTop="-40dp"/>
+            android:layout_marginLeft="450dp"
+            android:layout_marginTop="-48dp"/>
 
     </RelativeLayout>
 
