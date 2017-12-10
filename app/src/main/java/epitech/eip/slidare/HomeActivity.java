@@ -515,7 +515,7 @@ public class HomeActivity extends AppCompatActivity {
                     Log.d(TAG, "Urls = " + fileUrls);
 
                     String urlStr = fileUrls.toString().replace("[\"", "").replace("\"]", "").replaceAll("\\\\", "");
-                    mMyWebview.loadDataWithBaseURL(null, "<html><head></head><body><table style=\"width:20%; height:200%;\"><tr><td style=\"vertical-align:middle;\"><img src=\"" + urlStr + "\"></td></tr></table></body></html>", "html/css", "utf-8", null);
+                    mMyWebview.loadDataWithBaseURL(null, "<html><head></head><body><table style=\"width:20%; height:20%;\"><tr><td style=\"vertical-align:middle;\"><img src=\"" + urlStr + "\"></td></tr></table></body></html>", "html/css", "utf-8", null);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }

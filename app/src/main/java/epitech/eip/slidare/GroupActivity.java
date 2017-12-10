@@ -48,7 +48,7 @@ public class GroupActivity extends AppCompatActivity {
     private ImageView mHomeView;
     private ImageView mGroupView;
     private ImageView mProfilView;
-    private ImageView mAddGroup;
+    private TextView mAddGroup;
     private ImageView mSettings;
 
     private List<String> mGroups;
@@ -82,7 +82,7 @@ public class GroupActivity extends AppCompatActivity {
         mHomeView = (ImageView) findViewById(R.id.ico_home);
         mGroupView = (ImageView) findViewById(R.id.ico_group);
         mProfilView = (ImageView) findViewById(R.id.ico_profil);
-        mAddGroup = (ImageView) findViewById(R.id.ico_addGroup);
+        mAddGroup = (TextView) findViewById(R.id.ico_addGroup);
         mContactSwitch = (TextView) findViewById(R.id.contact_off);
         mGroupList = (ExpandableListView) findViewById(R.id.group_listview);
         mSettings = (ImageView) findViewById(R.id.ico_settings);

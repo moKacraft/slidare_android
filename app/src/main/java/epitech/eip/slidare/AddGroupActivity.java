@@ -34,7 +34,6 @@ public class AddGroupActivity extends AppCompatActivity {
     private String mBody;
 
     private TextView mNewGroup;
-    private TextView mCancel;
     private TextView mDone;
     private TextView mSave;
 
@@ -56,7 +55,6 @@ public class AddGroupActivity extends AppCompatActivity {
 
         mNewGroup = (EditText) findViewById(R.id.new_group);
         mSave = (TextView) findViewById(R.id.save);
-        mCancel = (TextView) findViewById(R.id.cancel_add);
         mDone = (TextView) findViewById(R.id.done_add);
 
         View.OnClickListener mSaveListener = new View.OnClickListener() {
@@ -76,13 +74,6 @@ public class AddGroupActivity extends AppCompatActivity {
             }
         };
 
-        View.OnClickListener mCancelListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        };
-
         View.OnClickListener mDoneListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -91,7 +82,6 @@ public class AddGroupActivity extends AppCompatActivity {
         };
 
         mSave.setOnClickListener(mSaveListener);
-        mCancel.setOnClickListener(mCancelListener);
         mDone.setOnClickListener(mDoneListener);
     }
 

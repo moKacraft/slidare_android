@@ -27,17 +27,6 @@
             android:textColor="@color/black"/>
 
         <TextView
-            android:id="@+id/cancel_add"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:gravity="center|left"
-            android:text="Cancel"
-            android:textSize="20dp"
-            android:fontFamily="Roboto"
-            android:layout_marginLeft="20dp"
-            android:textColor="@color/blue_back"/>
-
-        <TextView
             android:id="@+id/done_add"
             android:layout_height="match_parent"
             android:layout_width="match_parent"

@@ -61,17 +61,19 @@
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:gravity="center"
-            android:text="Groups"
+            android:text="Group list"
             android:textSize="20dp"
             android:textColor="@color/black"
             android:fontFamily="Roboto"/>
 
-        <ImageView
+        <TextView
             android:id="@+id/ico_addGroup"
-            android:layout_height="15dp"
-            android:layout_width="15dp"
-            android:src="@drawable/ico_plus_blue"
-            android:layout_marginLeft="335dp"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="New group"
+            android:textSize="15dp"
+            android:textColor="@color/blue_back"
+            android:layout_marginLeft="285dp"
             android:layout_centerVertical="true"/>
 
     </RelativeLayout>

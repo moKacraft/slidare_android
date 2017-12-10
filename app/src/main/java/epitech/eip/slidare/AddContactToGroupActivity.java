@@ -1,5 +1,6 @@
 package epitech.eip.slidare;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -8,6 +9,7 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +25,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,19 +36,27 @@ public class AddContactToGroupActivity extends AppCompatActivity {
 
     static final String TAG = "AddCtcToGrpActivity";
 
+    private Context mContext;
+
     private String mToken;
     private String mBody;
     private String mEmail;
     private String mName;
+    private String mGroupname;
 
-    private TextView mGroupname;
+    private TextView mNewGroupname;
     private TextView mNewEmail;
     private TextView mDelete;
-    private TextView mCancel;
+    private TextView mModifyBtn;
     private TextView mDone;
     private TextView mSave;
 
+    private SharingListAdapter mGroupListAdapter;
+    private ListView mGroupList;
+    private List<String> mList;
+
     private boolean mExist = false;
+    private boolean mBool = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,6 +64,8 @@ public class AddContactToGroupActivity extends AppCompatActivity {
         setContentView(R.layout.group_add_contact);
 
         Log.d(TAG, "---------> onCreate");
+
+        mContext = getApplicationContext();
 
         Intent intent = getIntent();
         mToken = intent.getStringExtra("token");
@@ -63,19 +76,29 @@ public class AddContactToGroupActivity extends AppCompatActivity {
         int height = dm.heightPixels;
         getWindow().setLayout((int)(width),(int)(height));
 
-        mGroupname = (EditText) findViewById(R.id.groupname);
+        mGroupList = (ListView) findViewById(R.id.list_group);
+        mNewGroupname = (EditText) findViewById(R.id.groupname);
+        mModifyBtn = (TextView) findViewById(R.id.modify);
         mNewEmail = (EditText) findViewById(R.id.new_email);
         mDelete = (TextView) findViewById(R.id.delete);
         mSave = (TextView) findViewById(R.id.save);
-        mCancel = (TextView) findViewById(R.id.cancel_add);
         mDone = (TextView) findViewById(R.id.done_add);
+
+        if (mGroupList.getCheckedItemPosition() > -1)
+            mGroupname = mGroupList.getItemAtPosition(mGroupList.getCheckedItemPosition()).toString();
+
+        try {
+            fetchGroups(mToken);
+        } catch (Exception error) {
+            Log.d(TAG, "EXCEPTION ERROR : " + error);
+        }
 
         View.OnClickListener mSaveListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 mEmail = mNewEmail.getText().toString();
-                mName = mGroupname.getText().toString();
+                mName = mNewGroupname.getText().toString();
                 if (!mEmail.isEmpty() && !mName.isEmpty()) {
                     try {
                         fetchGroups(mToken);
@@ -93,7 +116,7 @@ public class AddContactToGroupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                mName = mGroupname.getText().toString();
+                mName = mNewGroupname.getText().toString();
                 if (!mName.isEmpty()) {
                     try {
                         removeGroup(mName,mToken);
@@ -107,10 +130,10 @@ public class AddContactToGroupActivity extends AppCompatActivity {
             }
         };
 
-        View.OnClickListener mCancelListener = new View.OnClickListener() {
+        View.OnClickListener mModifyBtnListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                finish();
+
             }
         };
 
@@ -121,13 +144,13 @@ public class AddContactToGroupActivity extends AppCompatActivity {
             }
         };
 
+        mModifyBtn.setOnClickListener(mModifyBtnListener);
         mDelete.setOnClickListener(mDeleteListener);
         mSave.setOnClickListener(mSaveListener);
-        mCancel.setOnClickListener(mCancelListener);
         mDone.setOnClickListener(mDoneListener);
     }
 
-    public void fetchGroups(String token) throws Exception {
+    /*public void fetchGroups(String token) throws Exception {
 
         Map<String, Object> header = new HashMap<>();
         header.put("Authorization", "Bearer "+token);
@@ -173,6 +196,73 @@ public class AddContactToGroupActivity extends AppCompatActivity {
                 Log.d("fetchGroups FAILURE : ",response.toString());
             }
         });
+    }*/
+
+    public void fetchGroups(String token) throws Exception {
+
+        Map<String, Object> header = new HashMap<>();
+        header.put("Authorization", "Bearer "+token);
+
+        Fuel.get("http://34.238.153.180:50000/fetchGroups").header(header).responseString(new Handler<String>() {
+            @Override
+            public void success(@NotNull Request request, @NotNull Response response, String s) {
+                Log.d("fetchGroups SUCCESS : ",response.toString());
+
+                try {
+                    JSONObject data = new JSONObject(new String(response.getData()));
+                    //Log.d(TAG, "----------> result : "+data.getString("groups"));
+
+                    if (data.getString("groups").compareTo("null") != 0) {
+                        JSONArray groups = data.getJSONArray("groups");
+                        ArrayList<String> list = new ArrayList<String>();
+                        for (int i = 0; i < groups.length(); ++i) {
+                            JSONObject group = groups.getJSONObject(i);
+                            list.add(group.getString("name"));
+                            if (mBool){
+                                if (group.getString("name").compareTo(mGroupname) == 0){
+                                    if (!group.isNull("users")) {
+                                        String ids = group.getString("users").replace("[","").replace("]","").replace("{","").replace("}","");
+                                        if (ids.contains(",")){
+                                            //Log.d(TAG, "----------> MANY");
+                                            String[] tab = ids.split(",");
+                                            for (int j = 0; j < tab.length; j++) {
+                                                try {
+                                                    userContact(tab[j].replace("\"", ""), mToken);
+                                                } catch (Exception error) {
+                                                    Log.d(TAG, "EXCEPTION ERROR : " + error);
+                                                }
+                                            }
+                                        } else {
+                                            try {
+                                                userContact(ids.replace("\"", ""), mToken);
+                                            } catch (Exception error) {
+                                                Log.d(TAG, "EXCEPTION ERROR : " + error);
+                                            }
+                                        }
+                                    } else {
+                                        Log.d(TAG, "----------> NONE");
+                                    }
+                                }
+                            }
+                        }
+                        mList = list;
+                        mBool = false;
+                    }
+                    else {
+                        Toast.makeText(mContext, "You have no group yet.", Toast.LENGTH_SHORT).show();
+                    }
+                    mGroupListAdapter = new SharingListAdapter(mList, mContext, mToken);
+                    mGroupList.setAdapter(mGroupListAdapter);
+                } catch (Throwable tx) {
+                    tx.printStackTrace();
+                }
+            }
+
+            @Override
+            public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
+                Log.d("fetchGroups FAILURE : ",response.toString());
+            }
+        });
     }
 
     public void userContacts(String token) throws Exception {
@@ -208,7 +298,7 @@ public class AddContactToGroupActivity extends AppCompatActivity {
                                     mBody = "{ \"contact_identifier\": \"" + str[i] + "\" }";
                                     //Log.d(TAG, "TEST = " + mBody);
                                     try {
-                                        addToGroup(mGroupname.getText().toString(), mBody, mToken);
+                                        addToGroup(mNewGroupname.getText().toString(), mBody, mToken);
                                     } catch (Exception error) {
                                         Log.d(TAG, "EXCEPTION ERROR : " + error);
                                     }
@@ -238,6 +328,36 @@ public class AddContactToGroupActivity extends AppCompatActivity {
             @Override
             public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
                 Log.d("userContacts FAILURE : ",response.toString());
+            }
+        });
+    }
+
+    public void userContact(String id, String token) throws Exception {
+
+        Map<String, Object> header = new HashMap<>();
+        header.put("Authorization", "Bearer "+token);
+
+        Fuel.get("http://34.238.153.180:50000/userContact/" + id).header(header).responseString(new Handler<String>() {
+
+            @Override
+            public void success(@NotNull Request request, @NotNull Response response, String s) {
+                Log.d("userContact SUCCESS : ",response.toString());
+
+                try {
+                    JSONObject data = new JSONObject(new String(response.getData()));
+                    if (data.getString("contact").compareTo("null") != 0) {
+                        JSONObject contacts = data.getJSONObject("contact");
+                        String email = contacts.getString("email");
+                        ShareActivity.mEmails.put(email);
+                    }
+                } catch (Throwable tx) {
+                    tx.printStackTrace();
+                }
+            }
+
+            @Override
+            public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
+                Log.d("userContact FAILURE : ",response.toString());
             }
         });
     }

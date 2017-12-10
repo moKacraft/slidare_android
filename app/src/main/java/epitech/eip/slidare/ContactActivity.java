@@ -44,7 +44,7 @@ public class ContactActivity extends AppCompatActivity {
 
     private ImageView mHomeView;
     private ImageView mProfilView;
-    private ImageView mAddContact;
+    private TextView mAddContact;
 
     private CustomListAdapter mAdapter;
     private ListView mListView;
@@ -72,7 +72,7 @@ public class ContactActivity extends AppCompatActivity {
         mListView = (ListView) findViewById(R.id.listView);
         mHomeView = (ImageView) findViewById(R.id.ico_home);
         mProfilView = (ImageView) findViewById(R.id.ico_profil);
-        mAddContact = (ImageView) findViewById(R.id.ico_addContact);
+        mAddContact = (TextView) findViewById(R.id.ico_addContact);
         mGroupSwitch = (TextView) findViewById(R.id.group_off);
 
         View.OnClickListener mHomeViewListener = new View.OnClickListener() {

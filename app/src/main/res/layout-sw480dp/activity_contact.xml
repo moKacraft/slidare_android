@@ -53,18 +53,21 @@
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             android:gravity="center"
-            android:text="Contacts"
+            android:text="Contact list"
             android:textSize="20dp"
             android:textColor="@color/black"
             android:fontFamily="Roboto"/>
 
-        <ImageView
+        <TextView
             android:id="@+id/ico_addContact"
-            android:layout_height="20dp"
-            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:layout_width="350dp"
+            android:gravity="center"
+            android:text="Add"
+            android:textSize="20dp"
+            android:fontFamily="Roboto"
             android:layout_marginLeft="500dp"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ico_plus_blue" />
+            android:textColor="@color/blue_back"/>
 
     </RelativeLayout>
 
