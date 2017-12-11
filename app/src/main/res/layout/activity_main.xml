@@ -42,7 +42,7 @@
             android:textSize="17dp"
             android:drawableLeft="@drawable/small_mail"
             android:fontFamily="Roboto"
-            android:layout_marginBottom="25dp"/>
+            android:layout_marginBottom="30dp"/>
 
         <EditText
             android:id="@+id/password_field"
@@ -70,24 +70,25 @@
             android:textSize="14dp"
             android:fontFamily="Roboto"
             android:textColor="@color/whiteColor"
-            android:layout_marginBottom="30dp"/>
+            android:layout_marginBottom="40dp"/>
 
         <Button
             android:id="@+id/btnsignin"
             android:layout_height ="30dp"
-            android:layout_width ="180dp"
+            android:layout_width ="250dp"
             android:layout_below="@+id/forget"
             android:layout_centerHorizontal="true"
             android:background="@drawable/submit_border"
             android:textAllCaps="false"
             android:text ="Sign in"
             android:textSize="16sp"
+            android:layout_marginBottom="10dp"
             android:textColor="@color/whiteColor"
             android:stateListAnimator="@null"/>
 
         <com.facebook.login.widget.LoginButton
             android:id="@+id/login_button"
-            android:layout_width="wrap_content"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="15dp"

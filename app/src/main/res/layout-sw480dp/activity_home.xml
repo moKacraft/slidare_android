@@ -26,15 +26,6 @@
             android:textColor="@color/black"/>
 
         <ImageView
-            android:id="@+id/ico_slidare"
-            android:layout_height="35dp"
-            android:layout_width="35dp"
-            android:src="@drawable/slidarelogo"
-            android:gravity="center|left"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="30dp"/>
-
-        <ImageView
             android:id="@+id/ico_send"
             android:layout_height="25dp"
             android:layout_width="25dp"

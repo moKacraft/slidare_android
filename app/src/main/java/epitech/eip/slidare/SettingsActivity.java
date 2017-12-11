@@ -1,9 +1,14 @@
 package epitech.eip.slidare;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -36,6 +41,9 @@ import java.util.Map;
 public class SettingsActivity extends AppCompatActivity {
 
     static final String TAG = "SettingsActivity";
+
+    static final int REQUEST_IMAGE_CAPTURE = 1;
+    private static final int CAMERA_REQUEST = 1888;
 
     private Context mContext;
 
@@ -101,6 +109,17 @@ public class SettingsActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Log.d(TAG, "----------> PHOTO BUTTON");
 
+                /*Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                }*/
+
+                try{
+                    Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(cameraIntent, CAMERA_REQUEST);
+                } catch(Exception error) {
+                    Log.d(TAG, "EXCEPTION ERROR : " + error);
+                }
             }
         };
 
@@ -268,6 +287,25 @@ public class SettingsActivity extends AppCompatActivity {
         }
     }
 
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK) {
+            Bitmap photo = (Bitmap) data.getExtras().get("data");
+            mUserImage.setImageBitmap(photo);
+        }
+        else {
+            try {
+                String url = ImagePicker.getImagePathFromResult(this, requestCode, resultCode, data);
+
+                Log.d(TAG, "TEST = " + url);
+
+                Picasso.with(getApplicationContext()).load(new File(url)).fit().into(mUserImage);
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void fetchUser(String token) throws Exception {
 
         Map<String, Object> header = new HashMap<>();
@@ -431,19 +469,5 @@ public class SettingsActivity extends AppCompatActivity {
                 Toast.makeText(SettingsActivity.this, "Wrong password provided.", Toast.LENGTH_SHORT).show();
             }
         });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        try {
-            String url = ImagePicker.getImagePathFromResult(this, requestCode, resultCode, data);
-
-            Log.d(TAG, "TEST = " +  url);
-
-            Picasso.with(getApplicationContext()).load(new File(url)).fit().into(mUserImage);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 }
