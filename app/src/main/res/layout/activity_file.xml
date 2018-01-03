@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.design.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context="epitech.eip.slidare.FileActivity">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/grey_snow"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/back"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:gravity="center|left"
+            android:text="Back"
+            android:textSize="20dp"
+            android:fontFamily="Roboto"
+            android:layout_marginLeft="30dp"
+            android:textColor="@color/blue_back"/>
+
+        <TextView
+            android:id="@+id/file_title"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:text="File"
+            android:textSize="20dp"
+            android:fontFamily="Roboto"
+            android:textColor="@color/black"/>
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/file_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="50dp"/>
+
+</android.support.design.widget.CoordinatorLayout>

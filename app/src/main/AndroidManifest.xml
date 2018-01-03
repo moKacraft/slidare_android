@@ -55,6 +55,10 @@
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
+            android:name=".FileActivity"
+            android:theme="@style/AppTheme.NoActionBar">
+        </activity>
+        <activity
             android:name=".SettingsActivity"
             android:theme="@style/AppTheme.PopupEdit"
             android:windowSoftInputMode="stateHidden">

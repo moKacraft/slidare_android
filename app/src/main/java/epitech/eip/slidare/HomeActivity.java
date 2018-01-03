@@ -1,5 +1,6 @@
 package epitech.eip.slidare;
 
+import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -18,8 +19,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.ImageView;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 
 import com.github.kittinunf.fuel.Fuel;
 import com.github.kittinunf.fuel.core.FuelError;
@@ -57,14 +59,17 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.InvalidParameterSpecException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
-import epitech.eip.slidare.util.MyWebViewClient;
+import epitech.eip.slidare.request.Config;
+import epitech.eip.slidare.request.Share;
 import epitech.eip.slidare.util.TcpClient;
 import epitech.eip.slidare.util.encryptUtils;
 
@@ -76,16 +81,21 @@ public class HomeActivity extends AppCompatActivity {
 
     static final String TAG = "HomeActivity";
 
+    private Context mContext;
+
     private String mToken;
     private String mUrlPicture;
     private ByteArrayOutputStream fileData = new ByteArrayOutputStream();
     private FileOutputStream fos;
 
+    private HomeListAdapter mAdapter;
+    private ListView mListView;
+    private List<String> mList;
+
     private ImageView mHomeView;
     private ImageView mGroupView;
     private ImageView mProfilView;
     private ImageView mShare;
-    private WebView mMyWebview;
     private String mFileName;
     private String encFilePath;
     private String filePath;
@@ -140,7 +150,7 @@ public class HomeActivity extends AppCompatActivity {
                                         e.printStackTrace();
                                     }
 
-                                    mMyWebview.loadUrl(taskSnapshot.getDownloadUrl().toString());
+                                    //mMyWebview.loadUrl(taskSnapshot.getDownloadUrl().toString());
                                     DownloadManager.Request request = new DownloadManager.Request(taskSnapshot.getDownloadUrl());
                                     request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, mFileName);
                                     request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED); // to notify when download is complete
@@ -332,26 +342,31 @@ public class HomeActivity extends AppCompatActivity {
 
             mSocket.connect();
         }
+
         Log.d(TAG, "----------> onCreate");
 
+        mContext = getApplicationContext();
         Intent intent = getIntent();
         mToken = intent.getStringExtra("token");
         mUrlPicture = intent.getStringExtra("fbUrl");
+
+        mAdapter = new HomeListAdapter(mList, mContext, mToken);
 
         mHomeView = (ImageView) findViewById(R.id.ico_home);
         mGroupView = (ImageView) findViewById(R.id.ico_group);
         mProfilView = (ImageView) findViewById(R.id.ico_profil);
         mShare = (ImageView) findViewById(R.id.ico_send);
-        mMyWebview = (WebView) findViewById(R.id.my_webview);
+        mListView = (ListView) findViewById(R.id.history_list);
+        //mMyWebview = (WebView) findViewById(R.id.my_webview);
 
-        mMyWebview.setWebViewClient(new MyWebViewClient());
+        /*mMyWebview.setWebViewClient(new MyWebViewClient());
         mMyWebview.getSettings().setJavaScriptEnabled(true);
 
         mMyWebview.getSettings().setAllowContentAccess(true);
         mMyWebview.getSettings().setAllowFileAccessFromFileURLs(true);
         mMyWebview.getSettings().setAllowFileAccess(true);
         mMyWebview.getSettings().setLoadWithOverviewMode(true);
-        mMyWebview.getSettings().setUseWideViewPort(true);
+        mMyWebview.getSettings().setUseWideViewPort(true);*/
 
         if (ContextCompat.checkSelfPermission(this,
                 android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -449,8 +464,32 @@ public class HomeActivity extends AppCompatActivity {
         mGroupView.setOnClickListener(mGroupViewListener);
         mProfilView.setOnClickListener(mProfilViewListener);
         mShare.setOnClickListener(mSendListener);
+        mListView.setAdapter(mAdapter);
         try {
-            getFiles();
+           Handler<String> handle = new Handler<String>() {
+                @Override
+                public void success(@NotNull Request request, @NotNull Response response, String s) {
+                    Log.d("getFiles SUCCESS : ",response.toString());
+                    try {
+                        JSONObject data = new JSONObject(new String(response.getData()));
+                        JSONArray fileUrls = data.getJSONArray("file_urls");
+
+                        String urlStr = fileUrls.toString().replace("[\"", "").replace("\"]", "").replaceAll("\\\\", "");
+                        mList = new ArrayList<String>();
+                        mList.add(urlStr);
+                        mAdapter = new HomeListAdapter(mList, mContext, mToken);
+                        mListView.setAdapter(mAdapter);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
+                    Log.d("getFiles FAILURE : ",response.toString());
+                }
+            };
+            Share.getFiles(mToken, handle);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -486,7 +525,7 @@ public class HomeActivity extends AppCompatActivity {
         String body = "{ \"file_url\": \"" + file_url + "\" }";
 
 
-        Fuel.post("http://34.238.153.180:50000/addFileToList").header(header).body(body.getBytes()).responseString(new Handler<String>() {
+        Fuel.post(Config.URL_API + "addFileToList").header(header).body(body.getBytes()).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
                 Log.d("addContact SUCCESS : ",response.toString());
@@ -504,7 +543,7 @@ public class HomeActivity extends AppCompatActivity {
         Map<String, Object> header = new HashMap<>();
         header.put("Authorization", "Bearer "+ mToken);
 
-        Fuel.get("http://34.238.153.180:50000/getUserFiles").header(header).responseString(new Handler<String>() {
+        Fuel.get(Config.URL_API + "getUserFiles").header(header).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
                 Log.d("getFiles SUCCESS : ",response.toString());
@@ -515,7 +554,12 @@ public class HomeActivity extends AppCompatActivity {
                     Log.d(TAG, "Urls = " + fileUrls);
 
                     String urlStr = fileUrls.toString().replace("[\"", "").replace("\"]", "").replaceAll("\\\\", "");
-                    mMyWebview.loadDataWithBaseURL(null, "<html><head></head><body><table style=\"width:20%; height:20%;\"><tr><td style=\"vertical-align:middle;\"><img src=\"" + urlStr + "\"></td></tr></table></body></html>", "html/css", "utf-8", null);
+                    Log.d(TAG, "Urls = " + urlStr);
+                    mList = new ArrayList<String>();
+                    mList.add(urlStr);
+                    mAdapter = new HomeListAdapter(mList, mContext, mToken);
+                    mListView.setAdapter(mAdapter);
+                    //mMyWebview.loadDataWithBaseURL(null, "<html><head></head><body><table style=\"width:20%; height:20%;\"><tr><td style=\"vertical-align:middle;\"><img src=\"" + urlStr + "\"></td></tr></table></body></html>", "html/css", "utf-8", null);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
