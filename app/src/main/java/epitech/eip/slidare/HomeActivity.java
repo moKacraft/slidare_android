@@ -1,6 +1,5 @@
 package epitech.eip.slidare;
 
-import android.app.Activity;
 import android.app.DownloadManager;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -20,7 +19,6 @@ import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.github.kittinunf.fuel.Fuel;
@@ -465,15 +463,15 @@ public class HomeActivity extends AppCompatActivity {
         mProfilView.setOnClickListener(mProfilViewListener);
         mShare.setOnClickListener(mSendListener);
         mListView.setAdapter(mAdapter);
+
         try {
-           Handler<String> handle = new Handler<String>() {
+            Handler<String> handler = new Handler<String>() {
                 @Override
                 public void success(@NotNull Request request, @NotNull Response response, String s) {
                     Log.d("getFiles SUCCESS : ",response.toString());
                     try {
                         JSONObject data = new JSONObject(new String(response.getData()));
                         JSONArray fileUrls = data.getJSONArray("file_urls");
-
                         String urlStr = fileUrls.toString().replace("[\"", "").replace("\"]", "").replaceAll("\\\\", "");
                         mList = new ArrayList<String>();
                         mList.add(urlStr);
@@ -489,7 +487,7 @@ public class HomeActivity extends AppCompatActivity {
                     Log.d("getFiles FAILURE : ",response.toString());
                 }
             };
-            Share.getFiles(mToken, handle);
+            Share.getFiles(mToken, handler);
         } catch (Exception e) {
             e.printStackTrace();
         }
