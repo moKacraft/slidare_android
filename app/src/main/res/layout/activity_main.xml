@@ -74,17 +74,16 @@
 
         <Button
             android:id="@+id/btnsignin"
-            android:layout_height ="30dp"
-            android:layout_width ="250dp"
+            android:layout_width="250dp"
+            android:layout_height="30dp"
+            android:layout_alignStart="@+id/login_button"
             android:layout_below="@+id/forget"
-            android:layout_centerHorizontal="true"
             android:background="@drawable/submit_border"
+            android:stateListAnimator="@null"
+            android:text="Sign in"
             android:textAllCaps="false"
-            android:text ="Sign in"
-            android:textSize="16sp"
-            android:layout_marginBottom="10dp"
             android:textColor="@color/whiteColor"
-            android:stateListAnimator="@null"/>
+            android:textSize="16sp" />
 
         <com.facebook.login.widget.LoginButton
             android:id="@+id/login_button"

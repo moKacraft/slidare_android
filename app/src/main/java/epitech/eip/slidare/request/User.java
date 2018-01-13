@@ -11,8 +11,18 @@ public class User {
 
     static final String TAG = "UserRequest";
 
+    static public void createUser(final String body, Handler<String> handler) throws Exception {
+
+        Fuel.post(Config.URL_API + "createUser").body(body.getBytes()).responseString(handler);
+    }
+
     static public void loginUser(final String body, Handler<String> handler) throws Exception {
 
         Fuel.post(Config.URL_API + "loginUser").body(body.getBytes()).responseString(handler);
+    }
+
+    static public void resetPassword(final String body, Handler<String> handler) throws Exception {
+
+        Fuel.post(Config.URL_API + "resetPassword").body(body.getBytes()).responseString(handler);
     }
 }
