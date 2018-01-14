@@ -6,14 +6,11 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
@@ -35,7 +32,6 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -76,6 +72,7 @@ public class HomeActivity extends AppCompatActivity {
 
     private String mToken;
     private String mUrlPicture;
+    private String mUserEmail;
     private ByteArrayOutputStream fileData = new ByteArrayOutputStream();
     private FileOutputStream fos;
 
@@ -138,12 +135,12 @@ public class HomeActivity extends AppCompatActivity {
                                 Handler<String> handler = new Handler<String>() {
                                     @Override
                                     public void success(@NotNull Request request, @NotNull Response response, String s) {
-                                        Log.d("addFile SUCCESS : ",response.toString());
+                                        Log.d("addFile " + Config.ONSUCCESS,response.toString());
                                     }
 
                                     @Override
                                     public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
-                                        Log.d("addFile FAILURE : ",response.toString());
+                                        Log.d("addFile " + Config.FAILURE,response.toString());
                                     }
                                 };
                                 Share.addFile(body, mToken, handler);
@@ -205,10 +202,10 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         if (mSocket.connected() == false) {
-            mSocket.on("lila@mail.fr", new Emitter.Listener() {
+            mSocket.on(mUserEmail, new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                sendNotification(getApplicationContext(), "xxx Wants to send you a file");
+                sendNotification(getApplicationContext(), mUserEmail + " wants to send you a file");
                 transferId = (String) args[2];
                 sha1 = (String) args[5];
                 key = (String) args[8];
@@ -239,12 +236,13 @@ public class HomeActivity extends AppCompatActivity {
             mSocket.connect();
         }
 
-        Log.d(TAG, "----------> onCreate");
+        Log.d(TAG, Config.ONCREATE);
 
         mContext = getApplicationContext();
         Intent intent = getIntent();
         mToken = intent.getStringExtra("token");
         mUrlPicture = intent.getStringExtra("fbUrl");
+        mUserEmail = intent.getStringExtra("email");
 
         mAdapter = new HomeListAdapter(mList, mContext, mToken);
 
@@ -300,7 +298,7 @@ public class HomeActivity extends AppCompatActivity {
             Handler<String> handler = new Handler<String>() {
                 @Override
                 public void success(@NotNull Request request, @NotNull Response response, String s) {
-                    Log.d("getFiles SUCCESS : ",response.toString());
+                    Log.d("getFiles " + Config.ONSUCCESS,response.toString());
                     try {
                         JSONObject data = new JSONObject(new String(response.getData()));
                         String fileUrls = data.getString("file_urls").toString().replace("[\"", "").replace("\"]", "").replaceAll("\"","").replaceAll("\\\\", "");
@@ -321,7 +319,7 @@ public class HomeActivity extends AppCompatActivity {
 
                 @Override
                 public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
-                    Log.d("getFiles FAILURE : ",response.toString());
+                    Log.d("getFiles " + Config.FAILURE,response.toString());
                 }
             };
             Share.getFiles(mToken, handler);

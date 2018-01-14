@@ -29,9 +29,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by 42350 on 27/09/2017.
- */
+import epitech.eip.slidare.request.Config;
 
 public class ToGroupFragment extends Fragment {
 
@@ -55,7 +53,7 @@ public class ToGroupFragment extends Fragment {
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_togroup, container, false);
 
-        Log.d(TAG, "----------> onCreateView");
+        Log.d(TAG, Config.ONCREATEVIEW);
 
         mContext = getActivity().getApplicationContext();
         Intent intent = getActivity().getIntent();
@@ -64,37 +62,32 @@ public class ToGroupFragment extends Fragment {
         try {
             fetchGroups(mToken);
         } catch (Exception error) {
-            Log.d(TAG, "EXCEPTION ERROR : " + error);
+            Log.d(TAG, Config.EXCEPTION + error);
         }
 
         mGroupList = (ListView) view.findViewById(R.id.list_group);
-
         mAttachment = (ImageView) view.findViewById(R.id.ico_attachment);
         mAttachment.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
-                if (mGroupList.getCheckedItemPosition() > -1){
-                    mGroupname = mGroupList.getItemAtPosition(mGroupList.getCheckedItemPosition()).toString();
-
-                    mBool = true;
-
-                    try {
-                        fetchGroups(mToken);
-                    } catch (Exception error) {
-                        Log.d(TAG, "EXCEPTION ERROR : " + error);
-                    }
-
-                    ImagePicker.setMinQuality(600, 600);
-                    ImagePicker.pickImage(getActivity(), "Select your image:");
-                } else {
-                    Toast.makeText(mContext, "You must choose a group first.", Toast.LENGTH_SHORT).show();
+            if (mGroupList.getCheckedItemPosition() > -1){
+                mGroupname = mGroupList.getItemAtPosition(mGroupList.getCheckedItemPosition()).toString();
+                mBool = true;
+                try {
+                    fetchGroups(mToken);
+                } catch (Exception error) {
+                    Log.d(TAG, "EXCEPTION ERROR : " + error);
                 }
 
+                ImagePicker.setMinQuality(600, 600);
+                ImagePicker.pickImage(getActivity(), "Select your image:");
+            } else {
+                Toast.makeText(mContext, "You must choose a group first.", Toast.LENGTH_SHORT).show();
+            }
             }
         });
-
         return view;
     }
 
@@ -107,12 +100,10 @@ public class ToGroupFragment extends Fragment {
         super.onAttach(context);
 
         Activity activity = context instanceof Activity ? (Activity) context : null;
-
         if (activity instanceof OnItemSelectedListener) {
             listener = (OnItemSelectedListener) activity;
         } else {
-            throw new ClassCastException(activity.toString()
-                    + " must implement ToGroupFragment.OnItemSelectedListener");
+            throw new ClassCastException(activity.toString() + " must implement ToGroupFragment.OnItemSelectedListener");
         }
     }
 
@@ -136,11 +127,10 @@ public class ToGroupFragment extends Fragment {
         Fuel.get("http://34.238.153.180:50000/fetchGroups").header(header).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
-                Log.d("fetchGroups SUCCESS : ",response.toString());
+                Log.d("fetchGroups " + Config.ONSUCCESS,response.toString());
 
                 try {
                     JSONObject data = new JSONObject(new String(response.getData()));
-                    //Log.d(TAG, "----------> result : "+data.getString("groups"));
 
                     if (data.getString("groups").compareTo("null") != 0) {
                         JSONArray groups = data.getJSONArray("groups");
@@ -153,24 +143,21 @@ public class ToGroupFragment extends Fragment {
                                     if (!group.isNull("users")) {
                                         String ids = group.getString("users").replace("[","").replace("]","").replace("{","").replace("}","");
                                         if (ids.contains(",")){
-                                            //Log.d(TAG, "----------> MANY");
                                             String[] tab = ids.split(",");
                                             for (int j = 0; j < tab.length; j++) {
                                                 try {
                                                     userContact(tab[j].replace("\"", ""), mToken);
                                                 } catch (Exception error) {
-                                                    Log.d(TAG, "EXCEPTION ERROR : " + error);
+                                                    Log.d(TAG, Config.EXCEPTION + error);
                                                 }
                                             }
                                         } else {
                                             try {
                                                 userContact(ids.replace("\"", ""), mToken);
                                             } catch (Exception error) {
-                                                Log.d(TAG, "EXCEPTION ERROR : " + error);
+                                                Log.d(TAG, Config.EXCEPTION + error);
                                             }
                                         }
-                                    } else {
-                                        Log.d(TAG, "----------> NONE");
                                     }
                                 }
                             }
@@ -190,7 +177,7 @@ public class ToGroupFragment extends Fragment {
 
             @Override
             public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
-                Log.d("fetchGroups FAILURE : ",response.toString());
+                Log.d("fetchGroups " + Config.FAILURE,response.toString());
             }
         });
     }
@@ -204,7 +191,7 @@ public class ToGroupFragment extends Fragment {
 
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
-                Log.d("userContact SUCCESS : ",response.toString());
+                Log.d("userContact " + Config.ONSUCCESS,response.toString());
 
                 try {
                     JSONObject data = new JSONObject(new String(response.getData()));
@@ -220,7 +207,7 @@ public class ToGroupFragment extends Fragment {
 
             @Override
             public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
-                Log.d("userContact FAILURE : ",response.toString());
+                Log.d("userContact " + Config.FAILURE,response.toString());
             }
         });
     }

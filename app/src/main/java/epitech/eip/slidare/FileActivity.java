@@ -10,10 +10,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-/**
- * Created by 42350 on 03/01/2018.
- */
-
 public class FileActivity extends AppCompatActivity {
 
     static final String TAG = "FileActivity";
@@ -41,10 +37,10 @@ public class FileActivity extends AppCompatActivity {
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, HomeActivity.class);
-                intent.putExtra("token", mToken);
-                startActivity(intent);
-                finish();
+            Intent intent = new Intent(mContext, HomeActivity.class);
+            intent.putExtra("token", mToken);
+            startActivity(intent);
+            finish();
             }
         });
     }

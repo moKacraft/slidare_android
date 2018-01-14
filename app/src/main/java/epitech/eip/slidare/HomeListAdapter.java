@@ -62,7 +62,7 @@ public class HomeListAdapter extends BaseAdapter implements ListAdapter {
             view = inflater.inflate(R.layout.home_list_item, null);
         }
 
-        Log.d(TAG, "getVIEW = " + mList.get(position));
+        //Log.d(TAG, "getVIEW = " + mList.get(position));
         String[] files = mList.get(position).split(";");
 
         final TextView listItemText = (TextView)view.findViewById(R.id.list_item_string);

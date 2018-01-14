@@ -55,7 +55,7 @@ public class ShareActivity extends AppCompatActivity implements ToContactFragmen
         try {
             mSocket = IO.socket(Config.URL_SOCKET);
         } catch (URISyntaxException e) {
-            Log.d(TAG, "SYNTAX EXCEPTION = " + e);
+            Log.d(TAG, Config.SYNTAX_EXCEPT + e);
         }
     }
 
@@ -64,7 +64,7 @@ public class ShareActivity extends AppCompatActivity implements ToContactFragmen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share);
 
-        Log.d(TAG, "----------> onCreate");
+        Log.d(TAG, Config.ONCREATE);
 
         mContext = getApplicationContext();
 
@@ -216,13 +216,9 @@ public class ShareActivity extends AppCompatActivity implements ToContactFragmen
 
     @Override
     public void onContactItemSelected(String link) {
-
-        Log.d(TAG, "--------> onContactItemSelected");
     }
 
     @Override
     public void onGroupItemSelected(String link) {
-
-        Log.d(TAG, "--------> onGroupItemSelected");
     }
 }

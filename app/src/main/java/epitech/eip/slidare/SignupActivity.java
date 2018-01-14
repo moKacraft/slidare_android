@@ -19,6 +19,7 @@ import com.github.kittinunf.fuel.core.Response;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
+import epitech.eip.slidare.request.Config;
 import epitech.eip.slidare.request.User;
 
 /**
@@ -47,7 +48,7 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        Log.d(TAG, "----------> onCreate");
+        Log.d(TAG, Config.ONCREATE);
 
         mFirstNameEditText = (EditText) findViewById(R.id.firstname);
         mLastNameEditText = (EditText) findViewById(R.id.lastname);
@@ -68,21 +69,21 @@ public class SignupActivity extends AppCompatActivity {
             String password = mPasswordEditText.getText().toString();
 
             if (password.compareTo(mPasswordConfirmEditText.getText().toString()) != 0)
-                Toast.makeText(SignupActivity.this, "Passwords must be identical.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignupActivity.this, Config.IDENTICAL_PWD, Toast.LENGTH_SHORT).show();
             else if (email.compareTo(mEmailConfirmEditText.getText().toString()) != 0)
-                Toast.makeText(SignupActivity.this, "Emails must be identical.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(SignupActivity.this, Config.IDENTICAL_MAIL, Toast.LENGTH_SHORT).show();
             else {
                 mBody = "{ \"first_name\": \"" + firstname + "\",\"last_name\": \"" + lastname + "\",\"email\": \"" + email + "\",\"password\": \"" + password + "\" }";
                 try {
                     Handler<String> handler = new Handler<String>() {
                         @Override
                         public void success(@NotNull Request request, @NotNull Response response, String s) {
-                            Log.d("createUser SUCCESS : ",response.toString());
+                            Log.d("createUser " + Config.ONSUCCESS,response.toString());
                             try {
                                 Handler<String> handler = new Handler<String>() {
                                     @Override
                                     public void success(@NotNull Request request, @NotNull Response response, String s) {
-                                        Log.d("loginUser SUCCESS : ",response.toString());
+                                        Log.d("loginUser " + Config.ONSUCCESS,response.toString());
 
                                         try {
                                             JSONObject data = new JSONObject(new String(response.getData()));
@@ -107,27 +108,27 @@ public class SignupActivity extends AppCompatActivity {
 
                                     @Override
                                     public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
-                                        Log.d("loginUser FAILURE : ",response.toString());
+                                        Log.d("loginUser " + Config.FAILURE,response.toString());
                                         Toast.makeText(SignupActivity.this, new String(response.getData()), Toast.LENGTH_SHORT).show();
                                     }
                                 };
                                 User.loginUser(mBody, handler);
                             }
                             catch (Exception error) {
-                                Log.d(TAG, "EXCEPTION ERROR : " + error);
+                                Log.d(TAG, Config.EXCEPTION + error);
                             }
                         }
 
                         @Override
                         public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
-                            Log.d("createUser FAILURE : ",response.toString());
-                            Toast.makeText(SignupActivity.this, "An error occurred while creating your profile.", Toast.LENGTH_SHORT).show();
+                            Log.d("createUser " + Config.FAILURE,response.toString());
+                            Toast.makeText(SignupActivity.this, Config.CREATEUSER_FAIL, Toast.LENGTH_SHORT).show();
                         }
                     };
                     User.createUser(mBody, handler);
                 }
                 catch (Exception error) {
-                    Log.d(TAG, "EXCEPTION ERROR : " + error);
+                    Log.d(TAG, Config.EXCEPTION + error);
                 }
             }
             }

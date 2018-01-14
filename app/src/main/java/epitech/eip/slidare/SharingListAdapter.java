@@ -1,21 +1,14 @@
 package epitech.eip.slidare;
 
 import android.content.Context;
-import android.util.Log;
-import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import java.util.List;
-
-/**
- * Created by 42350 on 26/09/2017.
- */
 
 public class SharingListAdapter extends BaseAdapter implements ListAdapter {
 
@@ -26,9 +19,6 @@ public class SharingListAdapter extends BaseAdapter implements ListAdapter {
     private List<String> mList;
 
     public SharingListAdapter(List<String> list, Context context, String token) {
-
-        Log.d(TAG, "------------> constructor");
-
         mList = list;
         mToken = token;
         mContext = context;
@@ -63,20 +53,6 @@ public class SharingListAdapter extends BaseAdapter implements ListAdapter {
 
         final TextView listItemText = (TextView)view.findViewById(R.id.list_item_text);
         listItemText.setText(mList.get(position));
-
-        /*TextView sendButton = (TextView) parent.findViewById(R.id.send);
-        sendButton.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-
-                String body = mList.get(position);
-
-                Log.d(TAG, "SEND = " + body);
-
-                notifyDataSetChanged();
-            }
-        });*/
-
         return view;
     }
 }

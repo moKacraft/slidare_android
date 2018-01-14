@@ -30,6 +30,7 @@ import org.json.JSONObject;
 
 import java.io.File;
 
+import epitech.eip.slidare.request.Config;
 import epitech.eip.slidare.request.User;
 
 /**
@@ -74,7 +75,7 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        Log.d(TAG, "----------> onCreate");
+        Log.d(TAG, Config.ONCREATE);
 
         Intent intent = getIntent();
         mToken = intent.getStringExtra("token");
@@ -102,14 +103,12 @@ public class SettingsActivity extends AppCompatActivity {
         View.OnClickListener mPhotoButtonListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            Log.d(TAG, "----------> PHOTO BUTTON");
-
             try{
                 Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                 startActivityForResult(cameraIntent, CAMERA_REQUEST);
             }
             catch(Exception error) {
-                Log.d(TAG, "EXCEPTION ERROR : " + error);
+                Log.d(TAG, Config.EXCEPTION + error);
             }
             }
         };
@@ -152,13 +151,13 @@ public class SettingsActivity extends AppCompatActivity {
                         @Override
                         public void success(@NotNull Request request, @NotNull Response response, String s) {
 
-                            Log.d("upUserName SUCCESS : ",response.toString());
-                            Toast.makeText(SettingsActivity.this, "Username successfully updated.", Toast.LENGTH_SHORT).show();
+                            Log.d("upUserName " + Config.ONSUCCESS,response.toString());
+                            Toast.makeText(SettingsActivity.this, Config.USERNAME_UPDATE, Toast.LENGTH_SHORT).show();
                             try {
                                 Handler<String> handler = new Handler<String>() {
                                     @Override
                                     public void success(@NotNull Request request, @NotNull Response response, String s) {
-                                        Log.d("fetchUser SUCCESS : ",response.toString());
+                                        Log.d("fetchUser " + Config.ONSUCCESS,response.toString());
 
                                         try {
                                             JSONObject data = new JSONObject(new String(response.getData()));
@@ -175,7 +174,7 @@ public class SettingsActivity extends AppCompatActivity {
                                                 Picasso.with(getApplicationContext()).load(new File(mUrlPicture)).fit().into(mUserImage);
                                             }
                                             catch (Exception error){
-                                                Log.d("No profile picture.", error.toString());
+                                                Log.d(Config.EXCEPTION, error.toString());
                                             }
 
                                             if (mPassword == null) {
@@ -194,27 +193,27 @@ public class SettingsActivity extends AppCompatActivity {
 
                                     @Override
                                     public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
-                                        Log.d("fetchUser FAILURE : ",response.toString());
+                                        Log.d("fetchUser " + Config.FAILURE,response.toString());
                                     }
                                 };
                                 User.fetchUser(mToken, handler);
                             }
                             catch (Exception error){
-                                Log.d(TAG, "EXCEPTION ERROR : " + error);
+                                Log.d(TAG, Config.EXCEPTION + error);
                             }
                         }
 
                         @Override
                         public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
 
-                            Log.d("upUserName FAILURE : ",response.toString());
-                            Toast.makeText(SettingsActivity.this, "Username updated failed.", Toast.LENGTH_SHORT).show();
+                            Log.d("upUserName " + Config.FAILURE,response.toString());
+                            Toast.makeText(SettingsActivity.this, Config.USERNAME_FAIL, Toast.LENGTH_SHORT).show();
                         }
                     };
                     User.updateUserName(mBodyUpdateUsername, mToken, handler);
                 }
                 catch (Exception error) {
-                    Log.d(TAG, "EXCEPTION ERROR : " + error);
+                    Log.d(TAG, Config.EXCEPTION + error);
                 }
             }
 
@@ -222,21 +221,21 @@ public class SettingsActivity extends AppCompatActivity {
                 if (newPassword.compareTo("") != 0 && confirmPassword.compareTo("") != 0) {
                     if (newPassword.compareTo(currentPassword) != 0){
                         if (newPassword.compareTo(confirmPassword) != 0)
-                            Toast.makeText(SettingsActivity.this, "New and confirmed password must be identicals.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(SettingsActivity.this, Config.NEW_CONFIRM_PWD, Toast.LENGTH_SHORT).show();
                         else {
                             mBodyUpdatePassword = "{ \"old_password\": \"" + currentPassword + "\",\"new_password\": \"" + newPassword + "\" }";
                             try {
                                 Handler<String> handler = new Handler<String>() {
                                     @Override
                                     public void success(@NotNull Request request, @NotNull Response response, String s) {
-                                        Log.d("upUserPass SUCCESS : ",response.toString());
+                                        Log.d("upUserPass " + Config.ONSUCCESS,response.toString());
 
-                                        Toast.makeText(SettingsActivity.this, "Password successfully updated.", Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(SettingsActivity.this, Config.PWD_UPDATE, Toast.LENGTH_SHORT).show();
                                         try {
                                             Handler<String> handler = new Handler<String>() {
                                                 @Override
                                                 public void success(@NotNull Request request, @NotNull Response response, String s) {
-                                                    Log.d("fetchUser SUCCESS : ",response.toString());
+                                                    Log.d("fetchUser " + Config.ONSUCCESS,response.toString());
 
                                                     try {
                                                         JSONObject data = new JSONObject(new String(response.getData()));
@@ -253,7 +252,7 @@ public class SettingsActivity extends AppCompatActivity {
                                                             Picasso.with(getApplicationContext()).load(new File(mUrlPicture)).fit().into(mUserImage);
                                                         }
                                                         catch (Exception error){
-                                                            Log.d("No profile picture.", error.toString());
+                                                            Log.d(Config.EXCEPTION, error.toString());
                                                         }
 
                                                         if (mPassword == null) {
@@ -272,40 +271,40 @@ public class SettingsActivity extends AppCompatActivity {
 
                                                 @Override
                                                 public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
-                                                    Log.d("fetchUser FAILURE : ",response.toString());
+                                                    Log.d("fetchUser " + Config.FAILURE,response.toString());
                                                 }
                                             };
                                             User.fetchUser(mToken, handler);
                                         }
                                         catch (Exception error){
-                                            Log.d(TAG, "EXCEPTION ERROR : " + error);
+                                            Log.d(TAG, Config.EXCEPTION + error);
                                         }
                                     }
 
                                     @Override
                                     public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
 
-                                        Log.d("upUserPass FAILURE : ",response.toString());
-                                        Toast.makeText(SettingsActivity.this, "Wrong password provided.", Toast.LENGTH_SHORT).show();
+                                        Log.d("upUserPass " + Config.FAILURE,response.toString());
+                                        Toast.makeText(SettingsActivity.this, Config.PWD_UPDATE_FAIL, Toast.LENGTH_SHORT).show();
                                     }
                                 };
                                 User.updateUserPassword(mBodyUpdatePassword, mToken, handler);
                             }
                             catch (Exception error) {
-                                Log.d(TAG, "EXCEPTION ERROR : " + error);
+                                Log.d(TAG, Config.EXCEPTION + error);
                             }
                         }
                     } else {
-                        Toast.makeText(SettingsActivity.this, "Current and new password identicals.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SettingsActivity.this, Config.CUR_NEW_IDENTIC, Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     if (newPassword.compareTo("") == 0 && confirmPassword.compareTo("") != 0)
-                        Toast.makeText(SettingsActivity.this, "You must confirm your new password.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SettingsActivity.this, Config.CONFIRM_PWD, Toast.LENGTH_SHORT).show();
                 }
             }
             else {
                 if (currentPassword.compareTo("") != 0)
-                    Toast.makeText(SettingsActivity.this, "Current Password incorrect.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SettingsActivity.this, Config.BAD_CURRENT_PWD, Toast.LENGTH_SHORT).show();
             }
             }
         };
@@ -345,7 +344,7 @@ public class SettingsActivity extends AppCompatActivity {
             Handler<String> handler = new Handler<String>() {
                 @Override
                 public void success(@NotNull Request request, @NotNull Response response, String s) {
-                    Log.d("fetchUser SUCCESS : ",response.toString());
+                    Log.d("fetchUser " + Config.ONSUCCESS,response.toString());
 
                     try {
                         JSONObject data = new JSONObject(new String(response.getData()));
@@ -362,7 +361,7 @@ public class SettingsActivity extends AppCompatActivity {
                             Picasso.with(getApplicationContext()).load(new File(mUrlPicture)).fit().into(mUserImage);
                         }
                         catch (Exception error){
-                            Log.d("No profile picture.", error.toString());
+                            Log.d(Config.EXCEPTION, error.toString());
                         }
 
                         if (mPassword == null) {
@@ -381,13 +380,13 @@ public class SettingsActivity extends AppCompatActivity {
 
                 @Override
                 public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
-                    Log.d("fetchUser FAILURE : ",response.toString());
+                    Log.d("fetchUser " + Config.FAILURE,response.toString());
                 }
             };
             User.fetchUser(mToken, handler);
         }
         catch (Exception error){
-            Log.d(TAG, "EXCEPTION ERROR : " + error);
+            Log.d(TAG, Config.EXCEPTION + error);
         }
     }
 
@@ -411,14 +410,14 @@ public class SettingsActivity extends AppCompatActivity {
             Handler<String> handler = new Handler<String>() {
                 @Override
                 public void success(@NotNull Request request, @NotNull Response response, String s) {
-                    Log.d("upUserPic SUCCESS : ",response.toString());
+                    Log.d("upUserPic " + Config.ONSUCCESS,response.toString());
 
-                    Toast.makeText(SettingsActivity.this, "Picture successfully updated.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(SettingsActivity.this, Config.PICTURE_UPDATE, Toast.LENGTH_SHORT).show();
                     try {
                         Handler<String> handler = new Handler<String>() {
                             @Override
                             public void success(@NotNull Request request, @NotNull Response response, String s) {
-                                Log.d("fetchUser SUCCESS : ",response.toString());
+                                Log.d("fetchUser " + Config.ONSUCCESS,response.toString());
 
                                 try {
                                     JSONObject data = new JSONObject(new String(response.getData()));
@@ -435,7 +434,7 @@ public class SettingsActivity extends AppCompatActivity {
                                         Picasso.with(getApplicationContext()).load(new File(mUrlPicture)).fit().into(mUserImage);
                                     }
                                     catch (Exception error){
-                                        Log.d("No profile picture.", error.toString());
+                                        Log.d(Config.EXCEPTION, error.toString());
                                     }
 
                                     if (mPassword == null) {
@@ -454,28 +453,27 @@ public class SettingsActivity extends AppCompatActivity {
 
                             @Override
                             public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
-                                Log.d("fetchUser FAILURE : ",response.toString());
+                                Log.d("fetchUser " + Config.FAILURE,response.toString());
                             }
                         };
                         User.fetchUser(mToken, handler);
                     }
                     catch (Exception error){
-                        Log.d(TAG, "EXCEPTION ERROR : " + error);
+                        Log.d(TAG, Config.EXCEPTION + error);
                     }
                 }
 
                 @Override
                 public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
-
-                    Log.d("upUserPic FAILURE : ",response.toString());
-                    Toast.makeText(SettingsActivity.this, "Picture update failed.", Toast.LENGTH_SHORT).show();
+                    Log.d("upUserPic " + Config.FAILURE,response.toString());
+                    Toast.makeText(SettingsActivity.this, Config.PIC_UPDATE_FAIL, Toast.LENGTH_SHORT).show();
                 }
             };
             User.updateUserPicture(mBodyUpdatePicture, mToken, handler);
             Picasso.with(getApplicationContext()).load(new File(url)).fit().into(mUserImage);
         }
         catch (Exception e) {
-            Log.d(TAG, "EXCEPTION ERROR : " + e);
+            Log.d(TAG, Config.EXCEPTION + e);
         }
     }
 }

@@ -28,6 +28,7 @@ import org.json.JSONObject;
 
 import java.util.Arrays;
 
+import epitech.eip.slidare.request.Config;
 import epitech.eip.slidare.request.User;
 
 public class MainActivity extends AppCompatActivity {
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Log.d(TAG, "----------> onCreate");
+        Log.d(TAG, Config.ONCREATE);
 
         mEmailEditText = (EditText) findViewById(R.id.email_field);
         mPasswordEditText = (EditText) findViewById(R.id.password_field);
@@ -70,21 +71,21 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onSuccess(LoginResult loginResult) {
-                Log.d(TAG, "----------> onSuccess");
+                Log.d(TAG, Config.ONSUCCESS);
                 mLoginResult = loginResult;
                 getUserDetailsFromFB(mLoginResult);
             }
 
             @Override
             public void onCancel() {
-                Log.d(TAG, "----------> onCancel");
-                Toast.makeText(MainActivity.this, "Login attempt canceled.", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, Config.ONCANCEL);
+                Toast.makeText(MainActivity.this, Config.LOGIN_CANCEL, Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(FacebookException exception) {
-                Log.d(TAG, "----------> onError");
-                Toast.makeText(MainActivity.this, "Login attempt failed.", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, Config.ONERROR);
+                Toast.makeText(MainActivity.this, Config.LOGIN_FAIL, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -100,7 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 Handler<String> handler = new Handler<String>() {
                     @Override
                     public void success(@NotNull Request request, @NotNull Response response, String s) {
-                        Log.d("loginUser SUCCESS : ",response.toString());
+                        Log.d("loginUser " + Config.ONSUCCESS ,response.toString());
 
                         try {
                             JSONObject data = new JSONObject(new String(response.getData()));
@@ -112,11 +113,13 @@ public class MainActivity extends AppCompatActivity {
                             editor.putString("userToken", mToken);
                             editor.putString("userId", mId);
                             editor.putString("fbUrlImage", mUrlPicture);
+                            editor.putString("userEmail", data.getString("email"));
                             editor.apply();
 
                             Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                             intent.putExtra("token", mToken);
                             intent.putExtra("fbUrlImage", mUrlPicture);
+                            intent.putExtra("email", data.getString("email"));
                             startActivity(intent);
                             finish();
                         }
@@ -127,8 +130,8 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
-                        Log.d("loginUser FAILURE : ",response.toString());
-                        Toast.makeText(MainActivity.this, "Email or password incorrect.", Toast.LENGTH_SHORT).show();
+                        Log.d("loginUser " + Config.FAILURE,response.toString());
+                        Toast.makeText(MainActivity.this, Config.LOGIN_ERROR, Toast.LENGTH_SHORT).show();
                     }
                 };
                 User.loginUser(mBody, handler);
@@ -142,18 +145,16 @@ public class MainActivity extends AppCompatActivity {
         View.OnClickListener mSignupTextListener = new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-
-                Intent intent = new Intent(MainActivity.this, SignupActivity.class);
-                startActivity(intent);
+            Intent intent = new Intent(MainActivity.this, SignupActivity.class);
+            startActivity(intent);
             }
         };
 
         View.OnClickListener mForgetListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Intent intent = new Intent(MainActivity.this, ForgetActivity.class);
-                startActivity(intent);
+            Intent intent = new Intent(MainActivity.this, ForgetActivity.class);
+            startActivity(intent);
             }
         };
 
@@ -166,17 +167,14 @@ public class MainActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        Log.d(TAG, "----------> onActivityResult");
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
     public void getUserDetailsFromFB(LoginResult loginResult) {
 
-        Log.d(TAG, "----------> getUserDetailsFromFB");
         GraphRequest req = GraphRequest.newMeRequest(loginResult.getAccessToken(), new GraphRequest.GraphJSONObjectCallback() {
             @Override
             public void onCompleted(JSONObject object, GraphResponse response) {
-
             try{
                 String[] strings = object.getString("name").split(" ");
                 mBody = "{ \"first_name\": \"" + strings[0] + "\",\"last_name\": \"" + strings[1] + "\",\"email\": \"" + object.getString("email") + "\",\"fb_token\": \"" + mLoginResult.getAccessToken().getToken() + "\",\"fb_user_id\": \"" + mLoginResult.getAccessToken().getUserId() + "\" }";
@@ -184,12 +182,12 @@ public class MainActivity extends AppCompatActivity {
                 Handler<String> handler = new Handler<String>() {
                     @Override
                     public void success(@NotNull Request request, @NotNull Response response, String s) {
-                        Log.d("createUser SUCCESS : ",response.toString());
+                        Log.d("createUser " + Config.ONSUCCESS,response.toString());
                         try {
                             Handler<String> handler = new Handler<String>() {
                                 @Override
                                 public void success(@NotNull Request request, @NotNull Response response, String s) {
-                                    Log.d("loginUser SUCCESS : ",response.toString());
+                                    Log.d("loginUser " + Config.ONSUCCESS,response.toString());
 
                                     try {
                                         JSONObject data = new JSONObject(new String(response.getData()));
@@ -216,27 +214,27 @@ public class MainActivity extends AppCompatActivity {
 
                                 @Override
                                 public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
-                                    Log.d("loginUser FAILURE : ",response.toString());
-                                    Toast.makeText(MainActivity.this, "Email or password incorrect.", Toast.LENGTH_SHORT).show();
+                                    Log.d("loginUser " + Config.FAILURE,response.toString());
+                                    Toast.makeText(MainActivity.this, Config.LOGIN_ERROR, Toast.LENGTH_SHORT).show();
                                 }
                             };
                             User.loginUser(mBody, handler);
                         }
                         catch (Exception error) {
-                            Log.d(TAG, "EXCEPTION ERROR : " + error);
+                            Log.d(TAG, Config.EXCEPTION + error);
                         }
                     }
 
                     @Override
                     public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
-                        Log.d("createUser FAILURE: ",response.toString());
+                        Log.d("createUser " + Config.FAILURE,response.toString());
                         Toast.makeText(MainActivity.this, new String(response.getData()), Toast.LENGTH_SHORT).show();
                     }
                 };
                 User.createUser(mBody, handler);
             }
             catch (Exception e){
-                Log.d(TAG, "EXCEPTION ERROR : " + e);
+                Log.d(TAG, Config.EXCEPTION + e);
             }
             }
         });

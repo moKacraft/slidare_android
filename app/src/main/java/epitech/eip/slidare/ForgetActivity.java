@@ -16,6 +16,7 @@ import com.github.kittinunf.fuel.core.Response;
 
 import org.jetbrains.annotations.NotNull;
 
+import epitech.eip.slidare.request.Config;
 import epitech.eip.slidare.request.User;
 
 public class ForgetActivity extends AppCompatActivity {
@@ -49,20 +50,20 @@ public class ForgetActivity extends AppCompatActivity {
                 Handler<String> handler = new Handler<String>() {
                     @Override
                     public void success(@NotNull Request request, @NotNull Response response, String s) {
-                        Log.d("resetPwd SUCCESS : ",response.toString());
-                        Toast.makeText(ForgetActivity.this, "A new password have been send to " + mEmail.getText().toString() + ".", Toast.LENGTH_SHORT).show();
+                        Log.d("resetPwd " + Config.ONSUCCESS,response.toString());
+                        Toast.makeText(ForgetActivity.this, Config.NEW_PWD + mEmail.getText().toString() + ".", Toast.LENGTH_SHORT).show();
                     }
 
                     @Override
                     public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
-                        Log.d("resetPwd FAILURE: ",response.toString());
+                        Log.d("resetPwd " + Config.FAILURE,response.toString());
                         Toast.makeText(ForgetActivity.this, "Error on sending email.", Toast.LENGTH_SHORT).show();
                     }
                 };
                 User.resetPassword(mBody, handler);
             }
             catch (Exception error) {
-                Log.d(TAG, "EXCEPTION ERROR : " + error);
+                Log.d(TAG, Config.EXCEPTION + error);
             }
             }
         };

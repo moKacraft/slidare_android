@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.github.kittinunf.fuel.Fuel;
@@ -29,9 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by 42350 on 27/09/2017.
- */
+import epitech.eip.slidare.request.Config;
 
 public class ToContactFragment extends Fragment {
 
@@ -52,7 +49,7 @@ public class ToContactFragment extends Fragment {
     @Override public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tocontact, container, false);
 
-        Log.d(TAG, "----------> onCreateView");
+        Log.d(TAG, Config.ONCREATEVIEW);
 
         mContext = getActivity().getApplicationContext();
         Intent intent = getActivity().getIntent();
@@ -61,27 +58,25 @@ public class ToContactFragment extends Fragment {
         try {
             userContacts(mToken);
         } catch (Exception error) {
-            Log.d(TAG, "EXCEPTION ERROR = " + error);
+            Log.d(TAG, Config.EXCEPTION + error);
         }
 
         mListView = (ListView) view.findViewById(R.id.list_contact);
-
         mAttachment = (ImageView) view.findViewById(R.id.ico_attachment);
         mAttachment.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
 
-                if (mListView.getCheckedItemPosition() > -1){
-                    ShareActivity.mEmails.put(mListView.getItemAtPosition(mListView.getCheckedItemPosition()).toString());
-                    ImagePicker.setMinQuality(600, 600);
-                    ImagePicker.pickImage(getActivity(), "Select your image:");
-                } else {
-                    Toast.makeText(mContext, "You must choose a contact first.", Toast.LENGTH_SHORT).show();
-                }
+            if (mListView.getCheckedItemPosition() > -1){
+                ShareActivity.mEmails.put(mListView.getItemAtPosition(mListView.getCheckedItemPosition()).toString());
+                ImagePicker.setMinQuality(600, 600);
+                ImagePicker.pickImage(getActivity(), "Select your image:");
+            } else {
+                Toast.makeText(mContext, "You must choose a contact first.", Toast.LENGTH_SHORT).show();
+            }
             }
         });
-
         return view;
     }
 
@@ -117,15 +112,13 @@ public class ToContactFragment extends Fragment {
 
     public void userContacts(String token) throws Exception {
 
-        Log.d(TAG, "----------> userContacts");
-
         Map<String, Object> header = new HashMap<>();
         header.put("Authorization", "Bearer "+token);
 
         Fuel.get("http://34.238.153.180:50000/userContacts").header(header).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
-                Log.d("userContacts SUCCESS : ",response.toString());
+                Log.d("userContacts " + Config.ONSUCCESS,response.toString());
 
                 try {
                     JSONObject data = new JSONObject(new String(response.getData()));
@@ -160,7 +153,7 @@ public class ToContactFragment extends Fragment {
 
             @Override
             public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
-                Log.d("userContacts FAILURE : ",response.toString());
+                Log.d("userContacts " + Config.FAILURE,response.toString());
             }
         });
     }

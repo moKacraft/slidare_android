@@ -6,6 +6,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 
+import epitech.eip.slidare.request.Config;
+
 /**
  * Created by ferrei_e on 13/02/2017.
  */
@@ -19,7 +21,7 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-        Log.d(TAG,"----------> onCreate");
+        Log.d(TAG, Config.ONCREATE);
 
         SharedPreferences settings = getSharedPreferences("USERDATA", 0);
         String userToken = settings.getString("userToken", null);
