@@ -6,10 +6,6 @@ import com.github.kittinunf.fuel.core.Handler;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by 42350 on 03/01/2018.
- */
-
 public class User {
 
     static final String TAG = "UserRequest";
@@ -35,5 +31,29 @@ public class User {
         header.put("Authorization", "Bearer " + token);
 
         Fuel.get(Config.URL_API + "fetchUser").header(header).responseString(handler);
+    }
+
+    static public void updateUserPicture(final String body, final String token, Handler<String> handler) throws Exception {
+
+        Map<String, Object> header = new HashMap<>();
+        header.put("Authorization", "Bearer " + token);
+
+        Fuel.post(Config.URL_API + "updateUserPicture").header(header).body(body.getBytes()).responseString(handler);
+    }
+
+    static public void updateUserName(final String body, final String token, Handler<String> handler) throws Exception {
+
+        Map<String, Object> header = new HashMap<>();
+        header.put("Authorization", "Bearer " + token);
+
+        Fuel.post(Config.URL_API + "updateUserName").header(header).body(body.getBytes()).responseString(handler);
+    }
+
+    static public void updateUserPassword(final String body, final String token, Handler<String> handler) throws Exception {
+
+        Map<String, Object> header = new HashMap<>();
+        header.put("Authorization", "Bearer " + token);
+
+        Fuel.post(Config.URL_API + "updateUserPassword").header(header).body(body.getBytes()).responseString(handler);
     }
 }

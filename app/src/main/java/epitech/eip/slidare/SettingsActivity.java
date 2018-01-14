@@ -18,7 +18,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.kittinunf.fuel.Fuel;
 import com.github.kittinunf.fuel.core.FuelError;
 import com.github.kittinunf.fuel.core.Handler;
 import com.github.kittinunf.fuel.core.Request;
@@ -30,8 +29,8 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
+
+import epitech.eip.slidare.request.User;
 
 /**
  * Created by ferrei_e on 13/02/2017.
@@ -147,10 +146,72 @@ public class SettingsActivity extends AppCompatActivity {
             String confirmPassword = mConfirmPassword.getText().toString();
 
             if (mUsername.compareTo(username) != 0){
-
                 mBodyUpdateUsername = "{ \"username\": \"" + username + "\" }";
                 try {
-                    updateUserName(mBodyUpdateUsername, mToken);
+                    Handler<String> handler = new Handler<String>() {
+                        @Override
+                        public void success(@NotNull Request request, @NotNull Response response, String s) {
+
+                            Log.d("upUserName SUCCESS : ",response.toString());
+                            Toast.makeText(SettingsActivity.this, "Username successfully updated.", Toast.LENGTH_SHORT).show();
+                            try {
+                                Handler<String> handler = new Handler<String>() {
+                                    @Override
+                                    public void success(@NotNull Request request, @NotNull Response response, String s) {
+                                        Log.d("fetchUser SUCCESS : ",response.toString());
+
+                                        try {
+                                            JSONObject data = new JSONObject(new String(response.getData()));
+                                            mName.setText(data.getString("username"));
+                                            mUserEmail.setText(data.getString("email"));
+                                            mUsername = data.getString("username");
+                                            mNewUsername.setText(mUsername);
+
+                                            // Au cas où, la connexion se fait via l'api FB, ces valeurs peuvent être nulles.
+                                            try {
+                                                mPassword = data.getString("password");
+                                                mUrlPicture = data.getString("profile_picture_url");
+                                                Log.d(TAG, "Url picture : " + mUrlPicture);
+                                                Picasso.with(getApplicationContext()).load(new File(mUrlPicture)).fit().into(mUserImage);
+                                            }
+                                            catch (Exception error){
+                                                Log.d("No profile picture.", error.toString());
+                                            }
+
+                                            if (mPassword == null) {
+                                                mCurrentPassword.setVisibility(View.INVISIBLE);
+                                                mNewPassword.setVisibility(View.INVISIBLE);
+                                            } else {
+                                                mCurrentPassword.setText("");
+                                                mNewPassword.setText("");
+                                                mConfirmPassword.setText("");
+                                            }
+                                        }
+                                        catch (Throwable tx) {
+                                            tx.printStackTrace();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
+                                        Log.d("fetchUser FAILURE : ",response.toString());
+                                    }
+                                };
+                                User.fetchUser(mToken, handler);
+                            }
+                            catch (Exception error){
+                                Log.d(TAG, "EXCEPTION ERROR : " + error);
+                            }
+                        }
+
+                        @Override
+                        public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
+
+                            Log.d("upUserName FAILURE : ",response.toString());
+                            Toast.makeText(SettingsActivity.this, "Username updated failed.", Toast.LENGTH_SHORT).show();
+                        }
+                    };
+                    User.updateUserName(mBodyUpdateUsername, mToken, handler);
                 }
                 catch (Exception error) {
                     Log.d(TAG, "EXCEPTION ERROR : " + error);
@@ -165,7 +226,70 @@ public class SettingsActivity extends AppCompatActivity {
                         else {
                             mBodyUpdatePassword = "{ \"old_password\": \"" + currentPassword + "\",\"new_password\": \"" + newPassword + "\" }";
                             try {
-                                updateUserPassword(mBodyUpdatePassword, mToken);
+                                Handler<String> handler = new Handler<String>() {
+                                    @Override
+                                    public void success(@NotNull Request request, @NotNull Response response, String s) {
+                                        Log.d("upUserPass SUCCESS : ",response.toString());
+
+                                        Toast.makeText(SettingsActivity.this, "Password successfully updated.", Toast.LENGTH_SHORT).show();
+                                        try {
+                                            Handler<String> handler = new Handler<String>() {
+                                                @Override
+                                                public void success(@NotNull Request request, @NotNull Response response, String s) {
+                                                    Log.d("fetchUser SUCCESS : ",response.toString());
+
+                                                    try {
+                                                        JSONObject data = new JSONObject(new String(response.getData()));
+                                                        mName.setText(data.getString("username"));
+                                                        mUserEmail.setText(data.getString("email"));
+                                                        mUsername = data.getString("username");
+                                                        mNewUsername.setText(mUsername);
+
+                                                        // Au cas où, la connexion se fait via l'api FB, ces valeurs peuvent être nulles.
+                                                        try {
+                                                            mPassword = data.getString("password");
+                                                            mUrlPicture = data.getString("profile_picture_url");
+                                                            Log.d(TAG, "Url picture : " + mUrlPicture);
+                                                            Picasso.with(getApplicationContext()).load(new File(mUrlPicture)).fit().into(mUserImage);
+                                                        }
+                                                        catch (Exception error){
+                                                            Log.d("No profile picture.", error.toString());
+                                                        }
+
+                                                        if (mPassword == null) {
+                                                            mCurrentPassword.setVisibility(View.INVISIBLE);
+                                                            mNewPassword.setVisibility(View.INVISIBLE);
+                                                        } else {
+                                                            mCurrentPassword.setText("");
+                                                            mNewPassword.setText("");
+                                                            mConfirmPassword.setText("");
+                                                        }
+                                                    }
+                                                    catch (Throwable tx) {
+                                                        tx.printStackTrace();
+                                                    }
+                                                }
+
+                                                @Override
+                                                public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
+                                                    Log.d("fetchUser FAILURE : ",response.toString());
+                                                }
+                                            };
+                                            User.fetchUser(mToken, handler);
+                                        }
+                                        catch (Exception error){
+                                            Log.d(TAG, "EXCEPTION ERROR : " + error);
+                                        }
+                                    }
+
+                                    @Override
+                                    public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
+
+                                        Log.d("upUserPass FAILURE : ",response.toString());
+                                        Toast.makeText(SettingsActivity.this, "Wrong password provided.", Toast.LENGTH_SHORT).show();
+                                    }
+                                };
+                                User.updateUserPassword(mBodyUpdatePassword, mToken, handler);
                             }
                             catch (Exception error) {
                                 Log.d(TAG, "EXCEPTION ERROR : " + error);
@@ -218,7 +342,49 @@ public class SettingsActivity extends AppCompatActivity {
         mLogout.setOnClickListener(mLogoutListener);
 
         try {
-            fetchUser(mToken);
+            Handler<String> handler = new Handler<String>() {
+                @Override
+                public void success(@NotNull Request request, @NotNull Response response, String s) {
+                    Log.d("fetchUser SUCCESS : ",response.toString());
+
+                    try {
+                        JSONObject data = new JSONObject(new String(response.getData()));
+                        mName.setText(data.getString("username"));
+                        mUserEmail.setText(data.getString("email"));
+                        mUsername = data.getString("username");
+                        mNewUsername.setText(mUsername);
+
+                        // Au cas où, la connexion se fait via l'api FB, ces valeurs peuvent être nulles.
+                        try {
+                            mPassword = data.getString("password");
+                            mUrlPicture = data.getString("profile_picture_url");
+                            Log.d(TAG, "Url picture : " + mUrlPicture);
+                            Picasso.with(getApplicationContext()).load(new File(mUrlPicture)).fit().into(mUserImage);
+                        }
+                        catch (Exception error){
+                            Log.d("No profile picture.", error.toString());
+                        }
+
+                        if (mPassword == null) {
+                            mCurrentPassword.setVisibility(View.INVISIBLE);
+                            mNewPassword.setVisibility(View.INVISIBLE);
+                        } else {
+                            mCurrentPassword.setText("");
+                            mNewPassword.setText("");
+                            mConfirmPassword.setText("");
+                        }
+                    }
+                    catch (Throwable tx) {
+                        tx.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
+                    Log.d("fetchUser FAILURE : ",response.toString());
+                }
+            };
+            User.fetchUser(mToken, handler);
         }
         catch (Exception error){
             Log.d(TAG, "EXCEPTION ERROR : " + error);
@@ -242,145 +408,74 @@ public class SettingsActivity extends AppCompatActivity {
                 url = ImagePicker.getImagePathFromResult(this, requestCode, resultCode, data);
             }
             mBodyUpdatePicture = "{ \"profile_picture_url\": \"" + url + "\" }";
-            updateUserPicture(mBodyUpdatePicture, mToken);
+            Handler<String> handler = new Handler<String>() {
+                @Override
+                public void success(@NotNull Request request, @NotNull Response response, String s) {
+                    Log.d("upUserPic SUCCESS : ",response.toString());
+
+                    Toast.makeText(SettingsActivity.this, "Picture successfully updated.", Toast.LENGTH_SHORT).show();
+                    try {
+                        Handler<String> handler = new Handler<String>() {
+                            @Override
+                            public void success(@NotNull Request request, @NotNull Response response, String s) {
+                                Log.d("fetchUser SUCCESS : ",response.toString());
+
+                                try {
+                                    JSONObject data = new JSONObject(new String(response.getData()));
+                                    mName.setText(data.getString("username"));
+                                    mUserEmail.setText(data.getString("email"));
+                                    mUsername = data.getString("username");
+                                    mNewUsername.setText(mUsername);
+
+                                    // Au cas où, la connexion se fait via l'api FB, ces valeurs peuvent être nulles.
+                                    try {
+                                        mPassword = data.getString("password");
+                                        mUrlPicture = data.getString("profile_picture_url");
+                                        Log.d(TAG, "Url picture : " + mUrlPicture);
+                                        Picasso.with(getApplicationContext()).load(new File(mUrlPicture)).fit().into(mUserImage);
+                                    }
+                                    catch (Exception error){
+                                        Log.d("No profile picture.", error.toString());
+                                    }
+
+                                    if (mPassword == null) {
+                                        mCurrentPassword.setVisibility(View.INVISIBLE);
+                                        mNewPassword.setVisibility(View.INVISIBLE);
+                                    } else {
+                                        mCurrentPassword.setText("");
+                                        mNewPassword.setText("");
+                                        mConfirmPassword.setText("");
+                                    }
+                                }
+                                catch (Throwable tx) {
+                                    tx.printStackTrace();
+                                }
+                            }
+
+                            @Override
+                            public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
+                                Log.d("fetchUser FAILURE : ",response.toString());
+                            }
+                        };
+                        User.fetchUser(mToken, handler);
+                    }
+                    catch (Exception error){
+                        Log.d(TAG, "EXCEPTION ERROR : " + error);
+                    }
+                }
+
+                @Override
+                public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
+
+                    Log.d("upUserPic FAILURE : ",response.toString());
+                    Toast.makeText(SettingsActivity.this, "Picture update failed.", Toast.LENGTH_SHORT).show();
+                }
+            };
+            User.updateUserPicture(mBodyUpdatePicture, mToken, handler);
             Picasso.with(getApplicationContext()).load(new File(url)).fit().into(mUserImage);
         }
         catch (Exception e) {
             Log.d(TAG, "EXCEPTION ERROR : " + e);
         }
-    }
-
-    public void fetchUser(String token) throws Exception {
-
-        Map<String, Object> header = new HashMap<>();
-        header.put("Authorization", "Bearer "+token);
-
-        Fuel.get("http://34.238.153.180:50000/fetchUser").header(header).responseString(new Handler<String>() {
-            @Override
-            public void success(@NotNull Request request, @NotNull Response response, String s) {
-                Log.d("fetchUser SUCCESS : ",response.toString());
-
-                try {
-                    JSONObject data = new JSONObject(new String(response.getData()));
-                    mName.setText(data.getString("username"));
-                    mUserEmail.setText(data.getString("email"));
-                    mUsername = data.getString("username");
-                    mNewUsername.setText(mUsername);
-
-                    // Au cas où, la connexion se fait via l'api FB, ces valeurs peuvent être nulles.
-                    try {
-                        mPassword = data.getString("password");
-                        mUrlPicture = data.getString("profile_picture_url");
-                        Log.d(TAG, "Url picture : " + mUrlPicture);
-                        Picasso.with(getApplicationContext()).load(new File(mUrlPicture)).fit().into(mUserImage);
-                    }
-                    catch (Exception error){
-                        Log.d("No profile picture.", error.toString());
-                    }
-
-                    if (mPassword == null) {
-                        mCurrentPassword.setVisibility(View.INVISIBLE);
-                        mNewPassword.setVisibility(View.INVISIBLE);
-                    } else {
-                        mCurrentPassword.setText("");
-                        mNewPassword.setText("");
-                        mConfirmPassword.setText("");
-                    }
-                } catch (Throwable tx) {
-                    tx.printStackTrace();
-                }
-            }
-
-            @Override
-            public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
-                Log.d("fetchUser FAILURE : ",response.toString());
-            }
-        });
-    }
-
-    public void updateUserPicture(String body, String token) throws Exception {
-
-        Map<String, Object> header = new HashMap<>();
-        header.put("Authorization", "Bearer "+token);
-
-        Fuel.post("http://34.238.153.180:50000/updateUserPicture").header(header).body(body.getBytes()).responseString(new Handler<String>() {
-            @Override
-            public void success(@NotNull Request request, @NotNull Response response, String s) {
-
-                Log.d("upUserPic SUCCESS : ",response.toString());
-                Toast.makeText(SettingsActivity.this, "Picture successfully updated.", Toast.LENGTH_SHORT).show();
-
-                try {
-                    fetchUser(mToken);
-                }
-                catch (Exception error){
-                    Log.d(TAG, "EXCEPTION ERROR : " + error);
-                }
-            }
-
-            @Override
-            public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
-
-                Log.d("upUserPic FAILURE : ",response.toString());
-                Toast.makeText(SettingsActivity.this, "Picture update failed.", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    public void updateUserName(String body, String token) throws Exception {
-
-        Map<String, Object> header = new HashMap<>();
-        header.put("Authorization", "Bearer "+token);
-
-        Fuel.post("http://34.238.153.180:50000/updateUserName").header(header).body(body.getBytes()).responseString(new Handler<String>() {
-            @Override
-            public void success(@NotNull Request request, @NotNull Response response, String s) {
-
-                Log.d("upUserName SUCCESS : ",response.toString());
-                Toast.makeText(SettingsActivity.this, "Username successfully updated.", Toast.LENGTH_SHORT).show();
-
-                try {
-                    fetchUser(mToken);
-                }
-                catch (Exception error){
-                    Log.d(TAG, "EXCEPTION ERROR : " + error);
-                }
-            }
-
-            @Override
-            public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
-
-                Log.d("upUserName FAILURE : ",response.toString());
-                Toast.makeText(SettingsActivity.this, "Username updated failed.", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    public void updateUserPassword(String body, String token) throws Exception {
-
-        Map<String, Object> header = new HashMap<>();
-        header.put("Authorization", "Bearer "+token);
-
-        Fuel.post("http://34.238.153.180:50000/updateUserPassword").header(header).body(body.getBytes()).responseString(new Handler<String>() {
-            @Override
-            public void success(@NotNull Request request, @NotNull Response response, String s) {
-
-                Log.d("upUserPass SUCCESS : ",response.toString());
-                Toast.makeText(SettingsActivity.this, "Password successfully updated.", Toast.LENGTH_SHORT).show();
-                try {
-                    fetchUser(mToken);
-                }
-                catch (Exception error){
-                    Log.d(TAG, "EXCEPTION ERROR : " + error);
-                }
-            }
-
-            @Override
-            public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
-
-                Log.d("upUserPass FAILURE : ",response.toString());
-                Toast.makeText(SettingsActivity.this, "Wrong password provided.", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 }

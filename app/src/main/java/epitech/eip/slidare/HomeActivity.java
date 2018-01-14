@@ -469,6 +469,10 @@ public class HomeActivity extends AppCompatActivity {
                     try {
                         JSONObject data = new JSONObject(new String(response.getData()));
                         JSONArray fileUrls = data.getJSONArray("file_urls");
+
+                        Log.d(TAG, "Data = " + data);
+                        Log.d(TAG, "Urls = " + fileUrls);
+
                         String urlStr = fileUrls.toString().replace("[\"", "").replace("\"]", "").replaceAll("\\\\", "");
                         mList = new ArrayList<String>();
                         mList.add(urlStr);
@@ -542,6 +546,7 @@ public class HomeActivity extends AppCompatActivity {
                     JSONObject data = new JSONObject(new String(response.getData()));
                     JSONArray fileUrls = data.getJSONArray("file_urls");
 
+                    Log.d(TAG, "Data = " + data);
                     Log.d(TAG, "Urls = " + fileUrls);
 
                     String urlStr = fileUrls.toString().replace("[\"", "").replace("\"]", "").replaceAll("\\\\", "");
