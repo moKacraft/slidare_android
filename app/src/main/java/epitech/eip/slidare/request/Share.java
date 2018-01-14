@@ -21,4 +21,12 @@ public class Share {
 
         Fuel.get(Config.URL_API + "getUserFiles").header(header).responseString(handler);
     }
+
+    static public void addFile(final String body, final String token, Handler<String> handler) throws Exception {
+
+        Map<String, Object> header = new HashMap<>();
+        header.put("Authorization", "Bearer " + token);
+
+        Fuel.post(Config.URL_API + "addFileToList").header(header).body(body.getBytes()).responseString(handler);
+    }
 }

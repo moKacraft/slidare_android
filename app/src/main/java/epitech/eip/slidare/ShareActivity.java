@@ -10,13 +10,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 import com.mvc.imagepicker.ImagePicker;
 
 import org.json.JSONArray;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -32,19 +35,14 @@ import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
+import epitech.eip.slidare.request.Config;
 import epitech.eip.slidare.util.encryptUtils;
-
-/**
- * Created by 42350 on 25/09/2017.
- */
 
 public class ShareActivity extends AppCompatActivity implements ToContactFragment.OnItemSelectedListener, ToGroupFragment.OnItemSelectedListener {
 
     static final String TAG = "ShareActivity";
 
     private Context mContext;
-
-    //private String mToken;
 
     public static JSONArray mEmails = new JSONArray();
 
@@ -55,7 +53,7 @@ public class ShareActivity extends AppCompatActivity implements ToContactFragmen
     private Socket mSocket;
     {
         try {
-            mSocket = IO.socket("http://34.238.153.180:8090");
+            mSocket = IO.socket(Config.URL_SOCKET);
         } catch (URISyntaxException e) {
             Log.d(TAG, "SYNTAX EXCEPTION = " + e);
         }
@@ -70,8 +68,37 @@ public class ShareActivity extends AppCompatActivity implements ToContactFragmen
 
         mContext = getApplicationContext();
 
-        //Intent intent = getIntent();
-        //mToken = intent.getStringExtra("token");
+        mSocket.on("server ready", new Emitter.Listener() {
+            @Override
+            public void call(final Object... args) {
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                try {
+                    java.net.Socket sock;
+                    sock = new java.net.Socket(Config.IP, (int)args[0]);
+                    OutputStream is = sock.getOutputStream();
+
+                    File arg = new File(getCacheDir(), (String)args[1]);
+
+                    FileInputStream fis = new FileInputStream(arg);
+                    BufferedInputStream bis = new BufferedInputStream(fis);
+                    byte[] buffer = new byte[4096];
+                    int ret;
+                    while ((ret = fis.read(buffer)) > 0) {
+                        is.write(buffer, 0, ret);
+                    }
+                    fis.close();
+                    bis.close();
+                    is.close();
+                    sock.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
+                }
+            }).start();
+            }
+        });
 
         mToContact = (TextView) findViewById(R.id.tocontact);
         mToGroup = (TextView) findViewById(R.id.togroup);
@@ -80,33 +107,30 @@ public class ShareActivity extends AppCompatActivity implements ToContactFragmen
         View.OnClickListener mToContactListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                getFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.tocontact_fragment, new ToContactFragment())
-                        .addToBackStack(null)
-                        .commit();
-
-                mToContact.setBackgroundResource(R.drawable.contact_left);
-                mToContact.setTextColor(ContextCompat.getColor(mContext, R.color.blue_back));
-                mToGroup.setBackgroundResource(R.drawable.contact_right);
-                mToGroup.setTextColor(ContextCompat.getColor(mContext, R.color.whiteColor));
+            getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.tocontact_fragment, new ToContactFragment())
+                .addToBackStack(null)
+                .commit();
+            mToContact.setBackgroundResource(R.drawable.contact_left);
+            mToContact.setTextColor(ContextCompat.getColor(mContext, R.color.blue_back));
+            mToGroup.setBackgroundResource(R.drawable.contact_right);
+            mToGroup.setTextColor(ContextCompat.getColor(mContext, R.color.whiteColor));
             }
         };
 
         View.OnClickListener mToGroupListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                getFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.tocontact_fragment, new ToGroupFragment())
-                        .addToBackStack(null)
-                        .commit();
-                mToContact.setBackgroundResource(R.drawable.group_left);
-                mToContact.setTextColor(ContextCompat.getColor(mContext, R.color.whiteColor));
-                mToGroup.setBackgroundResource(R.drawable.group_right);
-                mToGroup.setTextColor(ContextCompat.getColor(mContext, R.color.blue_back));
+            getFragmentManager()
+                .beginTransaction()
+                .replace(R.id.tocontact_fragment, new ToGroupFragment())
+                .addToBackStack(null)
+                .commit();
+            mToContact.setBackgroundResource(R.drawable.group_left);
+            mToContact.setTextColor(ContextCompat.getColor(mContext, R.color.whiteColor));
+            mToGroup.setBackgroundResource(R.drawable.group_right);
+            mToGroup.setTextColor(ContextCompat.getColor(mContext, R.color.blue_back));
             }
         };
 
@@ -125,14 +149,11 @@ public class ShareActivity extends AppCompatActivity implements ToContactFragmen
     @Override
     public void onResume() {
         super.onResume();
-
         mEmails = new JSONArray();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        //Log.d(TAG, "EMAIL !!!!!!!! = " + mEmails);
 
         try {
             InputStream is = ImagePicker.getInputStreamFromResult(mContext, requestCode, resultCode, data);
@@ -147,19 +168,17 @@ public class ShareActivity extends AppCompatActivity implements ToContactFragmen
 
                 File encrypted = new File(getCacheDir(), "encrypted");
                 FileOutputStream outFile = new FileOutputStream(encrypted);
-
                 encryptUtils _crypt = new  encryptUtils();
                 String key =  encryptUtils.SHA256("my secret key", 32);
-
                 _crypt.encryptFile(file.toString(), "encrypted", outFile, key);
 
-                //JSONArray users = new JSONArray();
-                //users.put(mEmail);
+                JSONArray users = new JSONArray();
+                users.put(mEmails);
 
                 mSocket.emit("request file transfer", file.getName(),
-                        encrypted, mEmails, _crypt.get_fileEncryptedName(), file.getName(),
-                        _crypt.get_fileSHA1(), Base64.encode(_crypt.get_fileSalt(), Base64.DEFAULT),
-                        Base64.encode(_crypt.get_fileIV(), Base64.DEFAULT), _crypt.get_fileKey(), file.length());
+                    encrypted, mEmails, _crypt.get_fileEncryptedName(), file.getName(),
+                    _crypt.get_fileSHA1(), Base64.encode(_crypt.get_fileSalt(), Base64.DEFAULT),
+                    Base64.encode(_crypt.get_fileIV(), Base64.DEFAULT), _crypt.get_fileKey(), file.length(), "lila@mail.fr");
 
                 System.out.println(_crypt.get_fileSalt());
                 System.out.println( Base64.encode(_crypt.get_fileSalt(), Base64.DEFAULT));
@@ -199,15 +218,11 @@ public class ShareActivity extends AppCompatActivity implements ToContactFragmen
     public void onContactItemSelected(String link) {
 
         Log.d(TAG, "--------> onContactItemSelected");
-
-        /*ToContactFragment fragment = (ToContactFragment) getFragmentManager().findFragmentById(R.id.tocontact_fragment);*/
     }
 
     @Override
     public void onGroupItemSelected(String link) {
 
         Log.d(TAG, "--------> onGroupItemSelected");
-
-        /*ToGroupFragment fragment = (ToGroupFragment) getFragmentManager().findFragmentById(R.id.tocontact_fragment);*/
     }
 }

@@ -31,7 +31,6 @@ public class HomeListAdapter extends BaseAdapter implements ListAdapter {
         Log.d(TAG, "------------> create");
 
         mList = list;
-        Log.d(TAG, "LIST = " + list);
         mToken = token;
         mContext = context;
     }
@@ -64,21 +63,21 @@ public class HomeListAdapter extends BaseAdapter implements ListAdapter {
         }
 
         Log.d(TAG, "getVIEW = " + mList.get(position));
+        String[] files = mList.get(position).split(";");
 
         final TextView listItemText = (TextView)view.findViewById(R.id.list_item_string);
-        listItemText.setText(mList.get(position));
+        listItemText.setText(files[0]);
 
         final ImageView listItemImg = (ImageView)view.findViewById(R.id.list_item_img);
-        Picasso.with(mContext).load(mList.get(position)).into(listItemImg);
+        Picasso.with(mContext).load(files[1]).into(listItemImg);
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "getVIEW = " + position);
-
+                String[] files = mList.get(position).split(";");
                 Intent intent = new Intent(mContext, FileActivity.class);
                 intent.putExtra("token", mToken);
-                intent.putExtra("image_url",mList.get(position));
+                intent.putExtra("image_url",files[1]);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                 mContext.startActivity(intent);
             }

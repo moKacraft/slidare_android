@@ -21,7 +21,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
 
-import com.github.kittinunf.fuel.Fuel;
 import com.github.kittinunf.fuel.core.FuelError;
 import com.github.kittinunf.fuel.core.Handler;
 import com.github.kittinunf.fuel.core.Request;
@@ -34,14 +33,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.mvc.imagepicker.ImagePicker;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -49,18 +46,14 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.security.spec.InvalidParameterSpecException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
@@ -90,10 +83,10 @@ public class HomeActivity extends AppCompatActivity {
     private ListView mListView;
     private List<String> mList;
 
-    private ImageView mHomeView;
     private ImageView mGroupView;
     private ImageView mProfilView;
     private ImageView mShare;
+    private String sender_id;
     private String mFileName;
     private String encFilePath;
     private String filePath;
@@ -106,7 +99,7 @@ public class HomeActivity extends AppCompatActivity {
     private Socket mSocket;
     {
         try {
-            mSocket = IO.socket("http://34.238.153.180:8090");
+            mSocket = IO.socket(Config.URL_SOCKET);
         } catch (URISyntaxException e) {}
     }
     TcpClient mTcpClient;
@@ -117,78 +110,86 @@ public class HomeActivity extends AppCompatActivity {
         @Override
         protected TcpClient doInBackground(byte[]... message) {
 
-            //we create a TCPClient object
             mTcpClient = new TcpClient(new TcpClient.OnMessageReceived() {
                 @Override
                 //here the messageReceived method is implemented
                 public void messageReceived(byte[] message, int messageSize) {
-                    if (messageSize <= 0) {
-                        encryptUtils _crypt = null;
-                        try {
-                            _crypt = new encryptUtils();
-                            _crypt.decryptFile(encFilePath, filePath, sha1, salt, iv, key);
+                if (messageSize <= 0) {
+                    encryptUtils _crypt = null;
+                    try {
+                        _crypt = new encryptUtils();
+                        _crypt.decryptFile(encFilePath, filePath, sha1, salt, iv, key);
 
-                            InputStream stream = new FileInputStream(new File(filePath));
-                            UploadTask uploadTask = mStorage.putStream(stream);
-//                            UploadTask uploadTask = mStorage.putBytes(fileData.toByteArray());
-                            uploadTask.addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception exception) {
-                                    System.out.println(exception);
-                                }
-                            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
-                                    System.out.println("SUCCESS");
-                                    sendNotification(getApplicationContext(), "File transfer finished");
-                                    mSocket.emit("transfer finished", transferId);
-                                    try {
-                                        addFile(taskSnapshot.getDownloadUrl().toString());
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
+                        InputStream stream = new FileInputStream(new File(filePath));
+                        UploadTask uploadTask = mStorage.putStream(stream);
+                        uploadTask.addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception exception) {
+                            System.out.println(exception);
+                            }
+                        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(final UploadTask.TaskSnapshot taskSnapshot) {
+                            System.out.println("SUCCESS");
+                            sendNotification(getApplicationContext(), "File transfer finished");
+                            mSocket.emit("transfer finished", transferId);
+                            try {
+                                String body = "{ \"file_url\": \"" + taskSnapshot.getDownloadUrl().toString() + "\", \"sender\": \"" + sender_id + "\"  }";
+                                Handler<String> handler = new Handler<String>() {
+                                    @Override
+                                    public void success(@NotNull Request request, @NotNull Response response, String s) {
+                                        Log.d("addFile SUCCESS : ",response.toString());
                                     }
 
-                                    //mMyWebview.loadUrl(taskSnapshot.getDownloadUrl().toString());
-                                    DownloadManager.Request request = new DownloadManager.Request(taskSnapshot.getDownloadUrl());
-                                    request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, mFileName);
-                                    request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED); // to notify when download is complete
-                                    request.allowScanningByMediaScanner();// if you want to be available from media players
-                                    DownloadManager manager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-                                    manager.enqueue(request);
-                                }
-                            });
-                        } catch (NoSuchAlgorithmException e) {
-                            e.printStackTrace();
-                        } catch (NoSuchPaddingException e) {
-                            e.printStackTrace();
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        } catch (InvalidKeyException e) {
-                            e.printStackTrace();
-                        } catch (InvalidAlgorithmParameterException e) {
-                            e.printStackTrace();
-                        } catch (IllegalBlockSizeException e) {
-                            e.printStackTrace();
-                        } catch (BadPaddingException e) {
-                            e.printStackTrace();
-                        } catch (InvalidKeySpecException e) {
-                            e.printStackTrace();
-                        }
-                    } else {
-                        try {
-                            fos.write(message, 0, messageSize);
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                        fileData.write(message, 0, messageSize);
-                        toto += messageSize;
+                                    @Override
+                                    public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
+                                        Log.d("addFile FAILURE : ",response.toString());
+                                    }
+                                };
+                                Share.addFile(body, mToken, handler);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+
+                            DownloadManager.Request request = new DownloadManager.Request(taskSnapshot.getDownloadUrl());
+                            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, mFileName);
+                            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED); // to notify when download is complete
+                            request.allowScanningByMediaScanner();// if you want to be available from media players
+                            DownloadManager manager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+                            manager.enqueue(request);
+                            }
+                        });
+                    } catch (NoSuchAlgorithmException e) {
+                        e.printStackTrace();
+                    } catch (NoSuchPaddingException e) {
+                        e.printStackTrace();
+                    } catch (UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (InvalidKeyException e) {
+                        e.printStackTrace();
+                    } catch (InvalidAlgorithmParameterException e) {
+                        e.printStackTrace();
+                    } catch (IllegalBlockSizeException e) {
+                        e.printStackTrace();
+                    } catch (BadPaddingException e) {
+                        e.printStackTrace();
+                    } catch (InvalidKeySpecException e) {
+                        e.printStackTrace();
                     }
+                } else {
+                    try {
+                        fos.write(message, 0, messageSize);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    fileData.write(message, 0, messageSize);
+                    toto += messageSize;
+                }
                 }
             });
             mTcpClient.run();
-
             return null;
         }
 
@@ -199,86 +200,19 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        try {
-            InputStream is = ImagePicker.getInputStreamFromResult(this, requestCode, resultCode, data);
-            if (is != null) {
-                File file = new File(getCacheDir(), "toEncryt.png");
-                OutputStream out = new FileOutputStream(file);
-                byte[] buf = new byte[1024];
-                int len;
-                while((len=is.read(buf))>0){
-                    out.write(buf,0,len);
-                }
-
-                File encrypted = new File(getCacheDir(), "encrypted");
-                FileOutputStream outFile = new FileOutputStream(encrypted);
-
-                encryptUtils _crypt = new  encryptUtils();
-                String key =  encryptUtils.SHA256("my secret key", 32);
-
-                _crypt.encryptFile(file.toString(), "encrypted", outFile, key);
-
-//                String users[] = new String[1];
-//                users[0] = "soso@gmail.com";
-
-//                String[] users = {"soso@gmail.com"};
-
-                JSONArray users = new JSONArray();
-                users.put("juju@gmail.com");
-
-                mSocket.emit("request file transfer", file.getName(),
-                        encrypted, users, _crypt.get_fileEncryptedName(), file.getName(),
-                        _crypt.get_fileSHA1(), Base64.encode(_crypt.get_fileSalt(), Base64.DEFAULT),
-                        Base64.encode(_crypt.get_fileIV(), Base64.DEFAULT), _crypt.get_fileKey(), file.length());
-
-                System.out.println(_crypt.get_fileSalt());
-                System.out.println( Base64.encode(_crypt.get_fileSalt(), Base64.DEFAULT));
-
-                out.flush();
-                out.close();
-                outFile.flush();
-                outFile.close();
-                is.close();
-            }
-            else {
-                //failed to load file
-            }
-
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-        } catch (InvalidParameterSpecException e) {
-            e.printStackTrace();
-        } catch (InvalidKeySpecException e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
         if (mSocket.connected() == false) {
-            mSocket.on("tim@gmail.com", new Emitter.Listener() {
+            mSocket.on("lila@mail.fr", new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
                 sendNotification(getApplicationContext(), "xxx Wants to send you a file");
                 transferId = (String) args[2];
                 sha1 = (String) args[5];
                 key = (String) args[8];
+                sender_id = (String) args[10];
                 salt = Base64.decode((String) args[6], Base64.DEFAULT);
                 iv = Base64.decode((String) args[7], Base64.DEFAULT);
                 fileData = new ByteArrayOutputStream();
@@ -295,44 +229,11 @@ public class HomeActivity extends AppCompatActivity {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                TcpClient.SERVER_IP = "34.238.153.180";
+                TcpClient.SERVER_IP = Config.IP;
                 TcpClient.SERVER_PORT = Integer.parseInt(args[1].toString());
                 mFileName = args[4].toString();
-//                FirebaseStorage.getInstance();
                 mStorage = FirebaseStorage.getInstance().getReferenceFromUrl("gs://slidare-c93d1.appspot.com/" + args[4].toString());
                 new ConnectTask().execute("".getBytes());
-                }
-            });
-
-            mSocket.on("server ready", new Emitter.Listener() {
-                @Override
-                public void call(final Object... args) {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                    try {
-                        java.net.Socket sock;
-                        sock = new java.net.Socket("34.238.153.180", (int)args[0]);
-                        OutputStream is = sock.getOutputStream();
-
-                        File arg = new File(getCacheDir(), (String)args[1]);
-
-                        FileInputStream fis = new FileInputStream(arg);
-                        BufferedInputStream bis = new BufferedInputStream(fis);
-                        byte[] buffer = new byte[4096];
-                        int ret;
-                        while ((ret = fis.read(buffer)) > 0) {
-                            is.write(buffer, 0, ret);
-                        }
-                        fis.close();
-                        bis.close();
-                        is.close();
-                        sock.close();
-                    } catch (IOException ex) {
-                        ex.printStackTrace();
-                    }
-                    }
-                }).start();
                 }
             });
             mSocket.connect();
@@ -347,115 +248,49 @@ public class HomeActivity extends AppCompatActivity {
 
         mAdapter = new HomeListAdapter(mList, mContext, mToken);
 
-        mHomeView = (ImageView) findViewById(R.id.ico_home);
         mGroupView = (ImageView) findViewById(R.id.ico_group);
         mProfilView = (ImageView) findViewById(R.id.ico_profil);
         mShare = (ImageView) findViewById(R.id.ico_send);
         mListView = (ListView) findViewById(R.id.history_list);
-        //mMyWebview = (WebView) findViewById(R.id.my_webview);
 
-        /*mMyWebview.setWebViewClient(new MyWebViewClient());
-        mMyWebview.getSettings().setJavaScriptEnabled(true);
-
-        mMyWebview.getSettings().setAllowContentAccess(true);
-        mMyWebview.getSettings().setAllowFileAccessFromFileURLs(true);
-        mMyWebview.getSettings().setAllowFileAccess(true);
-        mMyWebview.getSettings().setLoadWithOverviewMode(true);
-        mMyWebview.getSettings().setUseWideViewPort(true);*/
-
-        if (ContextCompat.checkSelfPermission(this,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
+        /*if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
             } else {
-
-                // No explanation needed, we can request the permission.
-
-                ActivityCompat.requestPermissions(this,
-                        new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                        4242);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
+                ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},4242);
             }
-        }
-        //
-//        mMyWebview.setDownloadListener(new DownloadListener() {
-//            @Override
-//            public void onDownloadStart(String url, String userAgent,
-//                                        String contentDisposition, String mimetype,
-//                                        long contentLength) {
-//
-//                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
-//            }
-//        });
-//        mMyWebview.set
-//        Map<String, String> extraHeaders = new HashMap<>();
-//        extraHeaders.put("Content-Disposition", "inline;filename=\"5.jpg\"");
-//        mMyWebview.loadUrl("https://firebasestorage.googleapis.com/v0/b/slidare-c93d1.appspot.com/o/5.jpg?alt=media&token=49ab4571-6565-47d2-89fd-5fecbf57c86d", extraHeaders);
-
-//        mMyWebview.loadUrl("https://firebasestorage.googleapis.com/v0/b/slidare-c93d1.appspot.com/o/5.jpg?alt=media&token=49ab4571-6565-47d2-89fd-5fecbf57c86d");
-//        mMyWebview.setDownloadListener(new DownloadListener() {
-//            @Override
-//            public void onDownloadStart(String s, String s1, String s2, String s3, long l) {
-//
-//            }
-//        });
-
-        View.OnClickListener mHomeViewListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Log.d(TAG, "----------> HOME");
-            }
-        };
+        }*/
 
         View.OnClickListener mGroupViewListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Log.d(TAG, "----------> CONTACT");
-
-                Intent intent = new Intent(HomeActivity.this, ContactActivity.class);
-                intent.putExtra("token", mToken);
-                startActivity(intent);
-                finish();
+            Intent intent = new Intent(HomeActivity.this, ContactActivity.class);
+            intent.putExtra("token", mToken);
+            startActivity(intent);
+            finish();
             }
         };
 
         View.OnClickListener mProfilViewListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Log.d(TAG, "----------> PROFIL");
-
-                Intent intent = new Intent(HomeActivity.this, SettingsActivity.class);
-                intent.putExtra("token", mToken);
-                intent.putExtra("fbUrl", mUrlPicture);
-                startActivity(intent);
-                finish();
+            Intent intent = new Intent(HomeActivity.this, SettingsActivity.class);
+            intent.putExtra("token", mToken);
+            intent.putExtra("fbUrl", mUrlPicture);
+            startActivity(intent);
+            finish();
             }
         };
 
         View.OnClickListener mSendListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, ShareActivity.class);
-                intent.putExtra("token", mToken);
-                startActivity(intent);
+            Intent intent = new Intent(HomeActivity.this, ShareActivity.class);
+            intent.putExtra("token", mToken);
+            startActivity(intent);
             }
         };
 
-        mHomeView.setOnClickListener(mHomeViewListener);
         mGroupView.setOnClickListener(mGroupViewListener);
         mProfilView.setOnClickListener(mProfilViewListener);
         mShare.setOnClickListener(mSendListener);
@@ -468,14 +303,15 @@ public class HomeActivity extends AppCompatActivity {
                     Log.d("getFiles SUCCESS : ",response.toString());
                     try {
                         JSONObject data = new JSONObject(new String(response.getData()));
-                        JSONArray fileUrls = data.getJSONArray("file_urls");
+                        String fileUrls = data.getString("file_urls").toString().replace("[\"", "").replace("\"]", "").replaceAll("\"","").replaceAll("\\\\", "");
+                        String senders = data.getString("senders").toString().replace("[\"", "").replace("\"]", "").replaceAll("\"","");
+                        String[] tab = fileUrls.split(",");
+                        String[] str = senders.split(",");
 
-                        Log.d(TAG, "Data = " + data);
-                        Log.d(TAG, "Urls = " + fileUrls);
-
-                        String urlStr = fileUrls.toString().replace("[\"", "").replace("\"]", "").replaceAll("\\\\", "");
                         mList = new ArrayList<String>();
-                        mList.add(urlStr);
+                        for (int i = 0; i < str.length; i++){
+                            mList.add(str[i] + ";" + tab[i]);
+                        }
                         mAdapter = new HomeListAdapter(mList, mContext, mToken);
                         mListView.setAdapter(mAdapter);
                     } catch (JSONException e) {
@@ -489,7 +325,8 @@ public class HomeActivity extends AppCompatActivity {
                 }
             };
             Share.getFiles(mToken, handler);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -512,65 +349,5 @@ public class HomeActivity extends AppCompatActivity {
 
         NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(1, b.build());
-    }
-
-    public void addFile(String file_url) throws Exception {
-
-        Map<String, Object> header = new HashMap<>();
-        header.put("Authorization", "Bearer "+ mToken);
-
-        String body = "{ \"file_url\": \"" + file_url + "\" }";
-        Fuel.post(Config.URL_API + "addFileToList").header(header).body(body.getBytes()).responseString(new Handler<String>() {
-            @Override
-            public void success(@NotNull Request request, @NotNull Response response, String s) {
-                Log.d("addContact SUCCESS : ",response.toString());
-            }
-
-            @Override
-            public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
-                Log.d("addContact FAILURE : ",response.toString());
-            }
-        });
-    }
-
-    public void getFiles() throws Exception {
-
-        Map<String, Object> header = new HashMap<>();
-        header.put("Authorization", "Bearer "+ mToken);
-
-        Fuel.get(Config.URL_API + "getUserFiles").header(header).responseString(new Handler<String>() {
-            @Override
-            public void success(@NotNull Request request, @NotNull Response response, String s) {
-                Log.d("getFiles SUCCESS : ",response.toString());
-                try {
-                    JSONObject data = new JSONObject(new String(response.getData()));
-                    JSONArray fileUrls = data.getJSONArray("file_urls");
-
-                    Log.d(TAG, "Data = " + data);
-                    Log.d(TAG, "Urls = " + fileUrls);
-
-                    String urlStr = fileUrls.toString().replace("[\"", "").replace("\"]", "").replaceAll("\\\\", "");
-                    Log.d(TAG, "Urls = " + urlStr);
-                    mList = new ArrayList<String>();
-                    mList.add(urlStr);
-                    mAdapter = new HomeListAdapter(mList, mContext, mToken);
-                    mListView.setAdapter(mAdapter);
-                    //mMyWebview.loadDataWithBaseURL(null, "<html><head></head><body><table style=\"width:20%; height:20%;\"><tr><td style=\"vertical-align:middle;\"><img src=\"" + urlStr + "\"></td></tr></table></body></html>", "html/css", "utf-8", null);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
-                Log.d("getFiles FAILURE : ",response.toString());
-            }
-        });
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        Log.d(TAG, "----------> onDestroy");
     }
 }
