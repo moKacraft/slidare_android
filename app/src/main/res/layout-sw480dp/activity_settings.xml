@@ -148,17 +148,17 @@
             android:id="@+id/password_confirm"
             android:layout_width="300dp"
             android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/save"
             android:layout_below="@+id/password_new"
-            android:padding="10dp"
-            android:hint="Confirm password"
-            android:textSize="20dp"
-            android:textColorHint="@color/grey_dc"
-            android:textColor="@color/black"
             android:background="@drawable/settings_border"
-            android:inputType="textPassword"
             android:fontFamily="sans-serif-condensed"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="135dp"/>
+            android:hint="Confirm password"
+            android:inputType="textPassword"
+            android:padding="10dp"
+            android:textColor="@color/black"
+            android:textColorHint="@color/grey_dc"
+            android:textSize="20dp"
+            android:layout_marginTop="10dp" />
 
         <Button
             android:id="@+id/save"

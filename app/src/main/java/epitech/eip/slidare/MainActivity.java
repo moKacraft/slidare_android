@@ -24,7 +24,6 @@ import com.github.kittinunf.fuel.core.Request;
 import com.github.kittinunf.fuel.core.Response;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.Arrays;
@@ -146,7 +145,6 @@ public class MainActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(MainActivity.this, SignupActivity.class);
                 startActivity(intent);
-                finish();
             }
         };
 
@@ -179,67 +177,67 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onCompleted(JSONObject object, GraphResponse response) {
 
-                try{
-                    String[] strings = object.getString("name").split(" ");
-                    mBody = "{ \"first_name\": \"" + strings[0] + "\",\"last_name\": \"" + strings[1] + "\",\"email\": \"" + object.getString("email") + "\",\"fb_token\": \"" + mLoginResult.getAccessToken().getToken() + "\",\"fb_user_id\": \"" + mLoginResult.getAccessToken().getUserId() + "\" }";
-                    mUrlPicture = "https://graph.facebook.com/" + mLoginResult.getAccessToken().getUserId() + "/picture?type=large";
-                    Handler<String> handler = new Handler<String>() {
-                        @Override
-                        public void success(@NotNull Request request, @NotNull Response response, String s) {
-                            Log.d("createUser SUCCESS : ",response.toString());
-                            try {
-                                Handler<String> handler = new Handler<String>() {
-                                    @Override
-                                    public void success(@NotNull Request request, @NotNull Response response, String s) {
-                                        Log.d("loginUser SUCCESS : ",response.toString());
+            try{
+                String[] strings = object.getString("name").split(" ");
+                mBody = "{ \"first_name\": \"" + strings[0] + "\",\"last_name\": \"" + strings[1] + "\",\"email\": \"" + object.getString("email") + "\",\"fb_token\": \"" + mLoginResult.getAccessToken().getToken() + "\",\"fb_user_id\": \"" + mLoginResult.getAccessToken().getUserId() + "\" }";
+                mUrlPicture = "https://graph.facebook.com/" + mLoginResult.getAccessToken().getUserId() + "/picture?type=large";
+                Handler<String> handler = new Handler<String>() {
+                    @Override
+                    public void success(@NotNull Request request, @NotNull Response response, String s) {
+                        Log.d("createUser SUCCESS : ",response.toString());
+                        try {
+                            Handler<String> handler = new Handler<String>() {
+                                @Override
+                                public void success(@NotNull Request request, @NotNull Response response, String s) {
+                                    Log.d("loginUser SUCCESS : ",response.toString());
 
-                                        try {
-                                            JSONObject data = new JSONObject(new String(response.getData()));
-                                            mToken = data.getString("token");
-                                            mId = data.getString("id");
+                                    try {
+                                        JSONObject data = new JSONObject(new String(response.getData()));
+                                        mToken = data.getString("token");
+                                        mId = data.getString("id");
 
-                                            SharedPreferences settings = getSharedPreferences("USERDATA", 0);
-                                            SharedPreferences.Editor editor = settings.edit();
-                                            editor.putString("userToken", mToken);
-                                            editor.putString("userId", mId);
-                                            editor.putString("fbUrlImage", mUrlPicture);
-                                            editor.apply();
+                                        SharedPreferences settings = getSharedPreferences("USERDATA", 0);
+                                        SharedPreferences.Editor editor = settings.edit();
+                                        editor.putString("userToken", mToken);
+                                        editor.putString("userId", mId);
+                                        editor.putString("fbUrlImage", mUrlPicture);
+                                        editor.apply();
 
-                                            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-                                            intent.putExtra("token", mToken);
-                                            intent.putExtra("fbUrlImage", mUrlPicture);
-                                            startActivity(intent);
-                                            finish();
-                                        }
-                                        catch (Throwable tx) {
-                                            tx.printStackTrace();
-                                        }
+                                        Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+                                        intent.putExtra("token", mToken);
+                                        intent.putExtra("fbUrlImage", mUrlPicture);
+                                        startActivity(intent);
+                                        finish();
                                     }
-
-                                    @Override
-                                    public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
-                                        Log.d("loginUser FAILURE : ",response.toString());
-                                        Toast.makeText(MainActivity.this, "Email or password incorrect.", Toast.LENGTH_SHORT).show();
+                                    catch (Throwable tx) {
+                                        tx.printStackTrace();
                                     }
-                                };
-                                User.loginUser(mBody, handler);
-                            }
-                            catch (Exception error) {
-                                Log.d(TAG, "EXCEPTION ERROR : " + error);
-                            }
-                        }
+                                }
 
-                        @Override
-                        public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
-                            Log.d("createUser FAILURE: ",response.toString());
-                            Toast.makeText(MainActivity.this, "An error occurred while creating your profile.", Toast.LENGTH_SHORT).show();
+                                @Override
+                                public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
+                                    Log.d("loginUser FAILURE : ",response.toString());
+                                    Toast.makeText(MainActivity.this, "Email or password incorrect.", Toast.LENGTH_SHORT).show();
+                                }
+                            };
+                            User.loginUser(mBody, handler);
                         }
-                    };
-                    User.createUser(mBody, handler);
-                }
-                catch (Exception e){
-                    Log.d(TAG, "EXCEPTION ERROR : " + e);
-                }
+                        catch (Exception error) {
+                            Log.d(TAG, "EXCEPTION ERROR : " + error);
+                        }
+                    }
+
+                    @Override
+                    public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
+                        Log.d("createUser FAILURE: ",response.toString());
+                        Toast.makeText(MainActivity.this, new String(response.getData()), Toast.LENGTH_SHORT).show();
+                    }
+                };
+                User.createUser(mBody, handler);
+            }
+            catch (Exception e){
+                Log.d(TAG, "EXCEPTION ERROR : " + e);
+            }
             }
         });
 

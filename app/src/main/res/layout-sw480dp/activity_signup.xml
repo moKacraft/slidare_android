@@ -118,15 +118,14 @@
             android:id="@+id/submit"
             android:layout_width="400dp"
             android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/cancel"
             android:layout_below="@+id/password_confirm"
-            android:layout_centerHorizontal="true"
-            android:textAllCaps="false"
-            android:text="Create"
-            android:textSize="25dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="20dp"
             android:background="@drawable/submit_border"
-            android:textColor="@drawable/login_button_text_color"/>
+            android:text="Create"
+            android:textAllCaps="false"
+            android:textColor="@drawable/login_button_text_color"
+            android:textSize="25dp"
+            android:layout_marginBottom="20dp"/>
 
         <TextView
             android:id="@+id/cancel"

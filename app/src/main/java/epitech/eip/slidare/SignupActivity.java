@@ -11,7 +11,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.kittinunf.fuel.Fuel;
 import com.github.kittinunf.fuel.core.FuelError;
 import com.github.kittinunf.fuel.core.Handler;
 import com.github.kittinunf.fuel.core.Request;
@@ -19,6 +18,8 @@ import com.github.kittinunf.fuel.core.Response;
 
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONObject;
+
+import epitech.eip.slidare.request.User;
 
 /**
  * Created by ferrei_e on 13/02/2017.
@@ -60,102 +61,89 @@ public class SignupActivity extends AppCompatActivity {
         View.OnClickListener mSubmitListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //Log.d("Firstname : ", "value = " + mFirstNameEditText.getText().toString());
-                //Log.d("Lastname : ", "value = " + mLastNameEditText.getText().toString());
-                //Log.d("Email : ", "value = " + mEmailEditText.getText().toString());
-                //Log.d("Password : ", "value = " + mPasswordEditText.getText().toString());
-                //Log.d("Password Confirm : ", "value = " + mPasswordConfirmEditText.getText().toString());
 
-                String firstname = mFirstNameEditText.getText().toString();
-                String lastname = mLastNameEditText.getText().toString();
-                String email = mEmailEditText.getText().toString();
-                String password = mPasswordEditText.getText().toString();
+            String firstname = mFirstNameEditText.getText().toString();
+            String lastname = mLastNameEditText.getText().toString();
+            String email = mEmailEditText.getText().toString();
+            String password = mPasswordEditText.getText().toString();
 
-                if (password.compareTo(mPasswordConfirmEditText.getText().toString()) != 0)
-                    Toast.makeText(SignupActivity.this, "Passwords must be identical.", Toast.LENGTH_SHORT).show();
-                else if (email.compareTo(mEmailConfirmEditText.getText().toString()) != 0)
-                    Toast.makeText(SignupActivity.this, "Addresses must be identical.", Toast.LENGTH_SHORT).show();
-                else {
-                    mBody = "{ \"first_name\": \"" + firstname + "\",\"last_name\": \"" + lastname + "\",\"email\": \"" + email + "\",\"password\": \"" + password + "\" }";
+            if (password.compareTo(mPasswordConfirmEditText.getText().toString()) != 0)
+                Toast.makeText(SignupActivity.this, "Passwords must be identical.", Toast.LENGTH_SHORT).show();
+            else if (email.compareTo(mEmailConfirmEditText.getText().toString()) != 0)
+                Toast.makeText(SignupActivity.this, "Emails must be identical.", Toast.LENGTH_SHORT).show();
+            else {
+                mBody = "{ \"first_name\": \"" + firstname + "\",\"last_name\": \"" + lastname + "\",\"email\": \"" + email + "\",\"password\": \"" + password + "\" }";
+                try {
+                    Handler<String> handler = new Handler<String>() {
+                        @Override
+                        public void success(@NotNull Request request, @NotNull Response response, String s) {
+                            Log.d("createUser SUCCESS : ",response.toString());
+                            try {
+                                Handler<String> handler = new Handler<String>() {
+                                    @Override
+                                    public void success(@NotNull Request request, @NotNull Response response, String s) {
+                                        Log.d("loginUser SUCCESS : ",response.toString());
 
-                    try {
-                        createUser(mBody);
-                    } catch (Exception error) {
-                        Log.d(TAG, "EXCEPTION ERROR : " + error);
-                    }
+                                        try {
+                                            JSONObject data = new JSONObject(new String(response.getData()));
+                                            String token = data.getString("token");
+                                            String id = data.getString("id");
+
+                                            SharedPreferences settings = getSharedPreferences("USERDATA", 0);
+                                            SharedPreferences.Editor editor = settings.edit();
+                                            editor.putString("userToken", token);
+                                            editor.putString("userId", id);
+                                            editor.apply();
+
+                                            Intent intent = new Intent(SignupActivity.this, HomeActivity.class);
+                                            intent.putExtra("token", token);
+                                            startActivity(intent);
+                                            finish();
+                                        }
+                                        catch (Throwable tx) {
+                                            tx.printStackTrace();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
+                                        Log.d("loginUser FAILURE : ",response.toString());
+                                        Toast.makeText(SignupActivity.this, new String(response.getData()), Toast.LENGTH_SHORT).show();
+                                    }
+                                };
+                                User.loginUser(mBody, handler);
+                            }
+                            catch (Exception error) {
+                                Log.d(TAG, "EXCEPTION ERROR : " + error);
+                            }
+                        }
+
+                        @Override
+                        public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
+                            Log.d("createUser FAILURE : ",response.toString());
+                            Toast.makeText(SignupActivity.this, "An error occurred while creating your profile.", Toast.LENGTH_SHORT).show();
+                        }
+                    };
+                    User.createUser(mBody, handler);
                 }
+                catch (Exception error) {
+                    Log.d(TAG, "EXCEPTION ERROR : " + error);
+                }
+            }
             }
         };
 
         View.OnClickListener mCancelTextListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(SignupActivity.this, MainActivity.class);
-                startActivity(intent);
-                finish();
+
+            Intent intent = new Intent(SignupActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
             }
         };
 
         mSubmitButton.setOnClickListener(mSubmitListener);
         mCancelText.setOnClickListener(mCancelTextListener);
-    }
-
-    public void createUser(String body) throws Exception {
-
-        Fuel.post("http://34.238.153.180:50000/createUser").body(body.getBytes()).responseString(new Handler<String>() {
-            @Override
-            public void success(@NotNull Request request, @NotNull Response response, String s) {
-                Log.d("createUser SUCCESS : ",response.toString());
-                try {
-                    loginUser(mBody);
-                }
-                catch (Exception error) {
-                    Log.d(TAG, "EXCEPTION ERROR : " + error);
-                }
-            }
-
-            @Override
-            public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
-                Log.d("createUser FAILURE : ",response.toString());
-                Toast.makeText(SignupActivity.this, new String(response.getData()), Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    public void loginUser(String body) throws Exception {
-
-        Fuel.post("http://34.238.153.180:50000/loginUser").body(body.getBytes()).responseString(new Handler<String>() {
-            @Override
-            public void success(@NotNull Request request, @NotNull Response response, String s) {
-                Log.d("loginUser SUCCESS : ",response.toString());
-
-                try {
-                    JSONObject data = new JSONObject(new String(response.getData()));
-
-                    String token = data.getString("token");
-                    String id = data.getString("id");
-
-                    SharedPreferences settings = getSharedPreferences("USERDATA", 0);
-                    SharedPreferences.Editor editor = settings.edit();
-                    editor.putString("userToken", token);
-                    editor.putString("userId", id);
-
-                    editor.apply();
-
-                    Intent intent = new Intent(SignupActivity.this, HomeActivity.class);
-                    intent.putExtra("token", token);
-                    startActivity(intent);
-                    finish();
-                }
-                catch (Throwable tx) {
-                    tx.printStackTrace();
-                }
-            }
-
-            @Override
-            public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
-                Log.d("loginUser FAILURE : ",response.toString());
-            }
-        });
     }
 }

@@ -300,7 +300,6 @@ public class HomeActivity extends AppCompatActivity {
                 mFileName = args[4].toString();
 //                FirebaseStorage.getInstance();
                 mStorage = FirebaseStorage.getInstance().getReferenceFromUrl("gs://slidare-c93d1.appspot.com/" + args[4].toString());
-
                 new ConnectTask().execute("".getBytes());
                 }
             });
@@ -308,36 +307,34 @@ public class HomeActivity extends AppCompatActivity {
             mSocket.on("server ready", new Emitter.Listener() {
                 @Override
                 public void call(final Object... args) {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                    try {
+                        java.net.Socket sock;
+                        sock = new java.net.Socket("34.238.153.180", (int)args[0]);
+                        OutputStream is = sock.getOutputStream();
 
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            try {
-                                java.net.Socket sock;
-                                sock = new java.net.Socket("34.238.153.180", (int)args[0]);
-                                OutputStream is = sock.getOutputStream();
+                        File arg = new File(getCacheDir(), (String)args[1]);
 
-                                File arg = new File(getCacheDir(), (String)args[1]);
-
-                                FileInputStream fis = new FileInputStream(arg);
-                                BufferedInputStream bis = new BufferedInputStream(fis);
-                                byte[] buffer = new byte[4096];
-                                int ret;
-                                while ((ret = fis.read(buffer)) > 0) {
-                                    is.write(buffer, 0, ret);
-                                }
-                                fis.close();
-                                bis.close();
-                                is.close();
-                                sock.close();
-                            } catch (IOException ex) {
-                                ex.printStackTrace();
-                            }
+                        FileInputStream fis = new FileInputStream(arg);
+                        BufferedInputStream bis = new BufferedInputStream(fis);
+                        byte[] buffer = new byte[4096];
+                        int ret;
+                        while ((ret = fis.read(buffer)) > 0) {
+                            is.write(buffer, 0, ret);
                         }
-                    }).start();
+                        fis.close();
+                        bis.close();
+                        is.close();
+                        sock.close();
+                    } catch (IOException ex) {
+                        ex.printStackTrace();
+                    }
+                    }
+                }).start();
                 }
             });
-
             mSocket.connect();
         }
 
@@ -499,17 +496,15 @@ public class HomeActivity extends AppCompatActivity {
         PendingIntent contentIntent = PendingIntent.getActivity(ctx, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
 
         NotificationCompat.Builder b = new NotificationCompat.Builder(ctx);
-
         b.setAutoCancel(true)
-                .setDefaults(Notification.DEFAULT_ALL)
-                .setWhen(System.currentTimeMillis())
-                .setSmallIcon(R.drawable.slidarelogo)
-                .setContentTitle("File Transfer")
-                .setContentText(content)
-                .setDefaults(Notification.DEFAULT_LIGHTS| Notification.DEFAULT_SOUND)
-                .setContentIntent(contentIntent)
-                .setContentInfo(content);
-
+            .setDefaults(Notification.DEFAULT_ALL)
+            .setWhen(System.currentTimeMillis())
+            .setSmallIcon(R.drawable.slidarelogo)
+            .setContentTitle("File Transfer")
+            .setContentText(content)
+            .setDefaults(Notification.DEFAULT_LIGHTS| Notification.DEFAULT_SOUND)
+            .setContentIntent(contentIntent)
+            .setContentInfo(content);
 
         NotificationManager notificationManager = (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
         notificationManager.notify(1, b.build());
@@ -521,8 +516,6 @@ public class HomeActivity extends AppCompatActivity {
         header.put("Authorization", "Bearer "+ mToken);
 
         String body = "{ \"file_url\": \"" + file_url + "\" }";
-
-
         Fuel.post(Config.URL_API + "addFileToList").header(header).body(body.getBytes()).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
