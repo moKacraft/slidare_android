@@ -155,6 +155,7 @@ public class ShareActivity extends AppCompatActivity implements ToContactFragmen
         mEmails = new JSONArray();
     }
 
+
 //    @Override
 //    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 //

@@ -204,7 +204,9 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         if (mSocket.connected() == false) {
+
             mSocket.on("soso@gmail.com", new Emitter.Listener() {
+
                 @Override
                 public void call(Object... args) {
                     Log.d("icicicicicicicici", "camarche pas pas pas pas pas pas");

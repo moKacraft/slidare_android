@@ -8,34 +8,62 @@
     android:background="@color/whiteColor"
     android:id="@+id/group_fragment">
 
-    <TextView
-        android:id="@+id/togroup_title"
-        android:layout_height="80dp"
+    <RelativeLayout
+        android:id="@+id/top_bar"
         android:layout_width="match_parent"
-        android:gravity="center"
-        android:text="Choose a group"
-        android:textSize="20dp"
-        android:fontFamily="Roboto"
-        android:textColor="@color/black"
-        android:layout_marginTop="20dp"/>
+        android:layout_height="50dp"
+        android:orientation="vertical">
 
-    <ListView
-        android:id="@+id/list_group"
+        <ImageView
+            android:id="@+id/ico_settings"
+            android:layout_height="15dp"
+            android:layout_width="15dp"
+            android:src="@drawable/ico_settings"
+            android:layout_marginLeft="35dp"
+            android:layout_centerVertical="true"/>
+
+        <TextView
+            android:id="@+id/group_title"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:text="Group list"
+            android:textSize="20dp"
+            android:textColor="@color/black"
+            android:fontFamily="Roboto"/>
+
+        <TextView
+            android:id="@+id/ico_addGroup"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:gravity="center|right"
+            android:text="New group"
+            android:textSize="15dp"
+            android:textColor="@color/blue_back"
+            android:layout_marginRight="20dp"
+            android:layout_centerVertical="true"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/main_background"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:choiceMode="singleChoice"
-        android:layout_below="@+id/togroup_title"
-        android:focusable="true"
-        android:listSelector="@color/grey_snow"
-        android:layout_marginBottom="100dp"/>
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="10dp"
+        android:orientation="vertical">
 
-    <ImageView
-        android:id="@+id/ico_attachment"
-        android:layout_height="35dp"
-        android:layout_width="35dp"
-        android:src="@drawable/attachment"
-        android:layout_below="@+id/list_group"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="50dp"/>
+        <ExpandableListView
+            android:id="@+id/group_listview"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:layout_marginTop="40dp"
+            android:listSelector="@color/grey_snow"
+            android:focusable="true"/>
+
+    </RelativeLayout>
 
 </RelativeLayout>

@@ -8,38 +8,6 @@
     tools:context="epitech.eip.slidare.ContactActivity">
 
     <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/top_bar"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_marginTop="70dp"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/contact_title"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:gravity="center"
-            android:text="Contact list"
-            android:textSize="20dp"
-            android:textColor="@color/black"
-            android:fontFamily="Roboto"/>
-
-        <TextView
-            android:id="@+id/ico_addContact"
-            android:layout_height="match_parent"
-            android:layout_width="350dp"
-            android:gravity="center"
-            android:text="Add"
-            android:textSize="20dp"
-            android:fontFamily="Roboto"
-            android:layout_marginLeft="500dp"
-            android:textColor="@color/blue_back"/>
-
-    </RelativeLayout>
-
-    <RelativeLayout
         android:id="@+id/main_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -90,7 +58,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:layout_marginTop="120dp"
+        android:layout_marginTop="70dp"
         android:layout_marginBottom="100dp">
     </fragment>
 
