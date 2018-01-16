@@ -122,8 +122,6 @@ public class ToContactFragment extends Fragment {
 
                 try {
                     JSONObject data = new JSONObject(new String(response.getData()));
-                    //Log.d(TAG, "----------> result : "+data.getString("contacts"));
-
                     if (data.getString("contacts").compareTo("null") != 0) {
                         String result = data.getString("contacts");
                         String[] tab = result.split(",");
@@ -135,7 +133,6 @@ public class ToContactFragment extends Fragment {
                                     i++;
                                     str[i]= str[i].replace("\"", "");
                                     list.add(str[i]);
-                                    //Log.d(TAG, "ELEM = " + str[i]);
                                 }
                             }
                         }

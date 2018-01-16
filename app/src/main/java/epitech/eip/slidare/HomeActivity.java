@@ -202,7 +202,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         if (mSocket.connected() == false) {
-            mSocket.on("lila@mail.fr", new Emitter.Listener() {
+            mSocket.on("doe@gmail.com", new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
                     sendNotification(getApplicationContext(),"xxx wants to send you a file");

@@ -40,45 +40,13 @@
 
     </LinearLayout>
 
-    <RelativeLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:orientation="vertical"
-        android:layout_marginTop="60dp"
-        android:id="@+id/top_bar">
-
-        <TextView
-            android:id="@+id/contact_title"
-            android:layout_height="match_parent"
-            android:layout_width="350dp"
-            android:gravity="center"
-            android:text="Contact list"
-            android:textSize="20dp"
-            android:fontFamily="Roboto"
-            android:textColor="@color/black"/>
-
-        <TextView
-            android:id="@+id/ico_addContact"
-            android:layout_height="match_parent"
-            android:layout_width="350dp"
-            android:gravity="center"
-            android:text="Add"
-            android:textSize="20dp"
-            android:fontFamily="Roboto"
-            android:layout_marginLeft="300dp"
-            android:textColor="@color/blue_back"/>
-
-    </RelativeLayout>
-
     <fragment
         android:name="epitech.eip.slidare.ContactFragment"
         android:id="@+id/contact_fragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal"
-        android:layout_marginTop="110dp"
+        android:layout_marginTop="50dp"
         android:layout_marginBottom="10dp">
     </fragment>
 

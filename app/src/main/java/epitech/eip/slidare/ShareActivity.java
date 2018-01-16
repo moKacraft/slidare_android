@@ -181,7 +181,7 @@ public class ShareActivity extends AppCompatActivity implements ToContactFragmen
                 mSocket.emit("request file transfer", file.getName(),
                     encrypted, mEmails, _crypt.get_fileEncryptedName(), file.getName(),
                     _crypt.get_fileSHA1(), Base64.encode(_crypt.get_fileSalt(), Base64.DEFAULT),
-                    Base64.encode(_crypt.get_fileIV(), Base64.DEFAULT), _crypt.get_fileKey(), file.length(), "lila@mail.fr");
+                    Base64.encode(_crypt.get_fileIV(), Base64.DEFAULT), _crypt.get_fileKey(), file.length(), "doe@gmail.com");
 
                 System.out.println(_crypt.get_fileSalt());
                 System.out.println( Base64.encode(_crypt.get_fileSalt(), Base64.DEFAULT));
