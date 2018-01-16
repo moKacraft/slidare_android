@@ -35,6 +35,7 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -42,6 +43,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.security.InvalidAlgorithmParameterException;
@@ -202,10 +204,11 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         if (mSocket.connected() == false) {
-            mSocket.on("lila@mail.fr", new Emitter.Listener() {
+            mSocket.on("soso@gmail.com", new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                    sendNotification(getApplicationContext(),"xxx wants to send you a file");
+                    Log.d("icicicicicicicici", "camarche pas pas pas pas pas pas");
+                    // sendNotification(getApplicationContext(),"xxx wants to send you a file");
                     transferId = (String) args[2];
                     sha1 = (String) args[5];
                     key = (String) args[8];
@@ -231,6 +234,37 @@ public class HomeActivity extends AppCompatActivity {
                     mFileName = args[4].toString();
                     mStorage = FirebaseStorage.getInstance().getReferenceFromUrl("gs://slidare-c93d1.appspot.com/" + args[4].toString());
                     new ConnectTask().execute("".getBytes());
+                }
+            });
+            mSocket.on("server ready", new Emitter.Listener() {
+                @Override
+                public void call(final Object... args) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            try {
+                                java.net.Socket sock;
+                                sock = new java.net.Socket(Config.IP, (int) args[0]);
+                                OutputStream is = sock.getOutputStream();
+
+                                File arg = new File(getCacheDir(), (String) args[1]);
+
+                                FileInputStream fis = new FileInputStream(arg);
+                                BufferedInputStream bis = new BufferedInputStream(fis);
+                                byte[] buffer = new byte[4096];
+                                int ret;
+                                while ((ret = fis.read(buffer)) > 0) {
+                                    is.write(buffer, 0, ret);
+                                }
+                                fis.close();
+                                bis.close();
+                                is.close();
+                                sock.close();
+                            } catch (IOException ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+                    }).start();
                 }
             });
             mSocket.connect();

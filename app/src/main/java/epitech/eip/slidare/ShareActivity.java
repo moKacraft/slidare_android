@@ -50,14 +50,14 @@ public class ShareActivity extends AppCompatActivity implements ToContactFragmen
     private TextView mToGroup;
     private TextView mDone;
 
-    private Socket mSocket;
-    {
-        try {
-            mSocket = IO.socket(Config.URL_SOCKET);
-        } catch (URISyntaxException e) {
-            Log.d(TAG, Config.SYNTAX_EXCEPT + e);
-        }
-    }
+//    private Socket mSocket;
+//    {
+//        try {
+//            mSocket = IO.socket(Config.URL_SOCKET);
+//        } catch (URISyntaxException e) {
+//            Log.d(TAG, Config.SYNTAX_EXCEPT + e);
+//        }
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,40 +68,40 @@ public class ShareActivity extends AppCompatActivity implements ToContactFragmen
 
         mContext = getApplicationContext();
 
-        if (mSocket.connected() == false) {
-            mSocket.on("server ready", new Emitter.Listener() {
-                @Override
-                public void call(final Object... args) {
-                    new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                        try {
-                            java.net.Socket sock;
-                            sock = new java.net.Socket(Config.IP, (int) args[0]);
-                            OutputStream is = sock.getOutputStream();
-
-                            File arg = new File(getCacheDir(), (String) args[1]);
-
-                            FileInputStream fis = new FileInputStream(arg);
-                            BufferedInputStream bis = new BufferedInputStream(fis);
-                            byte[] buffer = new byte[4096];
-                            int ret;
-                            while ((ret = fis.read(buffer)) > 0) {
-                                is.write(buffer, 0, ret);
-                            }
-                            fis.close();
-                            bis.close();
-                            is.close();
-                            sock.close();
-                        } catch (IOException ex) {
-                            ex.printStackTrace();
-                        }
-                        }
-                    }).start();
-                }
-            });
-            mSocket.connect();
-        }
+        //if (mSocket.connected() == false) {
+//            mSocket.on("server ready", new Emitter.Listener() {
+//                @Override
+//                public void call(final Object... args) {
+//                    new Thread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                        try {
+//                            java.net.Socket sock;
+//                            sock = new java.net.Socket(Config.IP, (int) args[0]);
+//                            OutputStream is = sock.getOutputStream();
+//
+//                            File arg = new File(getCacheDir(), (String) args[1]);
+//
+//                            FileInputStream fis = new FileInputStream(arg);
+//                            BufferedInputStream bis = new BufferedInputStream(fis);
+//                            byte[] buffer = new byte[4096];
+//                            int ret;
+//                            while ((ret = fis.read(buffer)) > 0) {
+//                                is.write(buffer, 0, ret);
+//                            }
+//                            fis.close();
+//                            bis.close();
+//                            is.close();
+//                            sock.close();
+//                        } catch (IOException ex) {
+//                            ex.printStackTrace();
+//                        }
+//                        }
+//                    }).start();
+//                }
+//            });
+            //mSocket.connect();
+        //}
 
         mToContact = (TextView) findViewById(R.id.tocontact);
         mToGroup = (TextView) findViewById(R.id.togroup);
@@ -155,67 +155,67 @@ public class ShareActivity extends AppCompatActivity implements ToContactFragmen
         mEmails = new JSONArray();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-        try {
-            InputStream is = ImagePicker.getInputStreamFromResult(mContext, requestCode, resultCode, data);
-            if (is != null) {
-                File file = new File(getCacheDir(), "toEncryt.png");
-                OutputStream out = new FileOutputStream(file);
-                byte[] buf = new byte[1024];
-                int len;
-                while((len=is.read(buf))>0){
-                    out.write(buf,0,len);
-                }
-
-                File encrypted = new File(getCacheDir(), "encrypted");
-                FileOutputStream outFile = new FileOutputStream(encrypted);
-                encryptUtils _crypt = new  encryptUtils();
-                String key =  encryptUtils.SHA256("my secret key", 32);
-                _crypt.encryptFile(file.toString(), "encrypted", outFile, key);
-
-                JSONArray users = new JSONArray();
-                users.put(mEmails);
-
-                mSocket.emit("request file transfer", file.getName(),
-                    encrypted, mEmails, _crypt.get_fileEncryptedName(), file.getName(),
-                    _crypt.get_fileSHA1(), Base64.encode(_crypt.get_fileSalt(), Base64.DEFAULT),
-                    Base64.encode(_crypt.get_fileIV(), Base64.DEFAULT), _crypt.get_fileKey(), file.length(), "lila@mail.fr");
-
-                System.out.println(_crypt.get_fileSalt());
-                System.out.println( Base64.encode(_crypt.get_fileSalt(), Base64.DEFAULT));
-
-                out.flush();
-                out.close();
-                outFile.flush();
-                outFile.close();
-                is.close();
-            }
-            else {
-                //failed to load file
-            }
-
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        } catch (NoSuchPaddingException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-        } catch (IllegalBlockSizeException e) {
-            e.printStackTrace();
-        } catch (BadPaddingException e) {
-            e.printStackTrace();
-        } catch (InvalidParameterSpecException e) {
-            e.printStackTrace();
-        } catch (InvalidKeySpecException e) {
-            e.printStackTrace();
-        }
-    }
+//    @Override
+//    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+//
+//        try {
+//            InputStream is = ImagePicker.getInputStreamFromResult(mContext, requestCode, resultCode, data);
+//            if (is != null) {
+//                File file = new File(getCacheDir(), "toEncryt.png");
+//                OutputStream out = new FileOutputStream(file);
+//                byte[] buf = new byte[1024];
+//                int len;
+//                while((len=is.read(buf))>0){
+//                    out.write(buf,0,len);
+//                }
+//
+//                File encrypted = new File(getCacheDir(), "encrypted");
+//                FileOutputStream outFile = new FileOutputStream(encrypted);
+//                encryptUtils _crypt = new  encryptUtils();
+//                String key =  encryptUtils.SHA256("my secret key", 32);
+//                _crypt.encryptFile(file.toString(), "encrypted", outFile, key);
+//
+//                JSONArray users = new JSONArray();
+//                users.put(mEmails);
+//
+//                mSocket.emit("request file transfer", file.getName(),
+//                    encrypted, mEmails, _crypt.get_fileEncryptedName(), file.getName(),
+//                    _crypt.get_fileSHA1(), Base64.encode(_crypt.get_fileSalt(), Base64.DEFAULT),
+//                    Base64.encode(_crypt.get_fileIV(), Base64.DEFAULT), _crypt.get_fileKey(), file.length(), "lila@mail.fr");
+//
+//                System.out.println(_crypt.get_fileSalt());
+//                System.out.println( Base64.encode(_crypt.get_fileSalt(), Base64.DEFAULT));
+//
+//                out.flush();
+//                out.close();
+//                outFile.flush();
+//                outFile.close();
+//                is.close();
+//            }
+//            else {
+//                //failed to load file
+//            }
+//
+//        } catch (NoSuchAlgorithmException e) {
+//            e.printStackTrace();
+//        } catch (NoSuchPaddingException e) {
+//            e.printStackTrace();
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        } catch (InvalidKeyException e) {
+//            e.printStackTrace();
+//        } catch (IllegalBlockSizeException e) {
+//            e.printStackTrace();
+//        } catch (BadPaddingException e) {
+//            e.printStackTrace();
+//        } catch (InvalidParameterSpecException e) {
+//            e.printStackTrace();
+//        } catch (InvalidKeySpecException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     @Override
     public void onContactItemSelected(String link) {
