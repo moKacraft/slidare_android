@@ -63,6 +63,15 @@
             android:windowSoftInputMode="stateHidden">
         </activity>
         <activity
+            android:name=".AgendaActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateHidden">
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable">
+            </meta-data>
+        </activity>
+        <activity
             android:name=".ContactActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateHidden">

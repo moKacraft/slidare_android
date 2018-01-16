@@ -108,18 +108,18 @@ public class MainActivity extends AppCompatActivity {
                             mToken = data.getString("token");
                             mId = data.getString("id");
 
+                            Log.d(TAG, "DATA = " + data);
+
                             SharedPreferences settings = getSharedPreferences("USERDATA", 0);
                             SharedPreferences.Editor editor = settings.edit();
                             editor.putString("userToken", mToken);
                             editor.putString("userId", mId);
                             editor.putString("fbUrlImage", mUrlPicture);
-                            editor.putString("userEmail", data.getString("email"));
                             editor.apply();
 
                             Intent intent = new Intent(MainActivity.this, HomeActivity.class);
                             intent.putExtra("token", mToken);
                             intent.putExtra("fbUrlImage", mUrlPicture);
-                            intent.putExtra("email", data.getString("email"));
                             startActivity(intent);
                             finish();
                         }

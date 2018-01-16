@@ -80,7 +80,7 @@ public class HomeActivity extends AppCompatActivity {
     private ListView mListView;
     private List<String> mList;
 
-    private ImageView mGroupView;
+    private ImageView mAgendaView;
     private ImageView mProfilView;
     private ImageView mShare;
     private String sender_id;
@@ -202,35 +202,35 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
 
         if (mSocket.connected() == false) {
-            mSocket.on(mUserEmail, new Emitter.Listener() {
+            mSocket.on("lila@mail.fr", new Emitter.Listener() {
                 @Override
                 public void call(Object... args) {
-                sendNotification(getApplicationContext(), mUserEmail + " wants to send you a file");
-                transferId = (String) args[2];
-                sha1 = (String) args[5];
-                key = (String) args[8];
-                sender_id = (String) args[10];
-                salt = Base64.decode((String) args[6], Base64.DEFAULT);
-                iv = Base64.decode((String) args[7], Base64.DEFAULT);
-                fileData = new ByteArrayOutputStream();
-                try {
-                    File yourEncFile = new File(getApplicationContext().getFilesDir(), (String)args[3]);
-                    File yourFile = new File(getApplicationContext().getFilesDir(), (String)args[4]);
-                    encFilePath = yourEncFile.getPath();
-                    filePath = yourFile.getPath();
-                    yourFile.createNewFile();
-                    yourEncFile.createNewFile();
-                    fos = new FileOutputStream(encFilePath);
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                TcpClient.SERVER_IP = Config.IP;
-                TcpClient.SERVER_PORT = Integer.parseInt(args[1].toString());
-                mFileName = args[4].toString();
-                mStorage = FirebaseStorage.getInstance().getReferenceFromUrl("gs://slidare-c93d1.appspot.com/" + args[4].toString());
-                new ConnectTask().execute("".getBytes());
+                    sendNotification(getApplicationContext(),"xxx wants to send you a file");
+                    transferId = (String) args[2];
+                    sha1 = (String) args[5];
+                    key = (String) args[8];
+                    sender_id = (String) args[10];
+                    salt = Base64.decode((String) args[6], Base64.DEFAULT);
+                    iv = Base64.decode((String) args[7], Base64.DEFAULT);
+                    fileData = new ByteArrayOutputStream();
+                    try {
+                        File yourEncFile = new File(getApplicationContext().getFilesDir(), (String)args[3]);
+                        File yourFile = new File(getApplicationContext().getFilesDir(), (String)args[4]);
+                        encFilePath = yourEncFile.getPath();
+                        filePath = yourFile.getPath();
+                        yourFile.createNewFile();
+                        yourEncFile.createNewFile();
+                        fos = new FileOutputStream(encFilePath);
+                    } catch (FileNotFoundException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    TcpClient.SERVER_IP = Config.IP;
+                    TcpClient.SERVER_PORT = Integer.parseInt(args[1].toString());
+                    mFileName = args[4].toString();
+                    mStorage = FirebaseStorage.getInstance().getReferenceFromUrl("gs://slidare-c93d1.appspot.com/" + args[4].toString());
+                    new ConnectTask().execute("".getBytes());
                 }
             });
             mSocket.connect();
@@ -242,11 +242,11 @@ public class HomeActivity extends AppCompatActivity {
         Intent intent = getIntent();
         mToken = intent.getStringExtra("token");
         mUrlPicture = intent.getStringExtra("fbUrl");
-        mUserEmail = intent.getStringExtra("email");
+        //mUserEmail = intent.getStringExtra("email");
 
         mAdapter = new HomeListAdapter(mList, mContext, mToken);
 
-        mGroupView = (ImageView) findViewById(R.id.ico_group);
+        mAgendaView = (ImageView) findViewById(R.id.ico_agenda);
         mProfilView = (ImageView) findViewById(R.id.ico_profil);
         mShare = (ImageView) findViewById(R.id.ico_send);
         mListView = (ListView) findViewById(R.id.history_list);
@@ -259,10 +259,10 @@ public class HomeActivity extends AppCompatActivity {
             }
         }*/
 
-        View.OnClickListener mGroupViewListener = new View.OnClickListener() {
+        View.OnClickListener mAgendaViewListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            Intent intent = new Intent(HomeActivity.this, ContactActivity.class);
+            Intent intent = new Intent(HomeActivity.this, AgendaActivity.class);
             intent.putExtra("token", mToken);
             startActivity(intent);
             finish();
@@ -289,7 +289,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         };
 
-        mGroupView.setOnClickListener(mGroupViewListener);
+        mAgendaView.setOnClickListener(mAgendaViewListener);
         mProfilView.setOnClickListener(mProfilViewListener);
         mShare.setOnClickListener(mSendListener);
         mListView.setAdapter(mAdapter);

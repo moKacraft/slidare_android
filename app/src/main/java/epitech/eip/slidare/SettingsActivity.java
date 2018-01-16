@@ -65,7 +65,7 @@ public class SettingsActivity extends AppCompatActivity {
     private String mBodyUpdatePassword;
 
     private ImageView mHomeView;
-    private ImageView mGroupView;
+    private ImageView mAgendaView;
 
     private Button mSave;
     private TextView mLogout;
@@ -98,7 +98,7 @@ public class SettingsActivity extends AppCompatActivity {
         mLogout = (TextView) findViewById(R.id.logout);
 
         mHomeView = (ImageView) findViewById(R.id.ico_home);
-        mGroupView = (ImageView) findViewById(R.id.ico_group);
+        mAgendaView = (ImageView) findViewById(R.id.ico_agenda);
 
         View.OnClickListener mPhotoButtonListener = new View.OnClickListener() {
             @Override
@@ -124,11 +124,11 @@ public class SettingsActivity extends AppCompatActivity {
             }
         };
 
-        View.OnClickListener mGroupViewListener = new View.OnClickListener() {
+        View.OnClickListener mAgendaViewListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-            Intent intent = new Intent(SettingsActivity.this, ContactActivity.class);
+            Intent intent = new Intent(SettingsActivity.this, AgendaActivity.class);
             intent.putExtra("token", mToken);
             startActivity(intent);
             finish();
@@ -334,7 +334,7 @@ public class SettingsActivity extends AppCompatActivity {
         };
 
         mHomeView.setOnClickListener(mHomeViewListener);
-        mGroupView.setOnClickListener(mGroupViewListener);
+        mAgendaView.setOnClickListener(mAgendaViewListener);
         mPhotoButton.setOnClickListener(mPhotoButtonListener);
         mLibrary.setOnClickListener(mSearchLibraryListener);
         mSave.setOnClickListener(mSaveListener);

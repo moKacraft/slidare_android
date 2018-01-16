@@ -68,37 +68,40 @@ public class ShareActivity extends AppCompatActivity implements ToContactFragmen
 
         mContext = getApplicationContext();
 
-        mSocket.on("server ready", new Emitter.Listener() {
-            @Override
-            public void call(final Object... args) {
-            new Thread(new Runnable() {
+        if (mSocket.connected() == false) {
+            mSocket.on("server ready", new Emitter.Listener() {
                 @Override
-                public void run() {
-                try {
-                    java.net.Socket sock;
-                    sock = new java.net.Socket(Config.IP, (int)args[0]);
-                    OutputStream is = sock.getOutputStream();
+                public void call(final Object... args) {
+                    new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                        try {
+                            java.net.Socket sock;
+                            sock = new java.net.Socket(Config.IP, (int) args[0]);
+                            OutputStream is = sock.getOutputStream();
 
-                    File arg = new File(getCacheDir(), (String)args[1]);
+                            File arg = new File(getCacheDir(), (String) args[1]);
 
-                    FileInputStream fis = new FileInputStream(arg);
-                    BufferedInputStream bis = new BufferedInputStream(fis);
-                    byte[] buffer = new byte[4096];
-                    int ret;
-                    while ((ret = fis.read(buffer)) > 0) {
-                        is.write(buffer, 0, ret);
-                    }
-                    fis.close();
-                    bis.close();
-                    is.close();
-                    sock.close();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
+                            FileInputStream fis = new FileInputStream(arg);
+                            BufferedInputStream bis = new BufferedInputStream(fis);
+                            byte[] buffer = new byte[4096];
+                            int ret;
+                            while ((ret = fis.read(buffer)) > 0) {
+                                is.write(buffer, 0, ret);
+                            }
+                            fis.close();
+                            bis.close();
+                            is.close();
+                            sock.close();
+                        } catch (IOException ex) {
+                            ex.printStackTrace();
+                        }
+                        }
+                    }).start();
                 }
-                }
-            }).start();
-            }
-        });
+            });
+            mSocket.connect();
+        }
 
         mToContact = (TextView) findViewById(R.id.tocontact);
         mToGroup = (TextView) findViewById(R.id.togroup);

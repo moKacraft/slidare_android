@@ -212,7 +212,7 @@
             android:layout_marginTop="15dp"/>
 
         <ImageView
-            android:id="@+id/ico_group"
+            android:id="@+id/ico_agenda"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_below="@+id/ico_home"
@@ -224,7 +224,7 @@
             android:id="@+id/ico_profil"
             android:layout_height="45dp"
             android:layout_width="45dp"
-            android:layout_below="@+id/ico_group"
+            android:layout_below="@+id/ico_agenda"
             android:src="@drawable/new_user"
             android:layout_marginLeft="450dp"
             android:layout_marginTop="-48dp"/>

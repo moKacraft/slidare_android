@@ -33,7 +33,7 @@ import epitech.eip.slidare.request.Config;
 
 public class ToGroupFragment extends Fragment {
 
-    static final String TAG = "ToContactFragment";
+    static final String TAG = "ToGroupFragment";
 
     private OnItemSelectedListener listener;
 

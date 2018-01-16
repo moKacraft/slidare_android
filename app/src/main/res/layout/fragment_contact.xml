@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_gravity="center_vertical"
+    android:background="@color/whiteColor"
+    android:id="@+id/contact_fragment">
+
+    <TextView
+        android:id="@+id/tocontact_title"
+        android:layout_height="80dp"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:text="Choose a contact"
+        android:textSize="20dp"
+        android:fontFamily="Roboto"
+        android:textColor="@color/black"
+        android:layout_marginTop="20dp"/>
+
+    <ListView
+        android:id="@+id/list_contact"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@+id/tocontact_title"
+        android:choiceMode="singleChoice"
+        android:focusable="true"
+        android:listSelector="@color/grey_snow"
+        android:layout_marginBottom="100dp"/>
+
+    <ImageView
+        android:id="@+id/ico_attachment"
+        android:layout_height="35dp"
+        android:layout_width="35dp"
+        android:src="@drawable/attachment"
+        android:layout_below="@+id/list_contact"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="50dp"/>
+
+</RelativeLayout>
