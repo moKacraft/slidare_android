@@ -203,6 +203,22 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+
+        Log.d(TAG, Config.ONCREATE);
+
+        mContext = getApplicationContext();
+        Intent intent = getIntent();
+        mToken = intent.getStringExtra("token");
+        mUrlPicture = intent.getStringExtra("fbUrl");
+        //mUserEmail = intent.getStringExtra("email");
+
+        mAdapter = new HomeListAdapter(mList, mContext, mToken);
+
+        mAgendaView = (ImageView) findViewById(R.id.ico_agenda);
+        mProfilView = (ImageView) findViewById(R.id.ico_profil);
+        mShare = (ImageView) findViewById(R.id.ico_send);
+        mListView = (ListView) findViewById(R.id.history_list);
+
         if (mSocket.connected() == false) {
 
             mSocket.on("soso@gmail.com", new Emitter.Listener() {
@@ -272,20 +288,7 @@ public class HomeActivity extends AppCompatActivity {
             mSocket.connect();
         }
 
-        Log.d(TAG, Config.ONCREATE);
 
-        mContext = getApplicationContext();
-        Intent intent = getIntent();
-        mToken = intent.getStringExtra("token");
-        mUrlPicture = intent.getStringExtra("fbUrl");
-        //mUserEmail = intent.getStringExtra("email");
-
-        mAdapter = new HomeListAdapter(mList, mContext, mToken);
-
-        mAgendaView = (ImageView) findViewById(R.id.ico_agenda);
-        mProfilView = (ImageView) findViewById(R.id.ico_profil);
-        mShare = (ImageView) findViewById(R.id.ico_send);
-        mListView = (ListView) findViewById(R.id.history_list);
 
         /*if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
