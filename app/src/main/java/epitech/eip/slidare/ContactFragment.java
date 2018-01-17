@@ -71,9 +71,9 @@ public class ContactFragment extends Fragment {
         View.OnClickListener mAddContactListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(mContext, AddContactActivity.class);
-                intent.putExtra("token", mToken);
-                startActivity(intent);
+            Intent intent = new Intent(mContext, AddContactActivity.class);
+            intent.putExtra("token", mToken);
+            startActivity(intent);
             }
         };
 

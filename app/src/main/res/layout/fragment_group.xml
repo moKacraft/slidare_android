@@ -35,13 +35,13 @@
         <TextView
             android:id="@+id/ico_addGroup"
             android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:gravity="center|right"
+            android:layout_width="100dp"
+            android:gravity="center"
             android:text="New group"
             android:textSize="15dp"
             android:textColor="@color/blue_back"
-            android:layout_marginRight="20dp"
-            android:layout_centerVertical="true"/>
+            android:layout_marginRight="15dp"
+            android:layout_alignParentRight="true"/>
 
     </RelativeLayout>
 
