@@ -208,7 +208,7 @@ public class AddContactToGroupActivity extends AppCompatActivity {
                                             if (str[i].toString().equals("\"id\"") && lock == 1) {
                                                 i++;
                                                 str[i] = str[i].replace("\"", "");
-                                                mBody = "{ \"contact_identifier\": \"" + str[i] + "\" }";
+                                                mBody = "{ \"contact_identifier\": \"" + mEmail + "\" }";
                                                 //Log.d(TAG, "BODY = " + mBody);
                                                 try {
                                                     Handler<String> handler = new Handler<String>() {
