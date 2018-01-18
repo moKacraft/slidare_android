@@ -27,12 +27,13 @@
         <TextView
             android:id="@+id/ico_addContact"
             android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:gravity="center|right"
+            android:layout_width="100dp"
+            android:gravity="center"
             android:text="Add"
             android:textSize="20dp"
             android:fontFamily="Roboto"
-            android:layout_marginRight="30dp"
+            android:layout_marginLeft="15dp"
+            android:layout_alignParentRight="true"
             android:textColor="@color/blue_back"/>
 
     </RelativeLayout>

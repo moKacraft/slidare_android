@@ -38,116 +38,122 @@
 
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/choosegroup"
+    <RelativeLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_below="@+id/top_bar"
-        android:gravity="center"
-        android:text="Choose a group"
-        android:textSize="20dp"
-        android:fontFamily="Roboto"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:textColor="@color/black"/>
+        android:layout_marginTop="50dp">
 
-    <ListView
-        android:id="@+id/list_group"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:layout_below="@+id/choosegroup"
-        android:choiceMode="singleChoice"
-        android:focusable="true"
-        android:listSelector="@color/grey_snow"
-        android:layout_marginBottom="10dp"/>
+        <TextView
+            android:id="@+id/choosegroup"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:gravity="center"
+            android:text="Choose a group"
+            android:textSize="20dp"
+            android:fontFamily="Roboto"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/black"/>
 
-    <TextView
-        android:id="@+id/changename"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_below="@+id/list_group"
-        android:gravity="center"
-        android:text="Change the name"
-        android:textSize="20dp"
-        android:fontFamily="Roboto"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
-        android:textColor="@color/black"/>
+        <ListView
+            android:id="@+id/list_group"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_below="@+id/choosegroup"
+            android:choiceMode="singleChoice"
+            android:focusable="true"
+            android:scrollbars="vertical"
+            android:listSelector="@color/grey_snow"
+            android:layout_marginBottom="10dp"/>
 
-    <EditText
-        android:id="@+id/groupname"
-        android:layout_width="300dp"
-        android:layout_height="40dp"
-        android:layout_below="@+id/changename"
-        android:layout_centerHorizontal="true"
-        android:gravity="center_horizontal"
-        android:background="@drawable/border"
-        android:padding="5dp"
-        android:inputType="text"
-        android:layout_marginBottom="10dp"
-        android:textSize="18dp"/>
+        <TextView
+            android:id="@+id/changename"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/list_group"
+            android:gravity="center"
+            android:text="Change the name"
+            android:textSize="20dp"
+            android:fontFamily="Roboto"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/black"/>
 
-    <TextView
-        android:id="@+id/modify"
-        android:layout_width="300dp"
-        android:layout_height="40dp"
-        android:layout_below="@+id/groupname"
-        android:layout_marginBottom="20dp"
-        android:gravity="center"
-        android:text="Modify"
-        android:textSize="20dp"
-        android:textColor="@color/whiteColor"
-        android:background="@drawable/submit_border"
-        android:layout_centerHorizontal="true"/>
+        <EditText
+            android:id="@+id/groupname"
+            android:layout_width="300dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/changename"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_horizontal"
+            android:background="@drawable/border"
+            android:padding="5dp"
+            android:inputType="text"
+            android:layout_marginBottom="10dp"
+            android:textSize="18dp"/>
 
-    <TextView
-        android:id="@+id/enteremail"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_below="@+id/modify"
-        android:gravity="center"
-        android:text="Add a contact"
-        android:textSize="20dp"
-        android:fontFamily="Roboto"
-        android:layout_marginBottom="10dp"
-        android:textColor="@color/black"/>
+        <TextView
+            android:id="@+id/modify"
+            android:layout_width="300dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/groupname"
+            android:layout_marginBottom="20dp"
+            android:gravity="center"
+            android:text="Modify"
+            android:textSize="20dp"
+            android:textColor="@color/whiteColor"
+            android:background="@drawable/submit_border"
+            android:layout_centerHorizontal="true"/>
 
-    <EditText
-        android:id="@+id/new_email"
-        android:layout_width="300dp"
-        android:layout_height="40dp"
-        android:layout_below="@+id/enteremail"
-        android:layout_centerHorizontal="true"
-        android:gravity="center_horizontal"
-        android:background="@drawable/border"
-        android:padding="5dp"
-        android:inputType="textEmailAddress"
-        android:layout_marginBottom="20dp"
-        android:textSize="18dp"/>
+        <TextView
+            android:id="@+id/enteremail"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_below="@+id/modify"
+            android:gravity="center"
+            android:text="Add a contact"
+            android:textSize="20dp"
+            android:fontFamily="Roboto"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/black"/>
 
-    <TextView
-        android:id="@+id/save"
-        android:layout_width="300dp"
-        android:layout_height="40dp"
-        android:layout_below="@+id/new_email"
-        android:layout_marginBottom="80dp"
-        android:gravity="center"
-        android:text="Add"
-        android:textSize="20dp"
-        android:textColor="@color/whiteColor"
-        android:background="@drawable/submit_border"
-        android:layout_centerHorizontal="true"/>
+        <EditText
+            android:id="@+id/new_email"
+            android:layout_width="300dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/enteremail"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_horizontal"
+            android:background="@drawable/border"
+            android:padding="5dp"
+            android:inputType="textEmailAddress"
+            android:layout_marginBottom="20dp"
+            android:textSize="18dp"/>
 
-    <TextView
-        android:id="@+id/delete"
-        android:layout_width="180dp"
-        android:layout_height="40dp"
-        android:gravity="center"
-        android:text="Delete the group"
-        android:textSize="20dp"
-        android:textColor="@color/whiteColor"
-        android:background="@drawable/logout_border"
-        android:layout_below="@+id/save"
-        android:layout_centerHorizontal="true" />
+        <TextView
+            android:id="@+id/save"
+            android:layout_width="300dp"
+            android:layout_height="40dp"
+            android:layout_below="@+id/new_email"
+            android:layout_marginBottom="80dp"
+            android:gravity="center"
+            android:text="Add"
+            android:textSize="20dp"
+            android:textColor="@color/whiteColor"
+            android:background="@drawable/submit_border"
+            android:layout_centerHorizontal="true"/>
 
+        <TextView
+            android:id="@+id/delete"
+            android:layout_width="180dp"
+            android:layout_height="40dp"
+            android:gravity="center"
+            android:text="Delete the group"
+            android:textSize="20dp"
+            android:textColor="@color/whiteColor"
+            android:background="@drawable/logout_border"
+            android:layout_below="@+id/save"
+            android:layout_centerHorizontal="true" />
+
+    </RelativeLayout>
 </RelativeLayout>

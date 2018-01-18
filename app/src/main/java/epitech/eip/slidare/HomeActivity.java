@@ -7,11 +7,14 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.util.Log;
@@ -232,7 +235,6 @@ public class HomeActivity extends AppCompatActivity {
         mListView = (ListView) findViewById(R.id.history_list);
 
         if (mSocket.connected() == false) {
-
             mSocket.on(mEmail, new Emitter.Listener() {
 
                 @Override
@@ -300,15 +302,13 @@ public class HomeActivity extends AppCompatActivity {
             mSocket.connect();
         }
 
-
-
-        /*if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
 
             } else {
                 ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE},4242);
             }
-        }*/
+        }
 
         View.OnClickListener mAgendaViewListener = new View.OnClickListener() {
             @Override

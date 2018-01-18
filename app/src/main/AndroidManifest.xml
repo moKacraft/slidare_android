@@ -73,21 +73,8 @@
             </meta-data>
         </activity>
         <activity
-            android:name=".ContactActivity"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="stateHidden">
-            <meta-data
-                android:name="android.app.searchable"
-                android:resource="@xml/searchable">
-            </meta-data>
-        </activity>
-        <activity
             android:name=".AddContactActivity"
             android:theme="@style/AppTheme.PopupEdit">
-        </activity>
-        <activity
-            android:name=".GroupActivity"
-            android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
             android:name=".AddGroupActivity"

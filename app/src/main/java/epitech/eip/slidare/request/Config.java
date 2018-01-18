@@ -33,4 +33,20 @@ public class Config {
     public static String CUR_NEW_IDENTIC = "Current and new password identicals.";
     public static String PICTURE_UPDATE = "Picture successfully updated.";
     public static String PIC_UPDATE_FAIL = "Picture update failed.";
+    public static String NO_GROUP = "You have no group yet.";
+    public static String ADDTOGROUP = "Contact successfully added to the group.";
+    public static String NOTACONTACT = "This is not one of your contacts.";
+    public static String MISSGRPANDMAIL = "Please select a group and enter a contact email.";
+    public static String GRPDELETED = "Group successfully deleted.";
+    public static String GRPDELFAILED = "This group cannot be deleted.";
+    public static String SELGRPTODEL = "Please select a group to delete in the list.";
+    public static String GRPRENAMED = "Group successfully renamed.";
+    public static String RENAMEFAIL = "This group cannot be renamed.";
+    public static String RENAMEPLSE = "Please select a group to modify and enter the new name.";
+    public static String GRPCREATED = "Group successfully created.";
+    public static String GRPNOCREATED = "This group can not be created.";
+    public static String CONTACTADDED = "Contact successfully added.";
+    public static String CTCTNOTEXIST = "This contact does not exist.";
+    public static String NO_CONTACT = "You have no contact yet.";
+
 }

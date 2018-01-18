@@ -4,14 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.kittinunf.fuel.Fuel;
 import com.github.kittinunf.fuel.core.FuelError;
 import com.github.kittinunf.fuel.core.Handler;
 import com.github.kittinunf.fuel.core.Request;
@@ -19,8 +17,8 @@ import com.github.kittinunf.fuel.core.Response;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.Map;
+import epitech.eip.slidare.request.Config;
+import epitech.eip.slidare.request.Group;
 
 /**
  * Created by ferrei_e on 13/02/2017.
@@ -42,16 +40,10 @@ public class AddGroupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.group_add);
 
-        Log.d(TAG, "---------> onCreate");
+        Log.d(TAG, Config.ONCREATE);
 
         Intent intent = getIntent();
         mToken = intent.getStringExtra("token");
-
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        int width = dm.widthPixels;
-        int height = dm.heightPixels;
-        getWindow().setLayout((int)(width),(int)(height));
 
         mNewGroup = (EditText) findViewById(R.id.new_group);
         mSave = (TextView) findViewById(R.id.save);
@@ -61,16 +53,28 @@ public class AddGroupActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                String name = mNewGroup.getText().toString();
-                if (!name.isEmpty()) {
-                    mBody = "{ \"name\": \"" + name + "\" }";
-                    //Log.d("TEST = ", mBody);
-                    try {
-                        createGroup(mBody, mToken);
-                    } catch (Exception error) {
-                        Log.d(TAG, "EXCEPTION ERROR = " + error);
-                    }
+            String name = mNewGroup.getText().toString();
+            if (!name.isEmpty()) {
+                mBody = "{ \"name\": \"" + name + "\" }";
+                try {
+                    Handler<String> handler = new Handler<String>() {
+                        @Override
+                        public void success(@NotNull Request request, @NotNull Response response, String s) {
+                            Log.d("createGroup " + Config.ONSUCCESS,response.toString());
+                            Toast.makeText(AddGroupActivity.this, Config.GRPCREATED, Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
+                            Log.d("createGroup " + Config.FAILURE,response.toString());
+                            Toast.makeText(AddGroupActivity.this, Config.GRPNOCREATED, Toast.LENGTH_SHORT).show();
+                        }
+                    };
+                    Group.createGroup(mBody, mToken, handler);
+                } catch (Exception error) {
+                    Log.d(TAG, Config.EXCEPTION + error);
                 }
+            }
             }
         };
 
@@ -83,27 +87,5 @@ public class AddGroupActivity extends AppCompatActivity {
 
         mSave.setOnClickListener(mSaveListener);
         mDone.setOnClickListener(mDoneListener);
-    }
-
-    public void createGroup(String body, String token) throws Exception {
-
-        Map<String, Object> header = new HashMap<>();
-        header.put("Authorization", "Bearer "+token);
-
-        Fuel.post("http://34.238.153.180:50000/createGroup").header(header).body(body.getBytes()).responseString(new Handler<String>() {
-            @Override
-            public void success(@NotNull Request request, @NotNull Response response, String s) {
-
-                Log.d("createGroup SUCCESS : ",response.toString());
-                Toast.makeText(AddGroupActivity.this, "Group successfully created.", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
-
-                Log.d("createGroup FAILURE : ",response.toString());
-                Toast.makeText(AddGroupActivity.this, "This group can not be created.", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 }
