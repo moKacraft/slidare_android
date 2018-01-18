@@ -43,5 +43,10 @@ public class Config {
     public static String GRPRENAMED = "Group successfully renamed.";
     public static String RENAMEFAIL = "This group cannot be renamed.";
     public static String RENAMEPLSE = "Please select a group to modify and enter the new name.";
+    public static String GRPCREATED = "Group successfully created.";
+    public static String GRPNOCREATED = "This group can not be created.";
+    public static String CONTACTADDED = "Contact successfully added.";
+    public static String CTCTNOTEXIST = "This contact does not exist.";
+    public static String NO_CONTACT = "You have no contact yet.";
 
 }

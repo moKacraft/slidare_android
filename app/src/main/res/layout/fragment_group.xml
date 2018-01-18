@@ -16,8 +16,8 @@
 
         <ImageView
             android:id="@+id/ico_settings"
-            android:layout_height="15dp"
-            android:layout_width="15dp"
+            android:layout_height="20dp"
+            android:layout_width="20dp"
             android:src="@drawable/ico_settings"
             android:layout_marginLeft="35dp"
             android:layout_centerVertical="true"/>
@@ -38,7 +38,7 @@
             android:layout_width="100dp"
             android:gravity="center"
             android:text="New group"
-            android:textSize="15dp"
+            android:textSize="19dp"
             android:textColor="@color/blue_back"
             android:layout_marginRight="15dp"
             android:layout_alignParentRight="true"/>

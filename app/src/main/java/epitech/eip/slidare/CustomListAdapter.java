@@ -88,10 +88,8 @@ public class CustomListAdapter extends BaseAdapter implements ListAdapter, Filte
             @Override
             public void onClick(View v) {
 
-                //Log.d(TAG, "DELETE = " + mList.get(position));
                 String body = mList.get(position);
                 mList.remove(position);
-
                 try {
                     if (Patterns.EMAIL_ADDRESS.matcher(body).matches())
                         removeContactByEmail(body, mToken);
@@ -109,18 +107,14 @@ public class CustomListAdapter extends BaseAdapter implements ListAdapter, Filte
     @Override
     public Filter getFilter() {
 
-        //Log.d(TAG, "GETFILTER");
         Filter filter = new Filter() {
-
             @SuppressWarnings("unchecked")
             @Override
             protected void publishResults(CharSequence constraint,FilterResults results) {
 
                 mArrayList = (ArrayList<String>) results.values;
-
                 if (mArrayList != mList)
                     mList = mArrayList;
-
                 if (constraint.length() == 0)
                     mList = mSaveList;
                 notifyDataSetChanged();
@@ -131,7 +125,6 @@ public class CustomListAdapter extends BaseAdapter implements ListAdapter, Filte
                 FilterResults results = new FilterResults();
                 ArrayList<String> FilteredArrList = new ArrayList<String>();
 
-                //Log.d(TAG, "PERFORM");
                 if (mList == null) {
                     mList = new ArrayList<String>(mArrayList);
                 }

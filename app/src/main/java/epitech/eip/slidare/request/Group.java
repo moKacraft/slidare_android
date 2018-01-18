@@ -10,6 +10,14 @@ public class Group {
 
     static final String TAG = "GroupRequest";
 
+    static public void createGroup(final String body, final String token, Handler<String> handler) throws Exception {
+
+        Map<String, Object> header = new HashMap<>();
+        header.put("Authorization", "Bearer " + token);
+
+        Fuel.post(Config.URL_API + "createGroup").header(header).body(body.getBytes()).responseString(handler);
+    }
+
     static public void fetchGroups(final String token, Handler<String> handler) throws Exception {
 
         Map<String, Object> header = new HashMap<>();

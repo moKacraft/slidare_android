@@ -25,4 +25,12 @@ public class Contact {
 
         Fuel.get(Config.URL_API + "userContacts").header(header).responseString(handler);
     }
+
+    static public void addContact(final String body, final String token, Handler<String> handler) throws Exception {
+
+        Map<String, Object> header = new HashMap<>();
+        header.put("Authorization", "Bearer " + token);
+
+        Fuel.post(Config.URL_API + "addContact").header(header).body(body.getBytes()).responseString(handler);
+    }
 }
