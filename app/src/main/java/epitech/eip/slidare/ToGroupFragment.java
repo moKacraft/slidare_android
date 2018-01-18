@@ -78,13 +78,13 @@ public class ToGroupFragment extends Fragment {
                 try {
                     fetchGroups(mToken);
                 } catch (Exception error) {
-                    Log.d(TAG, "EXCEPTION ERROR : " + error);
+                    Log.d(TAG, Config.EXCEPTION + error);
                 }
 
                 ImagePicker.setMinQuality(600, 600);
                 ImagePicker.pickImage(getActivity(), "Select your image:");
             } else {
-                Toast.makeText(mContext, "You must choose a group first.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, Config.CHOOSEGRP, Toast.LENGTH_SHORT).show();
             }
             }
         });
@@ -124,7 +124,7 @@ public class ToGroupFragment extends Fragment {
         Map<String, Object> header = new HashMap<>();
         header.put("Authorization", "Bearer "+token);
 
-        Fuel.get("http://34.238.153.180:50000/fetchGroups").header(header).responseString(new Handler<String>() {
+        Fuel.get(Config.URL_API + "fetchGroups").header(header).responseString(new Handler<String>() {
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
                 Log.d("fetchGroups " + Config.ONSUCCESS,response.toString());
@@ -166,7 +166,7 @@ public class ToGroupFragment extends Fragment {
                         mBool = false;
                     }
                     else {
-                        Toast.makeText(mContext, "You have no group yet.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, Config.NO_GROUP, Toast.LENGTH_SHORT).show();
                     }
                     mGroupListAdapter = new SharingListAdapter(mList, mContext, mToken);
                     mGroupList.setAdapter(mGroupListAdapter);
@@ -187,7 +187,7 @@ public class ToGroupFragment extends Fragment {
         Map<String, Object> header = new HashMap<>();
         header.put("Authorization", "Bearer "+token);
 
-        Fuel.get("http://34.238.153.180:50000/userContact/" + id).header(header).responseString(new Handler<String>() {
+        Fuel.get(Config.URL_API + "userContact/" + id).header(header).responseString(new Handler<String>() {
 
             @Override
             public void success(@NotNull Request request, @NotNull Response response, String s) {
