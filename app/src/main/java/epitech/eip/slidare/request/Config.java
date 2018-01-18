@@ -48,5 +48,12 @@ public class Config {
     public static String CONTACTADDED = "Contact successfully added.";
     public static String CTCTNOTEXIST = "This contact does not exist.";
     public static String NO_CONTACT = "You have no contact yet.";
+    public static String GRPNOEXIST = "This group does not exist.";
+    public static String NOTYOURCTCT = "You do not have this contact.";
+    public static String CTCTDELETED = "Contact successfully deleted.";
+    public static String CTCTNOTDEL = "This contact can not be deleted.";
+    public static String CHOOSECTCT = "You must choose a contact first.";
+    public static String CHOOSEGRP = "You must choose a group first.";
+    public static String ERROROCCUR = "An error occurred.";
 
 }

@@ -26,6 +26,14 @@ public class Group {
         Fuel.get(Config.URL_API + "fetchGroups").header(header).responseString(handler);
     }
 
+    static public void fetchGroupsExpandable(final String groupname, final String email, final String token, Handler<String> handler) throws Exception {
+
+        Map<String, Object> header = new HashMap<>();
+        header.put("Authorization", "Bearer " + token);
+
+        Fuel.get(Config.URL_API + "fetchGroups").header(header).responseString(handler);
+    }
+
     static public void renameGroup(final String body, final String token, Handler<String> handler) throws Exception {
 
         Map<String, Object> header = new HashMap<>();
@@ -48,5 +56,13 @@ public class Group {
         header.put("Authorization", "Bearer " + token);
 
         Fuel.delete(Config.URL_API + "removeGroup/" + group).header(header).responseString(handler);
+    }
+
+    static public void removeFromGroup(final String name, final String body, final String token, Handler<String> handler) throws Exception {
+
+        Map<String, Object> header = new HashMap<>();
+        header.put("Authorization", "Bearer " + token);
+
+        Fuel.put(Config.URL_API + "removeFromGroup/" + name).header(header).body(body.getBytes()).responseString(handler);
     }
 }

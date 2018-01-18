@@ -1,6 +1,5 @@
 package epitech.eip.slidare;
 
-import android.app.DownloadManager;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -10,7 +9,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationCompat;
@@ -79,7 +77,6 @@ public class HomeActivity extends AppCompatActivity {
 
     private String mToken;
     private String mUrlPicture;
-    private String mUserEmail;
     private ByteArrayOutputStream fileData = new ByteArrayOutputStream();
     private FileOutputStream fos;
 
@@ -162,13 +159,6 @@ public class HomeActivity extends AppCompatActivity {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-
-//                            DownloadManager.Request request = new DownloadManager.Request(taskSnapshot.getDownloadUrl());
-//                            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, mFileName);
-//                            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED); // to notify when download is complete
-//                            request.allowScanningByMediaScanner();// if you want to be available from media players
-//                            DownloadManager manager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-//                            manager.enqueue(request);
                             }
                         });
                     } catch (NoSuchAlgorithmException e) {
@@ -216,17 +206,14 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-
         Log.d(TAG, Config.ONCREATE);
 
         mContext = getApplicationContext();
         Intent intent = getIntent();
         mToken = intent.getStringExtra("token");
         mUrlPicture = intent.getStringExtra("fbUrl");
-        //mUserEmail = intent.getStringExtra("email");
         SharedPreferences settings = getSharedPreferences("USERDATA", 0);
         mEmail = settings.getString("email", null);
-        Log.d(TAG, mEmail);
         mAdapter = new HomeListAdapter(mList, mContext, mToken);
 
         mAgendaView = (ImageView) findViewById(R.id.ico_agenda);
@@ -274,7 +261,6 @@ public class HomeActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             try {
-                                Log.d("icicicicicicicici", "camarche pas pas pas pas pas pas");
                                 java.net.Socket sock;
                                 sock = new java.net.Socket(Config.IP, (int) args[0]);
                                 OutputStream is = sock.getOutputStream();
@@ -354,10 +340,6 @@ public class HomeActivity extends AppCompatActivity {
                         JSONObject data = new JSONObject(new String(response.getData()));
                         JSONArray files = data.getJSONArray("file_urls");
                         JSONArray senders = data.getJSONArray("senders");
-//                        String fileUrls = data.getString("file_urls").toString().replace("[\"", "").replace("\"]", "").replaceAll("\"","").replaceAll("\\\\", "");
-//                        String senders = data.getString("senders").toString().replace("[\"", "").replace("\"]", "").replaceAll("\"","");
-//                        String[] tab = fileUrls.split(",");
-//                        String[] str = senders.split(",");
                         System.out.println(data);
 
                         mList = new ArrayList<String>();

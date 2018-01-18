@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
                 User.loginUser(mBody, handler);
             }
             catch (Exception error) {
-                Log.d(TAG, "EXCEPTION ERROR : " + error);
+                Log.d(TAG, Config.EXCEPTION + error);
             }
             }
         };

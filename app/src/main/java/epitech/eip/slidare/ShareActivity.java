@@ -11,22 +11,16 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
-import com.github.nkzawa.emitter.Emitter;
-import com.github.nkzawa.socketio.client.IO;
-import com.github.nkzawa.socketio.client.Socket;
 import com.mvc.imagepicker.ImagePicker;
 
 import org.json.JSONArray;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -53,15 +47,6 @@ public class ShareActivity extends AppCompatActivity implements ToContactFragmen
     private TextView mToGroup;
     private TextView mDone;
 
-//    private Socket mSocket;
-//    {
-//        try {
-//            mSocket = IO.socket(Config.URL_SOCKET);
-//        } catch (URISyntaxException e) {
-//            Log.d(TAG, Config.SYNTAX_EXCEPT + e);
-//        }
-//    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,39 +55,6 @@ public class ShareActivity extends AppCompatActivity implements ToContactFragmen
         Log.d(TAG, Config.ONCREATE);
 
         mContext = getApplicationContext();
-
-//        HomeActivity.mSocket.on("server ready", new Emitter.Listener() {
-//            @Override
-//            public void call(final Object... args) {
-//                new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                    try {
-//                        java.net.Socket sock;
-//                        sock = new java.net.Socket(Config.IP, (int) args[0]);
-//                        OutputStream is = sock.getOutputStream();
-//
-//                        File arg = new File(getCacheDir(), (String) args[1]);
-//
-//                        FileInputStream fis = new FileInputStream(arg);
-//                        BufferedInputStream bis = new BufferedInputStream(fis);
-//                        byte[] buffer = new byte[4096];
-//                        int ret;
-//                        while ((ret = fis.read(buffer)) > 0) {
-//                            is.write(buffer, 0, ret);
-//                        }
-//                        fis.close();
-//                        bis.close();
-//                        is.close();
-//                        sock.close();
-//                    } catch (IOException ex) {
-//                        ex.printStackTrace();
-//                    }
-//                    }
-//                }).start();
-//            }
-//        });
-
         mToContact = (TextView) findViewById(R.id.tocontact);
         mToGroup = (TextView) findViewById(R.id.togroup);
         mDone = (TextView) findViewById(R.id.done_share);

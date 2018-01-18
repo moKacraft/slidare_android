@@ -3,7 +3,6 @@ package epitech.eip.slidare;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,20 +11,21 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.kittinunf.fuel.Fuel;
 import com.github.kittinunf.fuel.core.FuelError;
 import com.github.kittinunf.fuel.core.Handler;
 import com.github.kittinunf.fuel.core.Request;
 import com.github.kittinunf.fuel.core.Response;
 
 import org.jetbrains.annotations.NotNull;
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+
+import epitech.eip.slidare.request.Config;
+import epitech.eip.slidare.request.Contact;
+import epitech.eip.slidare.request.Group;
 
 /**
  * Created by ferrei_e on 13/02/2017.
@@ -40,10 +40,11 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     private String mToken;
     private String mBody;
 
+    private String mGroupname;
+    private String mEmail;
+
     private List<String> mList;
     private HashMap<String, List<String>> mMap;
-
-    private boolean mExist = false;
 
     public ExpandableListAdapter(Context context, List<String> listDataHeader, HashMap<String, List<String>> listChildData, String token) {
         mContext = context;
@@ -79,17 +80,79 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         deleteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("KIKOULOL", "DELETE = " + getGroup(groupPosition));
-                Log.d("KIKOULOL", "DELETE = " + getChild(groupPosition, childPosition));
-
-                mMap.get(mList.get(groupPosition)).remove(childPosition);
-
+            mGroupname = mList.get(groupPosition);
+            mEmail = childText;
+            if (mEmail != null && mGroupname != null) {
                 try {
-                    fetchGroups(getGroup(groupPosition).toString(), getChild(groupPosition, childPosition).toString(), mToken);
-                } catch (Exception error) {
-                    Log.d(TAG, "EXCEPTION ERROR = " + error);
+                    Handler<String> handler = new Handler<String>() {
+                        @Override
+                        public void success(@NotNull Request request, @NotNull Response response, String s) {
+                            Log.d("userContacts " + Config.ONSUCCESS,response.toString());
+                            try {
+                                JSONObject data = new JSONObject(new String(response.getData()));
+                                if (data.getString("contacts").compareTo("null") != 0) {
+                                    String result = data.getString("contacts");
+                                    String[] tab = result.split(",");
+                                    ArrayList<String> list = new ArrayList<String>();
+                                    int lock = 0;
+                                    for (String elem : tab) {
+                                        String[] str = elem.split(":");
+
+                                        for (int i = 0; i < (str.length - 1) ; i++) {
+                                            if (str[i].toString().equals("\"id\"") && lock == 1) {
+                                                i++;
+                                                str[i] = str[i].replace("\"", "");
+                                                mBody = "{ \"contact_identifier\": \"" + str[i] + "\" }";
+                                                try {
+                                                    Handler<String> handler = new Handler<String>() {
+                                                        @Override
+                                                        public void success(@NotNull Request request, @NotNull Response response, String s) {
+                                                            Log.d("rmCGroup " + Config.ONSUCCESS,response.toString());
+                                                            Toast.makeText(mContext, Config.CTCTDELETED, Toast.LENGTH_SHORT).show();
+                                                            mMap.get(mList.get(groupPosition)).remove(childPosition);
+                                                            notifyDataSetChanged();
+                                                        }
+
+                                                        @Override
+                                                        public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
+                                                            Log.d("rmGGroup " + Config.FAILURE,response.toString());
+                                                            Toast.makeText(mContext, Config.CTCTNOTDEL, Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    };
+                                                    Group.removeFromGroup(mGroupname, mBody, mToken, handler);
+                                                } catch (Exception error) {
+                                                    Log.d(TAG, Config.EXCEPTION + error);
+                                                }
+                                                lock = 0;
+                                            }
+                                            if (str[i].toString().equals("\"email\"")) {
+                                                i++;
+                                                str[i] = str[i].replace("\"", "");
+                                                if (str[i].toString().equals(mEmail)){
+                                                    lock = 1;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            } catch (Throwable tx) {
+                                tx.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
+                            Log.d("userContacts " + Config.FAILURE,response.toString());
+                        }
+                    };
+                    Contact.userContacts(mToken, handler);
                 }
-                notifyDataSetChanged();
+                catch (Exception e){
+                    Log.d(TAG, Config.EXCEPTION + e);
+                }
+            } else {
+                Toast.makeText(mContext, Config.ERROROCCUR, Toast.LENGTH_SHORT).show();
+            }
             }
         });
 
@@ -114,7 +177,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
     @Override
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         String headerTitle = (String) getGroup(groupPosition);
-
         if (convertView == null) {
             LayoutInflater infalInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = infalInflater.inflate(R.layout.group_list_item, null);
@@ -123,7 +185,6 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         TextView listItem = (TextView) convertView.findViewById(R.id.group_list_item);
         listItem.setTypeface(null, Typeface.BOLD);
         listItem.setText(headerTitle);
-
         return convertView;
     }
 
@@ -137,145 +198,8 @@ public class ExpandableListAdapter extends BaseExpandableListAdapter {
         return false;
     }
 
-    public void fetchGroups(final String groupname, final String email, String token) throws Exception {
-
-        Map<String, Object> header = new HashMap<>();
-        header.put("Authorization", "Bearer "+token);
-
-        Fuel.get("http://34.238.153.180:50000/fetchGroups").header(header).responseString(new Handler<String>() {
-            @Override
-            public void success(@NotNull Request request, @NotNull Response response, String s) {
-                Log.d("fetchGroups SUCCESS : ",response.toString());
-
-                try {
-                    JSONObject data = new JSONObject(new String(response.getData()));
-                    //Log.d(TAG, "----------> result : "+data.getString("groups"));
-                    if (data.getString("groups").compareTo("null") != 0) {
-                        JSONArray groups = data.getJSONArray("groups");
-                        for (int i = 0; i < groups.length(); ++i) {
-
-                            JSONObject group = groups.getJSONObject(i);
-                            //Log.d(TAG, "-----> NAME = " + mName);
-                            //Log.d(TAG, "-----> GROUPS : " + group.getString("name"));
-                            if(groupname.compareTo(group.getString("name")) == 0){
-                                mExist = true;
-                                try {
-                                    userContacts(groupname, email, mToken);
-                                } catch (Exception error) {
-                                    Log.d(TAG, "EXCEPTION ERROR = " + error);
-                                }
-                            }
-                        }
-                        if (mExist == false){
-                            Toast.makeText(mContext, "This group does not exist.", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                    else {
-                        Toast.makeText(mContext, "You have no group yet.", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Throwable tx) {
-                    tx.printStackTrace();
-                }
-            }
-
-            @Override
-            public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
-                Log.d("fetchGroups FAILURE : ",response.toString());
-            }
-        });
-    }
-
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition) {
         return true;
-    }
-
-    public void userContacts(final String groupname, final String email, String token) throws Exception {
-
-        Log.d(TAG, "----------> userContacts");
-
-        Map<String, Object> header = new HashMap<>();
-        header.put("Authorization", "Bearer "+token);
-
-        Fuel.get("http://34.238.153.180:50000/userContacts").header(header).responseString(new Handler<String>() {
-            @Override
-            public void success(@NotNull Request request, @NotNull Response response, String s) {
-                Log.d("userContacts SUCCESS : ",response.toString());
-
-                try {
-                    JSONObject data = new JSONObject(new String(response.getData()));
-                    //Log.d(TAG, "----------> result : "+data.getString("contacts"));
-
-                    if (data.getString("contacts").compareTo("null") != 0) {
-                        String result = data.getString("contacts");
-                        String[] tab = result.split(",");
-                        ArrayList<String> list = new ArrayList<String>();
-                        int lock = 0;
-                        for (String elem : tab) {
-                            String[] str = elem.split(":");
-
-                            for (int i = 0; i < (str.length - 1) ; i++) {
-
-                                if (str[i].toString().equals("\"id\"") && lock == 1) {
-                                    i++;
-                                    //Log.d(TAG, "ID = " + str[i]);
-                                    str[i] = str[i].replace("\"", "");
-                                    mBody = "{ \"contact_identifier\": \"" + str[i] + "\" }";
-                                    //Log.d(TAG, "TEST = " + mBody);
-                                    try {
-                                        removeFromGroup(groupname, mBody, mToken);
-                                    } catch (Exception error) {
-                                        Log.d(TAG, "EXCEPTION ERROR : " + error);
-                                    }
-                                    lock = 0;
-                                }
-
-                                if (str[i].toString().equals("\"email\"")) {
-                                    i++;
-                                    str[i] = str[i].replace("\"", "");
-                                    if (str[i].toString().equals(email)){
-                                        lock = 1;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    else {
-                        /*userListContacts = new String[1];
-                        userListContacts[0] = "0 contacts";*/
-                        Toast.makeText(mContext, "You do not have this contact.", Toast.LENGTH_SHORT).show();
-                    }
-                } catch (Throwable tx) {
-                    tx.printStackTrace();
-                }
-            }
-
-            @Override
-            public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
-                Log.d("userContacts FAILURE : ",response.toString());
-            }
-        });
-    }
-
-    public void removeFromGroup(String name, String body, String token) throws Exception {
-
-        Map<String, Object> header = new HashMap<>();
-        header.put("Authorization", "Bearer "+token);
-
-        Fuel.put("http://34.238.153.180:50000/removeFromGroup/"+ name).header(header).body(body.getBytes()).responseString(new Handler<String>() {
-            @Override
-            public void success(@NotNull Request request, @NotNull Response response, String s) {
-
-                Log.d("rmCGroup SUCCESS : ",response.toString());
-                Toast.makeText(mContext, "Contact successfully deleted.", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void failure(@NotNull Request request, @NotNull Response response, @NotNull FuelError fuelError) {
-
-                Log.d("rmGGroup FAILURE : ",response.toString());
-                Toast.makeText(mContext, "This contact can not be deleted.", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 }
