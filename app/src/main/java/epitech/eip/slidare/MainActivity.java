@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-            String email = mEmailEditText.getText().toString();
+            final String email = mEmailEditText.getText().toString();
             String password = mPasswordEditText.getText().toString();
             mBody = "{ \"email\": \"" + email + "\",\"password\": \"" + password + "\" }";
 
@@ -115,6 +115,7 @@ public class MainActivity extends AppCompatActivity {
                             editor.putString("userToken", mToken);
                             editor.putString("userId", mId);
                             editor.putString("fbUrlImage", mUrlPicture);
+                            editor.putString("email", email);
                             editor.apply();
 
                             Intent intent = new Intent(MainActivity.this, HomeActivity.class);

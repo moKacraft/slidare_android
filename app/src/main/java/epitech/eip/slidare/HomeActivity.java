@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
@@ -32,6 +33,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -91,11 +93,12 @@ public class HomeActivity extends AppCompatActivity {
     private String filePath;
     private String sha1;
     private String key;
+    private String mEmail;
     private byte[] salt;
     private byte[] iv;
     private String transferId;
 
-    private Socket mSocket;
+    static public Socket mSocket;
     {
         try {
             mSocket = IO.socket(Config.URL_SOCKET);
@@ -134,6 +137,13 @@ public class HomeActivity extends AppCompatActivity {
                             mSocket.emit("transfer finished", transferId);
                             try {
                                 String body = "{ \"file_url\": \"" + taskSnapshot.getDownloadUrl().toString() + "\", \"sender\": \"" + sender_id + "\"  }";
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mList.add(sender_id + ";" + taskSnapshot.getDownloadUrl().toString());
+                                        mAdapter.notifyDataSetChanged();
+                                    }
+                                });
                                 Handler<String> handler = new Handler<String>() {
                                     @Override
                                     public void success(@NotNull Request request, @NotNull Response response, String s) {
@@ -150,12 +160,12 @@ public class HomeActivity extends AppCompatActivity {
                                 e.printStackTrace();
                             }
 
-                            DownloadManager.Request request = new DownloadManager.Request(taskSnapshot.getDownloadUrl());
-                            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, mFileName);
-                            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED); // to notify when download is complete
-                            request.allowScanningByMediaScanner();// if you want to be available from media players
-                            DownloadManager manager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
-                            manager.enqueue(request);
+//                            DownloadManager.Request request = new DownloadManager.Request(taskSnapshot.getDownloadUrl());
+//                            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, mFileName);
+//                            request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED); // to notify when download is complete
+//                            request.allowScanningByMediaScanner();// if you want to be available from media players
+//                            DownloadManager manager = (DownloadManager) getSystemService(DOWNLOAD_SERVICE);
+//                            manager.enqueue(request);
                             }
                         });
                     } catch (NoSuchAlgorithmException e) {
@@ -211,7 +221,9 @@ public class HomeActivity extends AppCompatActivity {
         mToken = intent.getStringExtra("token");
         mUrlPicture = intent.getStringExtra("fbUrl");
         //mUserEmail = intent.getStringExtra("email");
-
+        SharedPreferences settings = getSharedPreferences("USERDATA", 0);
+        mEmail = settings.getString("email", null);
+        Log.d(TAG, mEmail);
         mAdapter = new HomeListAdapter(mList, mContext, mToken);
 
         mAgendaView = (ImageView) findViewById(R.id.ico_agenda);
@@ -221,16 +233,15 @@ public class HomeActivity extends AppCompatActivity {
 
         if (mSocket.connected() == false) {
 
-            mSocket.on("soso@gmail.com", new Emitter.Listener() {
+            mSocket.on(mEmail, new Emitter.Listener() {
 
                 @Override
                 public void call(Object... args) {
-                    Log.d("icicicicicicicici", "camarche pas pas pas pas pas pas");
-                    // sendNotification(getApplicationContext(),"xxx wants to send you a file");
                     transferId = (String) args[2];
                     sha1 = (String) args[5];
                     key = (String) args[8];
                     sender_id = (String) args[10];
+                    sendNotification(getApplicationContext(),sender_id + " sent you a file");
                     salt = Base64.decode((String) args[6], Base64.DEFAULT);
                     iv = Base64.decode((String) args[7], Base64.DEFAULT);
                     fileData = new ByteArrayOutputStream();
@@ -261,6 +272,7 @@ public class HomeActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             try {
+                                Log.d("icicicicicicicici", "camarche pas pas pas pas pas pas");
                                 java.net.Socket sock;
                                 sock = new java.net.Socket(Config.IP, (int) args[0]);
                                 OutputStream is = sock.getOutputStream();
@@ -340,14 +352,17 @@ public class HomeActivity extends AppCompatActivity {
                     Log.d("getFiles " + Config.ONSUCCESS,response.toString());
                     try {
                         JSONObject data = new JSONObject(new String(response.getData()));
-                        String fileUrls = data.getString("file_urls").toString().replace("[\"", "").replace("\"]", "").replaceAll("\"","").replaceAll("\\\\", "");
-                        String senders = data.getString("senders").toString().replace("[\"", "").replace("\"]", "").replaceAll("\"","");
-                        String[] tab = fileUrls.split(",");
-                        String[] str = senders.split(",");
+                        JSONArray files = data.getJSONArray("file_urls");
+                        JSONArray senders = data.getJSONArray("senders");
+//                        String fileUrls = data.getString("file_urls").toString().replace("[\"", "").replace("\"]", "").replaceAll("\"","").replaceAll("\\\\", "");
+//                        String senders = data.getString("senders").toString().replace("[\"", "").replace("\"]", "").replaceAll("\"","");
+//                        String[] tab = fileUrls.split(",");
+//                        String[] str = senders.split(",");
+                        System.out.println(data);
 
                         mList = new ArrayList<String>();
-                        for (int i = 0; i < str.length; i++){
-                            mList.add(str[i] + ";" + tab[i]);
+                        for (int i = 0; i < files.length(); i++){
+                            mList.add((i >= senders.length() ? "Sender Unknown" : senders.getString(i)) + ";" + files.getString(i));
                         }
                         mAdapter = new HomeListAdapter(mList, mContext, mToken);
                         mListView.setAdapter(mAdapter);

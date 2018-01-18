@@ -65,7 +65,7 @@ public class SignupActivity extends AppCompatActivity {
 
             String firstname = mFirstNameEditText.getText().toString();
             String lastname = mLastNameEditText.getText().toString();
-            String email = mEmailEditText.getText().toString();
+            final String email = mEmailEditText.getText().toString();
             String password = mPasswordEditText.getText().toString();
 
             if (password.compareTo(mPasswordConfirmEditText.getText().toString()) != 0)
@@ -94,6 +94,8 @@ public class SignupActivity extends AppCompatActivity {
                                             SharedPreferences.Editor editor = settings.edit();
                                             editor.putString("userToken", token);
                                             editor.putString("userId", id);
+                                            editor.putString("email", email);
+
                                             editor.apply();
 
                                             Intent intent = new Intent(SignupActivity.this, HomeActivity.class);
